@@ -1112,7 +1112,7 @@ export default function AppNew() {
               {showObjectiveLine && <p className="mt-1 text-base font-semibold">Objective: {objective}</p>}
               <p className="mt-2 text-xl">
                 Name:{' '}
-                <span className="inline-block min-w-64 border-b-2 border-dotted border-black">
+                <span className="inline-block min-w-64 border-b-2 border-solid border-black">
                   {config.childName || '________________'}
                 </span>
               </p>
@@ -1192,7 +1192,7 @@ export default function AppNew() {
                       {showObjectiveLine && <p className="mt-1 text-base font-semibold">Objective: {pageObjective}</p>}
                       <p className="mt-2 text-xl">
                         Name:{' '}
-                        <span className="inline-block min-w-64 border-b-2 border-dotted border-black">
+                        <span className="inline-block min-w-64 border-b-2 border-solid border-black">
                           {pageConfig.childName || '________________'}
                         </span>
                       </p>
