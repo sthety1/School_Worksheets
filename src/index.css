@@ -1,0 +1,150 @@
+@import url("https://fonts.googleapis.com/css2?family=Playwrite+NZ+Basic+Guides&display=swap");
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+
+.control-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.control-input {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.6rem;
+  background: #fff;
+  padding: 0.6rem 0.7rem;
+  font-size: 0.95rem;
+}
+
+.action-btn {
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  font-weight: 700;
+}
+
+.action-btn-secondary {
+  border: 1px solid #111827;
+  background: #fff;
+  color: #111827;
+  border-radius: 0.7rem;
+  padding: 0.7rem 0.9rem;
+  font-weight: 700;
+}
+
+.worksheet-paper {
+  width: 8.5in;
+  min-height: 11in;
+  box-sizing: border-box;
+  margin-inline: auto;
+}
+
+.trace-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem;
+  border-bottom: 2px dotted #374151;
+  padding-bottom: 0.55rem;
+}
+
+.trace-text {
+  width: 100%;
+  min-height: 2.8rem;
+  letter-spacing: 0.25rem;
+  font-size: 2rem;
+  line-height: 1.25;
+}
+
+.handwriting-guide {
+  width: 70%;
+  min-height: 3.2rem;
+  padding: 0.15rem 0.35rem;
+  border-bottom: 2px dotted #111827;
+}
+
+.trace-dots {
+  font-family: "Playwrite NZ Basic Guides", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+  font-size: 2.35rem;
+  font-weight: 400;
+  letter-spacing: 0.03rem;
+  line-height: 1.25;
+  color: #6b7280;
+  opacity: 0.9;
+  transform: translateY(0);
+}
+
+.answer-line {
+  border-bottom: 2px dotted #111827;
+  min-width: 8rem;
+  font-size: 1.2rem;
+}
+
+.shape-circle,
+.shape-square,
+.shape-triangle,
+.shape-rectangle,
+.shape-star,
+.shape-heart,
+.shape-oval {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #111827;
+}
+
+.shape-circle {
+  border-radius: 999px;
+}
+
+.shape-square {
+  border-radius: 4px;
+}
+
+.shape-triangle {
+  width: 0;
+  height: 0;
+  border-left: 26px solid transparent;
+  border-right: 26px solid transparent;
+  border-bottom: 52px solid #111827;
+  border-top: 0;
+  background: transparent;
+}
+
+.shape-rectangle {
+  width: 76px;
+  height: 44px;
+  border-radius: 4px;
+}
+
+.shape-star,
+.shape-heart {
+  border-radius: 8px;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.shape-oval {
+  width: 72px;
+  border-radius: 999px;
+}
+
+@media print {
+  @page {
+    size: Letter portrait;
+    margin: 0.35in;
+  }
+
+  body {
+    background: white;
+  }
+}
