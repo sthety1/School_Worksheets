@@ -60,6 +60,11 @@ A parent-friendly web app that generates **printable kindergarten worksheets** (
 - Regression tests (unit + UI)
 - Snapshot-style print layout regression test
 
+### Next queued work
+
+- **Phase 5 (stabilize first)**: Teacher tools (optional answer keys, standards tags, editable instructions)
+- **Phase 6 (queued after Phase 5)**: Handwriting paper options (paper styles, tracing opacity slider, optional tracing font selector)
+
 ## Project structure
 
 - `src/AppNew.jsx`: main UI (single worksheet + packet mode)

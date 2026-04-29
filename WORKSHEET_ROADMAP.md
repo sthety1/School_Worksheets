@@ -24,7 +24,10 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Regression test suite (core generation + UI actions)
 - [x] Weekly packet workflow
 - [x] Persistent child profiles
-- [ ] Automated layout regression checks
+- [x] Automated layout regression checks (snapshot tests)
+- [x] Teacher tools (answer keys, standards tags, editable instructions/objectives)
+- [x] Handwriting paper options (paper style, tracing opacity, tracing font)
+- [x] Content expansion (subtraction, ten-frames, CVC, sentence tracing, patterns)
 
 ---
 
@@ -117,6 +120,76 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ---
 
+## Phase 5: Teacher Tools + Standards Alignment (stabilize first)
+
+**Goal:** Add optional teacher-facing features without changing student-facing output by default.
+
+### Tasks
+
+- [x] Optional answer key pages (hidden by default)
+- [x] Optional standards/skill tags in worksheet footer (hidden by default)
+- [x] Editable instruction line (defaults preserved; per-profile override)
+- [x] Optional “Objective” line (hidden by default; per-profile override)
+
+### Acceptance Criteria
+
+- Student worksheet output is unchanged when toggles are off (default).
+- Print output remains clean black-and-white and snapshot tests stay stable.
+
+---
+
+## Phase 6: Handwriting Paper Options (queued after Phase 5)
+
+**Goal:** Let users choose paper styles and tracing visibility options while keeping a simple default experience.
+
+### Tasks
+
+- [x] `paperStyle` selector to switch handwriting guide backgrounds/lines
+- [x] Tracing opacity slider (for lighter/darker trace guides)
+- [x] Optional tracing font selector (with print-safe defaults)
+
+### Acceptance Criteria
+
+- Defaults stay parent-friendly with no extra configuration required.
+- All styles remain print-safe (8.5" x 11) and layout does not overflow.
+
+---
+
+## Phase 8: Content Expansion (queued)
+
+**Goal:** Add more worksheet types that cover common K-ready skills without sacrificing print cleanliness.
+
+### Tasks
+
+- [x] Subtraction (within small numbers)
+- [x] Ten-frames / number representation
+- [x] CVC words (blend/read/write)
+- [x] Sentence tracing (short “I see a ___.” style)
+- [x] Patterns (AB, AAB, ABB, ABC) with fill-in blanks
+
+### Acceptance Criteria
+
+- Each new type includes schema + engine generation + UI renderer + tests.
+- Defaults remain age-appropriate for each skill preset.
+
+---
+
+## Phase 9: UX + Reliability Polish (queued)
+
+**Goal:** Reduce friction for parents/teachers and make printing more predictable.
+
+### Tasks
+
+- [x] Dedicated Print Preview mode (hide controls; show packet page thumbnails / page list)
+- [x] Section-level reroll for multi-part pages (page-level reroll for weekly packet pages)
+- [x] Import/export child profiles as JSON (backup + share)
+- [x] Clear print overflow warnings with suggested fixes (reduce problems, switch template, etc.)
+
+### Acceptance Criteria
+
+- Parent can confidently preview before printing and avoid accidental multi-page overflow.
+- Profiles are portable and recoverable.
+
 ## Implementation Notes
 
 - Keep the UI parent-friendly and uncluttered.
@@ -135,6 +208,12 @@ Use this section as our sprint tracker.
 - [x] Phase 1 / Instruction line
 - [x] Phase 1 / Skill presets
 - [x] Phase 1 / Handwriting guide lines
+
+### Queued (After Phase 5 Stabilizes)
+
+- [x] Phase 6 / Handwriting paper options (paper styles, tracing opacity, font selector)
+- [x] Phase 8 / New worksheet types (subtraction, ten-frames, CVC, sentences, patterns)
+- [ ] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
 
 ### Decisions Log
 

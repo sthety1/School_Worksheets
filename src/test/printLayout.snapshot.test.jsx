@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import App from '../AppNew'
 
 describe('print layout snapshots', () => {
@@ -7,6 +7,23 @@ describe('print layout snapshots', () => {
     const page = container.querySelector('[data-page="worksheet"]')
     expect(page).toBeTruthy()
     expect(page).toMatchSnapshot()
+  })
+
+  test('single worksheet page renders standards tags when enabled', () => {
+    const { container } = render(<App />)
+    fireEvent.click(screen.getByLabelText('Show standards tags'))
+    const page = container.querySelector('[data-page="worksheet"]')
+    expect(page).toBeTruthy()
+    expect(page).toMatchSnapshot()
+  })
+
+  test('single worksheet renders answer key page when enabled', () => {
+    const { container } = render(<App />)
+    fireEvent.click(screen.getByLabelText('Show answer key'))
+    fireEvent.change(screen.getByLabelText('Worksheet Type'), { target: { value: 'addition' } })
+    const pages = Array.from(container.querySelectorAll('[data-page="worksheet"]'))
+    expect(pages.length).toBe(2)
+    expect(pages.map((p) => p.outerHTML).join('\n')).toMatchSnapshot()
   })
 })
 
