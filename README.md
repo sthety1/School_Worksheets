@@ -5,7 +5,7 @@ A parent-friendly web app that generates **printable kindergarten worksheets** (
 ## What it does
 
 - Generate **single worksheets** or **weekly packets (5 pages)**.
-- Print directly, or use the browser print dialog to **Save as PDF**.
+- Print directly, **download a PDF**, or use the browser print dialog to **Save as PDF**.
 - Supports a child name at the top of every page.
 - Uses handwriting-style tracing text designed for pencil tracing.
 
@@ -18,6 +18,11 @@ A parent-friendly web app that generates **printable kindergarten worksheets** (
 - Name writing practice
 - Shapes recognition
 - Beginning addition
+- Beginning subtraction
+- Ten-frames
+- CVC words
+- Sentence tracing
+- Patterns
 - Matching pictures/words
 - Beginning sounds / phonics
 - Color by number
@@ -60,10 +65,24 @@ A parent-friendly web app that generates **printable kindergarten worksheets** (
 - Regression tests (unit + UI)
 - Snapshot-style print layout regression test
 
-### Next queued work
+### Phase 5 — Teacher tools
 
-- **Phase 5 (stabilize first)**: Teacher tools (optional answer keys, standards tags, editable instructions)
-- **Phase 6 (queued after Phase 5)**: Handwriting paper options (paper styles, tracing opacity slider, optional tracing font selector)
+- Optional answer key pages
+- Optional standards/skill tags
+- Editable instruction line + optional objective line
+
+### Phase 6 — Handwriting paper options
+
+- Paper style selector (baseline / primary / wide ruled / blank)
+- Tracing opacity slider
+- Tracing font selector (Playwrite / system)
+
+### Phase 9 — UX polish
+
+- Dedicated Print Preview mode
+- Packet page reroll controls
+- Import/export child profiles as JSON
+- Combined packet PDF export (one file)
 
 ## Project structure
 
@@ -110,7 +129,7 @@ npm run lint
 ## Printing tips
 
 - Use **Print** and set scale to **100%** if possible.
-- To export a PDF, click **Save as PDF** and choose **Save as PDF** in the print destination dialog.
+- To export a PDF via the browser dialog, click **Save as PDF** and choose **Save as PDF** in the print destination dialog.
 - In packet mode, each worksheet is its own printable page (automatic page breaks).
 
 ## Notes

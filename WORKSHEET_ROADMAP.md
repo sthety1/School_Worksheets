@@ -228,6 +228,6 @@ Use this section as our sprint tracker.
 
 ### Risks / Open Questions
 
-- [ ] Confirm preferred default skill preset.
-- [ ] Confirm whether custom sight words should be saved per child profile.
-- [ ] Confirm if weekly packet should be single combined PDF or print batch.
+- [x] Default skill preset confirmed: **K End**
+- [x] Custom sight words are saved per child profile.
+- [x] Weekly packet supports **single combined PDF export** (in addition to print batch).

@@ -8,6 +8,9 @@ import {
 } from './worksheetEngine'
 import { buildPacketConfigs, packetTemplates } from './packetTemplates'
 import { ThemeIcon } from './themeIcons'
+import { buildPdfPages } from './pdf/pdfModel'
+import { WorksheetPdfDocument } from './pdf/worksheetPdf'
+import { downloadPdfDocument } from './pdf/downloadPdf'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -455,8 +458,8 @@ export default function AppNew() {
   const [config, setConfig] = useState({
     type: 'numberTracing',
     difficulty: 'easy',
-    skillLevel: 'kEarly',
-    problems: getPresetProblems('numberTracing', 'kEarly'),
+    skillLevel: 'kEnd',
+    problems: getPresetProblems('numberTracing', 'kEnd'),
     theme: 'dogs',
     childName: '',
     sightWordSource: 'dolchPrePrimer',
@@ -563,6 +566,48 @@ export default function AppNew() {
   const handleSaveAsPdf = async () => {
     setStatusMessage('Opening print dialog. Choose "Save as PDF" as destination.')
     window.print()
+  }
+
+  const safeFilenamePart = (value) =>
+    String(value ?? '')
+      .trim()
+      .replace(/[^a-z0-9-_]+/gi, '_')
+      .replace(/_+/g, '_')
+      .replace(/^_+|_+$/g, '')
+
+  const handleDownloadPdf = async () => {
+    try {
+      const now = new Date()
+      const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+      const child = safeFilenamePart(config.childName) || 'child'
+      const filename = mode === 'packet' ? `weekly_packet_${child}_${date}.pdf` : `worksheet_${child}_${date}.pdf`
+
+      if (mode === 'packet' && (!Array.isArray(packetPages) || packetPages.length === 0)) {
+        setStatusMessage('Generate a weekly packet first, then download the packet PDF.')
+        return
+      }
+
+      setStatusMessage('Building PDF…')
+      const pages = buildPdfPages({
+        mode,
+        config,
+        worksheetSeed: generationId,
+        packetPages,
+        packetPageRerolls,
+        generationId,
+        recentMemory,
+        showAnswerKey,
+        showStandardsTags,
+      })
+
+      const doc = <WorksheetPdfDocument pages={pages} filenameLabel={filename} />
+      await downloadPdfDocument({ doc, filename })
+      setStatusMessage('PDF downloaded.')
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err)
+      setStatusMessage('Could not generate PDF. Use Print → Save as PDF as a fallback.')
+    }
   }
 
   const handleRerollPacketPage = (idx) => {
@@ -709,6 +754,9 @@ export default function AppNew() {
           <div className="flex items-center gap-2">
             <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print</button>
             <button type="button" className="action-btn-secondary" onClick={handleSaveAsPdf}>Save as PDF</button>
+            <button type="button" className="action-btn-secondary" onClick={handleDownloadPdf}>
+              {mode === 'packet' ? 'Download Packet PDF' : 'Download PDF'}
+            </button>
             <button type="button" className="action-btn" onClick={() => setPrintPreviewMode(false)}>Exit Preview</button>
           </div>
         </div>
@@ -968,6 +1016,9 @@ export default function AppNew() {
             )}
             <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print Worksheet</button>
             <button type="button" className="action-btn-secondary" onClick={handleSaveAsPdf}>Save as PDF</button>
+            <button type="button" className="action-btn-secondary" onClick={handleDownloadPdf}>
+              {mode === 'packet' ? 'Download Packet PDF' : 'Download PDF'}
+            </button>
             <button type="button" className="action-btn-secondary" onClick={() => setPrintPreviewMode(true)}>
               Print Preview
             </button>

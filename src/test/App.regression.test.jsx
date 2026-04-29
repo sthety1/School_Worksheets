@@ -3,6 +3,16 @@ import userEvent from '@testing-library/user-event'
 import App from '../AppNew'
 
 describe('app regression coverage', () => {
+  test('defaults to K End preset for new sessions', () => {
+    const { container } = render(<App />)
+
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('kEnd')
+    // K End default for number tracing is 12 in the problem plan.
+    const problemsInput = container.querySelector('input[type="number"]')
+    expect(problemsInput).toBeTruthy()
+    expect(problemsInput).toHaveValue(12)
+  })
+
   test('shows sight word source controls when sight words are selected', async () => {
     const user = userEvent.setup()
     render(<App />)
@@ -243,6 +253,43 @@ describe('app regression coverage', () => {
 
     await user.selectOptions(screen.getByLabelText('Load profile'), 'Override Test')
     expect(screen.getByLabelText('Instruction text')).toHaveValue('Circle the correct answers.')
+
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: originalLocalStorage,
+      configurable: true,
+    })
+  })
+
+  test('custom sight words persist in saved profiles', async () => {
+    const user = userEvent.setup()
+    const store = new Map()
+    const originalLocalStorage = globalThis.localStorage
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: {
+        getItem: (k) => store.get(k) ?? null,
+        setItem: (k, v) => store.set(k, String(v)),
+        removeItem: (k) => store.delete(k),
+        clear: () => store.clear(),
+      },
+      configurable: true,
+    })
+
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'sightWords')
+    await user.selectOptions(screen.getByLabelText('Sight Word Source'), 'custom')
+    await user.type(screen.getByLabelText('Custom Words (comma or new line)'), 'cat\ndog\nsun')
+
+    await user.type(screen.getByLabelText('Profile name'), 'Custom Words Test')
+    await user.click(screen.getByRole('button', { name: 'Save Profile' }))
+
+    // Prove load restores it.
+    await user.selectOptions(screen.getByLabelText('Sight Word Source'), 'dolchPrePrimer')
+    expect(screen.queryByLabelText('Custom Words (comma or new line)')).not.toBeInTheDocument()
+
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Custom Words Test')
+    expect(screen.getByLabelText('Sight Word Source')).toHaveValue('custom')
+    expect(screen.getByLabelText('Custom Words (comma or new line)')).toHaveValue('cat\ndog\nsun')
 
     Object.defineProperty(globalThis, 'localStorage', {
       value: originalLocalStorage,
