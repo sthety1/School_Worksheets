@@ -1,4 +1,6 @@
+import { readFile } from 'node:fs/promises'
 import { test, expect } from '@playwright/test'
+import { PDFDocument } from 'pdf-lib'
 
 test.describe('release smoke', () => {
   test('single worksheet preview loads', async ({ page }) => {
@@ -52,5 +54,24 @@ test.describe('release smoke', () => {
     await page.getByRole('button', { name: 'Download PDF' }).first().click()
     const download = await downloadPromise
     expect(download.suggestedFilename()).toMatch(/worksheet_.*\.pdf$/)
+  })
+
+  test('placement packet PDF has six pages (five worksheets plus scorer)', async ({ page }, testInfo) => {
+    await page.goto('/')
+    await page.getByLabel('Mode').selectOption('packet')
+    await page.getByLabel('Packet Template').selectOption('placement')
+    await page.getByRole('button', { name: 'Generate Placement Packet' }).click()
+    await expect(page.locator('[data-page="worksheet"]')).toHaveCount(5)
+
+    const downloadPromise = page.waitForEvent('download', { timeout: 60_000 })
+    await page.getByRole('button', { name: 'Download Packet PDF' }).click()
+    const download = await downloadPromise
+    expect(download.suggestedFilename()).toMatch(/weekly_packet_.*\.pdf$/)
+
+    const saved = testInfo.outputPath('placement-packet.pdf')
+    await download.saveAs(saved)
+    const bytes = await readFile(saved)
+    const pdfDoc = await PDFDocument.load(bytes)
+    expect(pdfDoc.getPageCount()).toBe(6)
   })
 })
