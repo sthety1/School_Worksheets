@@ -38,19 +38,19 @@ const skillPresets = [
 ]
 
 const problemPlanByType = {
-  numberTracing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
-  countingObjects: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
-  letterTracing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
-  sightWords: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
-  nameWriting: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  numberTracing: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  countingObjects: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  letterTracing: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  sightWords: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  nameWriting: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   shapes: { preK: 6, kEarly: 7, kMid: 7, kEnd: 7 },
-  addition: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  addition: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   matching: { preK: 6, kEarly: 6, kMid: 6, kEnd: 6 },
-  phonics: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
-  colorByNumber: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  phonics: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  colorByNumber: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
 }
 
-const getPresetProblems = (type, skillLevel) => problemPlanByType[type]?.[skillLevel] ?? 8
+const getPresetProblems = (type, skillLevel) => problemPlanByType[type]?.[skillLevel] ?? 10
 
 const RECENT_MEMORY_KEY = 'worksheet_recent_memory_v1'
 const PROFILES_KEY = 'worksheet_child_profiles_v1'

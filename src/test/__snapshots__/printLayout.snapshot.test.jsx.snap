@@ -76,42 +76,6 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        12
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          12 12 12 12 12
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        3
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          3 3 3 3 3
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
         9
       </span>
       <span
@@ -130,7 +94,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        2
+        1
       </span>
       <span
         class="handwriting-guide"
@@ -138,7 +102,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          2 2 2 2 2
+          1 1 1 1 1
         </span>
       </span>
     </div>
@@ -148,7 +112,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        8
+        12
       </span>
       <span
         class="handwriting-guide"
@@ -156,7 +120,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          8 8 8 8 8
+          12 12 12 12 12
         </span>
       </span>
     </div>
@@ -184,7 +148,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        10
+        8
       </span>
       <span
         class="handwriting-guide"
@@ -192,7 +156,43 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          10 10 10 10 10
+          8 8 8 8 8
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        5
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          5 5 5 5 5
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        7
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          7 7 7 7 7
         </span>
       </span>
     </div>
@@ -211,6 +211,42 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
           class="trace-text trace-dots"
         >
           4 4 4 4 4
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        3
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          3 3 3 3 3
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        2
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          2 2 2 2 2
         </span>
       </span>
     </div>
