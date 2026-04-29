@@ -13,7 +13,8 @@ export const worksheetTypeEnum = z.enum([
   'colorByNumber',
 ])
 
-export const themeEnum = z.enum(['animals', 'princesses', 'cars', 'dinosaurs', 'unicorns'])
+// Keep 'animals' for backwards compatibility with saved profiles.
+export const themeEnum = z.enum(['dogs', 'cats', 'animals', 'princesses', 'cars', 'dinosaurs', 'unicorns'])
 
 export const skillLevelEnum = z.enum(['preK', 'kEarly', 'kMid', 'kEnd'])
 

@@ -21,74 +21,17 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
     <div
       class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
     >
-      <svg
+      <img
+        alt=""
         aria-hidden="true"
-        class="h-5 w-5"
-        viewBox="0 0 48 48"
-      >
-        <path
-          d="M14 18l-4-6v10"
-          fill="none"
-          stroke="black"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-        />
-        <path
-          d="M34 18l4-6v10"
-          fill="none"
-          stroke="black"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-        />
-        <circle
-          cx="24"
-          cy="28"
-          fill="none"
-          r="14"
-          stroke="black"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-        />
-        <circle
-          cx="19"
-          cy="26"
-          fill="black"
-          r="1.6"
-        />
-        <circle
-          cx="29"
-          cy="26"
-          fill="black"
-          r="1.6"
-        />
-        <path
-          d="M24 28l-2 2 2 2 2-2-2-2Z"
-          fill="black"
-        />
-        <path
-          d="M16 30h6"
-          fill="none"
-          stroke="black"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-        />
-        <path
-          d="M26 30h6"
-          fill="none"
-          stroke="black"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-        />
-      </svg>
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
       <span
         class="capitalize"
       >
-        animals
+        dogs
          theme
       </span>
     </div>
@@ -133,7 +76,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        6
+        12
       </span>
       <span
         class="handwriting-guide"
@@ -141,61 +84,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          6 6 6 6 6
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        4
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          4 4 4 4 4
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        10
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          10 10 10 10 10
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        9
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          9 9 9 9 9
+          12 12 12 12 12
         </span>
       </span>
     </div>
@@ -223,7 +112,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        7
+        9
       </span>
       <span
         class="handwriting-guide"
@@ -231,7 +120,25 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          7 7 7 7 7
+          9 9 9 9 9
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        2
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          2 2 2 2 2
         </span>
       </span>
     </div>
@@ -259,7 +166,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        11
+        6
       </span>
       <span
         class="handwriting-guide"
@@ -267,7 +174,43 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         <span
           class="trace-text trace-dots"
         >
-          11 11 11 11 11
+          6 6 6 6 6
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        10
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          10 10 10 10 10
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        4
+      </span>
+      <span
+        class="handwriting-guide"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          4 4 4 4 4
         </span>
       </span>
     </div>

@@ -215,16 +215,20 @@ export const generateWorksheetData = (input) => {
   }
   if (parsed.type === 'matching') {
     const themeWords = {
-      animals: ['cat', 'dog', 'fish', 'bird', 'frog', 'bear'],
+      // 'animals' kept for backwards compatibility with saved profiles.
+      animals: ['dog', 'cat', 'fish', 'bird', 'frog', 'bear'],
+      dogs: ['dog', 'puppy', 'bone', 'bark', 'leash', 'paw'],
+      cats: ['cat', 'kitten', 'whisker', 'meow', 'purr', 'tail'],
       princesses: ['crown', 'castle', 'dress', 'wand', 'ring', 'shoe'],
       cars: ['car', 'bus', 'van', 'truck', 'jeep', 'taxi'],
       dinosaurs: ['dino', 'fossil', 'tail', 'roar', 'egg', 'claw'],
       unicorns: ['unicorn', 'horn', 'star', 'cloud', 'rainbow', 'mane'],
     }
-    const basePool = themeWords[parsed.theme]
+    const normalizedTheme = parsed.theme === 'animals' ? 'dogs' : parsed.theme
+    const basePool = themeWords[normalizedTheme] ?? themeWords.dogs
     return pickUniqueWithRecent(basePool, safeProblems, parsed.recentMemory.matching, rng).map((word) => ({
       word,
-      theme: parsed.theme,
+      theme: normalizedTheme,
     }))
   }
   if (parsed.type === 'phonics') {

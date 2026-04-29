@@ -21,7 +21,14 @@ const worksheetTypes = [
   { value: 'colorByNumber', label: 'Color by Number' },
 ]
 
-const themes = ['animals', 'princesses', 'cars', 'dinosaurs', 'unicorns']
+const themeOptions = [
+  { value: 'dogs', label: 'Dog' },
+  { value: 'cats', label: 'Cat' },
+  { value: 'princesses', label: 'Princess' },
+  { value: 'cars', label: 'Cars' },
+  { value: 'dinosaurs', label: 'Dinosaurs' },
+  { value: 'unicorns', label: 'Unicorns' },
+]
 
 const skillPresets = [
   { value: 'preK', label: 'Pre-K' },
@@ -241,7 +248,7 @@ export default function AppNew() {
     difficulty: 'easy',
     skillLevel: 'kEarly',
     problems: getPresetProblems('numberTracing', 'kEarly'),
-    theme: 'animals',
+    theme: 'dogs',
     childName: '',
     sightWordSource: 'dolchPrePrimer',
     customWordList: '',
@@ -373,7 +380,7 @@ export default function AppNew() {
       ...prev,
       childName: found.config.childName ?? prev.childName,
       skillLevel: found.config.skillLevel ?? prev.skillLevel,
-      theme: found.config.theme ?? prev.theme,
+      theme: (found.config.theme === 'animals' ? 'dogs' : found.config.theme) ?? prev.theme,
       sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
       customWordList: found.config.customWordList ?? prev.customWordList,
       problems: Math.min(prev.problems, getMaxProblems(prev.type)),
@@ -476,9 +483,9 @@ export default function AppNew() {
             <label className="control-label">
               Theme
               <select className="control-input" value={config.theme} onChange={(e) => setConfig({ ...config, theme: e.target.value })}>
-                {themes.map((theme) => (
-                  <option key={theme} value={theme}>
-                    {theme}
+                {themeOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
                   </option>
                 ))}
               </select>
