@@ -45,6 +45,10 @@ body {
   min-height: 11in;
   box-sizing: border-box;
   margin-inline: auto;
+  --trace-opacity: 0.9;
+  --trace-font-family: "Playwrite NZ Basic Guides";
+  --guide-line-color: #111827;
+  --guide-soft-color: #9ca3af;
 }
 
 .trace-row {
@@ -52,7 +56,6 @@ body {
   align-items: center;
   justify-content: space-between;
   gap: 1.1rem;
-  border-bottom: 2px dotted #374151;
   padding-bottom: 0.55rem;
 }
 
@@ -68,17 +71,55 @@ body {
   width: 70%;
   min-height: 3.2rem;
   padding: 0.15rem 0.35rem;
-  border-bottom: 2px dotted #111827;
+  position: relative;
+  border-bottom: 2px dotted var(--guide-line-color);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.handwriting-guide[data-paper-style="blank"] {
+  border-bottom: none;
+  background-image: none;
+}
+
+.handwriting-guide[data-paper-style="baseline"] {
+  /* current default: single baseline */
+  background-image: none;
+}
+
+.handwriting-guide[data-paper-style="wideRuled"] {
+  border-bottom: none;
+  background-image:
+    linear-gradient(var(--guide-line-color), var(--guide-line-color));
+  background-size: 100% 2px;
+  background-position: 0 82%;
+  background-origin: content-box;
+  background-clip: content-box;
+}
+
+.handwriting-guide[data-paper-style="primary"] {
+  border-bottom: none;
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+  background-image:
+    linear-gradient(var(--guide-soft-color), var(--guide-soft-color)),
+    linear-gradient(var(--guide-soft-color), var(--guide-soft-color)),
+    linear-gradient(var(--guide-soft-color), var(--guide-soft-color));
+  /* Keep all guide lines light so stacked rows don't read as separators. */
+  background-size: 100% 1px, 100% 1px, 100% 1px;
+  background-position: 0 30%, 0 58%, 0 86%;
+  background-origin: content-box;
+  background-clip: content-box;
 }
 
 .trace-dots {
-  font-family: "Playwrite NZ Basic Guides", "Avenir Next", "Segoe UI", Arial, sans-serif !important;
+  font-family: var(--trace-font-family), "Avenir Next", "Segoe UI", Arial, sans-serif !important;
   font-size: 2.35rem;
   font-weight: 400;
   letter-spacing: 0.03rem;
   line-height: 1.25;
   color: #6b7280;
-  opacity: 0.9;
+  opacity: var(--trace-opacity);
   transform: translateY(0);
 }
 

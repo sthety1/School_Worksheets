@@ -1,18 +1,137 @@
-# React + Vite
+# School Worksheets (Kindergarten Worksheet Generator)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A parent-friendly web app that generates **printable kindergarten worksheets** (8.5" x 11") in a clean black‑and‑white format. Built with **React + Vite + Tailwind**, with a strong focus on print output and regression testing.
 
-Currently, two official plugins are available:
+## What it does
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Generate **single worksheets** or **weekly packets (5 pages)**.
+- Print directly, **download a PDF**, or use the browser print dialog to **Save as PDF**.
+- Supports a child name at the top of every page.
+- Uses handwriting-style tracing text designed for pencil tracing.
 
-## React Compiler
+## Worksheet types included
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Number tracing
+- Counting objects
+- Letter tracing (uppercase + lowercase)
+- Sight word tracing
+- Name writing practice
+- Shapes recognition
+- Beginning addition
+- Beginning subtraction
+- Ten-frames
+- CVC words
+- Sentence tracing
+- Patterns
+- Matching pictures/words
+- Beginning sounds / phonics
+- Color by number
 
-## Expanding the ESLint configuration
+## Key features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# School_Worksheets
-# School_Worksheets
+### Phase 1 — Instructional Foundations
+
+- Worksheet-specific instruction text under each title
+- Skill presets: **Pre‑K / K Early / K Mid / K End**
+- Writing/tracing areas designed for early learners
+- Type-aware maximum problem safeguards
+
+### Phase 2 — Content & Curriculum Quality
+
+- Sight word sources:
+  - Dolch Pre‑Primer
+  - Dolch Primer
+  - Fry Top 100 (starter set)
+  - Custom word list input
+  - Mixed random phonics
+- “No-repeat” memory to reduce immediate repeats across generations
+- Consistent black‑and‑white theme badge/icons
+- “Reshuffle problems” without changing settings
+
+### Phase 3 — Parent Workflow & Packaging
+
+- Weekly packet mode (multi-page) with templates:
+  - Mixed Review
+  - Handwriting Focus
+  - Math Focus
+- Child profile save/load/delete (name, level, theme, word source, packet template)
+- Print overflow warnings for packet pages (when a page looks too tall)
+
+### Phase 4 — Reliability & Engineering Hardening
+
+- Refactored generator + validation into dedicated modules
+- Settings validation using **zod**
+- Deterministic generation when seeded (stable regression behavior)
+- Regression tests (unit + UI)
+- Snapshot-style print layout regression test
+
+### Phase 5 — Teacher tools
+
+- Optional answer key pages
+- Optional standards/skill tags
+- Editable instruction line + optional objective line
+
+### Phase 6 — Handwriting paper options
+
+- Paper style selector (baseline / primary / wide ruled / blank)
+- Tracing opacity slider
+- Tracing font selector (Playwrite / system)
+
+### Phase 9 — UX polish
+
+- Dedicated Print Preview mode
+- Packet page reroll controls
+- Import/export child profiles as JSON
+- Combined packet PDF export (one file)
+
+## Project structure
+
+- `src/AppNew.jsx`: main UI (single worksheet + packet mode)
+- `src/worksheetEngine.js`: generator logic + deterministic RNG + word lists
+- `src/worksheetSchema.js`: zod schemas for generator/settings validation
+- `src/packetTemplates.js`: packet templates + packet config builder
+- `src/index.css`: print sizing and worksheet styling (Letter paper, page breaks)
+- `src/test/`: regression tests (engine/UI/snapshot)
+- `WORKSHEET_ROADMAP.md`: roadmap and progress tracker
+
+## Getting started
+
+### Install
+
+```bash
+npm install
+```
+
+### Run locally
+
+```bash
+npm run dev
+```
+
+### Build for production
+
+```bash
+npm run build
+```
+
+### Run tests
+
+```bash
+npm run test
+```
+
+### Run lint
+
+```bash
+npm run lint
+```
+
+## Printing tips
+
+- Use **Print** and set scale to **100%** if possible.
+- To export a PDF via the browser dialog, click **Save as PDF** and choose **Save as PDF** in the print destination dialog.
+- In packet mode, each worksheet is its own printable page (automatic page breaks).
+
+## Notes
+
+- If you add external fonts/icons, verify licensing before redistribution.

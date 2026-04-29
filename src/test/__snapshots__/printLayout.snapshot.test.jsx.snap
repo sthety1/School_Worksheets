@@ -4,6 +4,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
 <section
   class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
   data-page="worksheet"
+  style="--trace-opacity: 0.9; --trace-font-family: "Playwrite NZ Basic Guides";"
 >
   <header
     class="mb-8 border-b border-slate-300 pb-4"
@@ -21,58 +22,17 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
     <div
       class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
     >
-      <svg
+      <img
+        alt=""
         aria-hidden="true"
-        class="h-5 w-5"
-        viewBox="0 0 40 40"
-      >
-        <circle
-          cx="10"
-          cy="10"
-          fill="none"
-          r="4"
-          stroke="black"
-          stroke-width="2"
-        />
-        <circle
-          cx="30"
-          cy="10"
-          fill="none"
-          r="4"
-          stroke="black"
-          stroke-width="2"
-        />
-        <circle
-          cx="20"
-          cy="17"
-          fill="none"
-          r="5"
-          stroke="black"
-          stroke-width="2"
-        />
-        <ellipse
-          cx="13"
-          cy="28"
-          fill="none"
-          rx="5"
-          ry="6"
-          stroke="black"
-          stroke-width="2"
-        />
-        <ellipse
-          cx="27"
-          cy="28"
-          fill="none"
-          rx="5"
-          ry="6"
-          stroke="black"
-          stroke-width="2"
-        />
-      </svg>
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
       <span
         class="capitalize"
       >
-        animals
+        dogs
          theme
       </span>
     </div>
@@ -87,7 +47,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       Name:
        
       <span
-        class="inline-block min-w-64 border-b-2 border-dotted border-black"
+        class="inline-block min-w-64 border-b-2 border-solid border-black"
       >
         ________________
       </span>
@@ -117,87 +77,16 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
-        6
+        11
       </span>
       <span
         class="handwriting-guide"
+        data-paper-style="baseline"
       >
         <span
           class="trace-text trace-dots"
         >
-          6 6 6 6 6
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        4
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          4 4 4 4 4
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        10
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          10 10 10 10 10
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        9
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          9 9 9 9 9
-        </span>
-      </span>
-    </div>
-    <div
-      class="trace-row"
-    >
-      <span
-        class="text-3xl font-bold"
-      >
-        3
-      </span>
-      <span
-        class="handwriting-guide"
-      >
-        <span
-          class="trace-text trace-dots"
-        >
-          3 3 3 3 3
+          11 11 11 11 11
         </span>
       </span>
     </div>
@@ -211,6 +100,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       </span>
       <span
         class="handwriting-guide"
+        data-paper-style="baseline"
       >
         <span
           class="trace-text trace-dots"
@@ -229,6 +119,7 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       </span>
       <span
         class="handwriting-guide"
+        data-paper-style="baseline"
       >
         <span
           class="trace-text trace-dots"
@@ -243,10 +134,219 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
       <span
         class="text-3xl font-bold"
       >
+        1
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          1 1 1 1 1
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        4
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          4 4 4 4 4
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        5
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          5 5 5 5 5
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        10
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          10 10 10 10 10
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        3
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          3 3 3 3 3
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        9
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          9 9 9 9 9
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        12
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          12 12 12 12 12
+        </span>
+      </span>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`print layout snapshots > single worksheet page renders standards tags when enabled 1`] = `
+<section
+  class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+  data-page="worksheet"
+  style="--trace-opacity: 0.9; --trace-font-family: "Playwrite NZ Basic Guides";"
+>
+  <header
+    class="mb-8 border-b border-slate-300 pb-4"
+  >
+    <p
+      class="text-sm uppercase tracking-widest text-slate-500"
+    >
+      Printable Kindergarten Worksheet
+    </p>
+    <h2
+      class="text-4xl font-black"
+    >
+      Number Tracing (1-20)
+    </h2>
+    <div
+      class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
+      <span
+        class="capitalize"
+      >
+        dogs
+         theme
+      </span>
+    </div>
+    <p
+      class="mt-2 text-base"
+    >
+      Trace each number with your pencil. Say each number aloud as you write.
+    </p>
+    <p
+      class="mt-2 text-xl"
+    >
+      Name:
+       
+      <span
+        class="inline-block min-w-64 border-b-2 border-solid border-black"
+      >
+        ________________
+      </span>
+    </p>
+  </header>
+  <div
+    class="mb-4 flex items-center gap-2 print:hidden"
+  >
+    <button
+      class="action-btn-secondary"
+      type="button"
+    >
+      Reshuffle Problems
+    </button>
+    <span
+      class="text-xs text-slate-500"
+    >
+      Keeps settings, refreshes worksheet content only.
+    </span>
+  </div>
+  <div
+    class="space-y-3"
+  >
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
         11
       </span>
       <span
         class="handwriting-guide"
+        data-paper-style="baseline"
       >
         <span
           class="trace-text trace-dots"
@@ -255,6 +355,193 @@ exports[`print layout snapshots > single worksheet page renders consistently 1`]
         </span>
       </span>
     </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        7
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          7 7 7 7 7
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        8
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          8 8 8 8 8
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        1
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          1 1 1 1 1
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        4
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          4 4 4 4 4
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        5
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          5 5 5 5 5
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        10
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          10 10 10 10 10
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        3
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          3 3 3 3 3
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        9
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          9 9 9 9 9
+        </span>
+      </span>
+    </div>
+    <div
+      class="trace-row"
+    >
+      <span
+        class="text-3xl font-bold"
+      >
+        12
+      </span>
+      <span
+        class="handwriting-guide"
+        data-paper-style="baseline"
+      >
+        <span
+          class="trace-text trace-dots"
+        >
+          12 12 12 12 12
+        </span>
+      </span>
+    </div>
   </div>
+  <footer
+    class="mt-6 border-t border-slate-300 pt-2 text-xs text-slate-700 print:text-black"
+  >
+    <span
+      class="font-semibold"
+    >
+      Standards:
+    </span>
+     
+    K.CC.A.3
+  </footer>
 </section>
+`;
+
+exports[`print layout snapshots > single worksheet renders answer key page when enabled 1`] = `
+"<section class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none" data-page="worksheet" style="--trace-opacity: 0.9; --trace-font-family: &quot;Playwrite NZ Basic Guides&quot;;"><header class="mb-8 border-b border-slate-300 pb-4"><p class="text-sm uppercase tracking-widest text-slate-500">Printable Kindergarten Worksheet</p><h2 class="text-4xl font-black">Beginning Addition</h2><div class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"><img alt="" aria-hidden="true" class="h-5 w-5 object-contain" draggable="false" src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"><span class="capitalize">dogs theme</span></div><p class="mt-2 text-base">Solve each addition problem. Use your fingers or draw dots if needed.</p><p class="mt-2 text-xl">Name: <span class="inline-block min-w-64 border-b-2 border-solid border-black">________________</span></p></header><div class="mb-4 flex items-center gap-2 print:hidden"><button type="button" class="action-btn-secondary">Reshuffle Problems</button><span class="text-xs text-slate-500">Keeps settings, refreshes worksheet content only.</span></div><div class="grid grid-cols-2 gap-x-8 gap-y-4"><div class="text-2xl">5 + 2 = __</div><div class="text-2xl">3 + 2 = __</div><div class="text-2xl">3 + 5 = __</div><div class="text-2xl">3 + 5 = __</div><div class="text-2xl">5 + 1 = __</div><div class="text-2xl">2 + 2 = __</div><div class="text-2xl">4 + 1 = __</div><div class="text-2xl">4 + 1 = __</div><div class="text-2xl">2 + 3 = __</div><div class="text-2xl">4 + 4 = __</div></div></section>
+<section class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none" data-page="worksheet" style="--trace-opacity: 0.9; --trace-font-family: &quot;Playwrite NZ Basic Guides&quot;;"><header class="mb-8 border-b border-slate-300 pb-4"><p class="text-sm uppercase tracking-widest text-slate-500">Answer Key</p><h2 class="text-4xl font-black">Beginning Addition — Answer Key</h2></header><div class="grid grid-cols-2 gap-x-8 gap-y-4"><div class="text-2xl">5 + 2 = <span class="font-bold">7</span></div><div class="text-2xl">3 + 2 = <span class="font-bold">5</span></div><div class="text-2xl">3 + 5 = <span class="font-bold">8</span></div><div class="text-2xl">3 + 5 = <span class="font-bold">8</span></div><div class="text-2xl">5 + 1 = <span class="font-bold">6</span></div><div class="text-2xl">2 + 2 = <span class="font-bold">4</span></div><div class="text-2xl">4 + 1 = <span class="font-bold">5</span></div><div class="text-2xl">4 + 1 = <span class="font-bold">5</span></div><div class="text-2xl">2 + 3 = <span class="font-bold">5</span></div><div class="text-2xl">4 + 4 = <span class="font-bold">8</span></div></div></section>"
 `;

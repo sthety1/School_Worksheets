@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Temporary SVG download scratch space
+tmp_svgs/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

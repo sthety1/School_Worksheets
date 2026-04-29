@@ -8,12 +8,18 @@ export const worksheetTypeEnum = z.enum([
   'nameWriting',
   'shapes',
   'addition',
+  'subtraction',
   'matching',
   'phonics',
   'colorByNumber',
+  'tenFrames',
+  'cvcWords',
+  'sentenceTracing',
+  'patterns',
 ])
 
-export const themeEnum = z.enum(['animals', 'princesses', 'cars', 'dinosaurs', 'unicorns'])
+// Keep 'animals' for backwards compatibility with saved profiles.
+export const themeEnum = z.enum(['dogs', 'cats', 'animals', 'princesses', 'cars', 'dinosaurs', 'unicorns'])
 
 export const skillLevelEnum = z.enum(['preK', 'kEarly', 'kMid', 'kEnd'])
 
@@ -41,6 +47,11 @@ export const worksheetConfigSchema = z.object({
   skillLevel: skillLevelEnum,
   sightWordSource: sightWordSourceEnum,
   customWordList: z.string().default(''),
+  instructionOverride: z.string().optional().default(''),
+  objectiveOverride: z.string().optional().default(''),
+  paperStyle: z.enum(['baseline', 'primary', 'wideRuled', 'blank']).optional().default('baseline'),
+  traceOpacity: z.number().min(0.2).max(1).optional().default(0.9),
+  traceFont: z.enum(['playwrite', 'system']).optional().default('playwrite'),
 })
 
 export const generatorInputSchema = worksheetConfigSchema.extend({
