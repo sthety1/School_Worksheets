@@ -11,6 +11,7 @@ import { ThemeIcon } from './themeIcons'
 import { buildPdfPages } from './pdf/pdfModel'
 import { WorksheetPdfDocument } from './pdf/worksheetPdf'
 import { downloadPdfDocument } from './pdf/downloadPdf'
+import { recommendPlacementPreset } from './placement'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -477,6 +478,15 @@ export default function AppNew() {
   const [packetWarnings, setPacketWarnings] = useState([])
   const [packetPageRerolls, setPacketPageRerolls] = useState([])
 
+  const [placementScores, setPlacementScores] = useState({
+    letterTracing: 0,
+    phonics: 0,
+    countingObjects: 0,
+    numberTracing: 0,
+    addition: 0,
+    extra: 0,
+  })
+
   const [generationId, setGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
 
@@ -510,17 +520,19 @@ export default function AppNew() {
   }, [config.objectiveOverride, config.type])
   const maxProblems = useMemo(() => getMaxProblems(config.type), [config.type])
 
-  const updateWithPreset = (nextType, nextSkill) => {
+  const buildConfigWithPreset = (currentConfig, nextType, nextSkill) => {
     const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
     const suggestedProblems = getPresetProblems(nextType, nextSkill)
     return {
-      ...config,
+      ...currentConfig,
       type: nextType,
       skillLevel: nextSkill,
       difficulty: profile.difficulty,
       problems: Math.min(suggestedProblems, getMaxProblems(nextType)),
     }
   }
+
+  const placementRecommendation = useMemo(() => recommendPlacementPreset(placementScores), [placementScores])
 
   const handleGenerate = () => {
     const memoryPatch = { ...recentMemory }
@@ -603,9 +615,7 @@ export default function AppNew() {
       const doc = <WorksheetPdfDocument pages={pages} filenameLabel={filename} />
       await downloadPdfDocument({ doc, filename })
       setStatusMessage('PDF downloaded.')
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err)
+    } catch {
       setStatusMessage('Could not generate PDF. Use Print → Save as PDF as a fallback.')
     }
   }
@@ -798,7 +808,7 @@ export default function AppNew() {
               <select
                 className="control-input"
                 value={config.type}
-                onChange={(e) => setConfig(updateWithPreset(e.target.value, config.skillLevel))}
+                onChange={(e) => setConfig((prev) => buildConfigWithPreset(prev, e.target.value, prev.skillLevel))}
                 disabled={mode === 'packet'}
               >
                 {worksheetTypes.map((type) => (
@@ -814,7 +824,7 @@ export default function AppNew() {
               <select
                 className="control-input"
                 value={config.skillLevel}
-                onChange={(e) => setConfig(updateWithPreset(config.type, e.target.value))}
+                onChange={(e) => setConfig((prev) => buildConfigWithPreset(prev, prev.type, e.target.value))}
               >
                 {skillPresets.map((preset) => (
                   <option key={preset.value} value={preset.value}>
@@ -823,6 +833,126 @@ export default function AppNew() {
                 ))}
               </select>
             </label>
+
+            {mode === 'packet' && packetTemplate === 'placement' && (
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Placement</p>
+                <p className="mt-1 text-xs text-slate-600">
+                  Generate the packet, have your child complete it, then enter scores (0–5) to get a recommended preset.
+                </p>
+
+                <div className="mt-3 grid grid-cols-2 gap-2">
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Letter tracing
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.letterTracing}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, letterTracing: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Phonics
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.phonics}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, phonics: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Counting
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.countingObjects}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, countingObjects: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Number tracing
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.numberTracing}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, numberTracing: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Addition
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.addition}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, addition: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Optional extra
+                    <input
+                      className="mt-1 w-full rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm"
+                      type="number"
+                      min="0"
+                      max="5"
+                      value={placementScores.extra}
+                      onChange={(e) =>
+                        setPlacementScores((prev) => ({ ...prev, extra: Math.max(0, Math.min(5, Number(e.target.value))) }))
+                      }
+                    />
+                  </label>
+                </div>
+
+                <div className="mt-3 rounded-lg border border-slate-200 bg-white p-3">
+                  <p className="text-xs font-bold text-slate-700">Recommended preset: {placementRecommendation.label}</p>
+                  <p className="mt-1 text-xs text-slate-600">{placementRecommendation.explanation}</p>
+                  <div className="mt-2 grid grid-cols-2 gap-2">
+                    <button
+                      type="button"
+                      className="action-btn-secondary"
+                      onClick={() => setConfig((prev) => buildConfigWithPreset(prev, prev.type, placementRecommendation.preset))}
+                    >
+                      Apply recommendation
+                    </button>
+                    <button
+                      type="button"
+                      className="action-btn-secondary"
+                      onClick={() =>
+                        setPlacementScores({
+                          letterTracing: 0,
+                          phonics: 0,
+                          countingObjects: 0,
+                          numberTracing: 0,
+                          addition: 0,
+                          extra: 0,
+                        })
+                      }
+                    >
+                      Reset scores
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <label className="control-label">
               Number of Problems
@@ -1011,7 +1141,7 @@ export default function AppNew() {
               </button>
             ) : (
               <button type="button" className="action-btn" onClick={handleGeneratePacket}>
-                Generate Weekly Packet
+                {packetTemplate === 'placement' ? 'Generate Placement Packet' : 'Generate Weekly Packet'}
               </button>
             )}
             <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print Worksheet</button>

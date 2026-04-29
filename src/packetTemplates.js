@@ -4,12 +4,14 @@ export const packetTemplates = [
   { value: 'mixed', label: 'Mixed Review (5 pages)' },
   { value: 'handwriting', label: 'Handwriting Focus (5 pages)' },
   { value: 'math', label: 'Math Focus (5 pages)' },
+  { value: 'placement', label: 'Placement Packet (5 pages)' },
 ]
 
 export const packetTemplateToTypes = {
   mixed: ['letterTracing', 'numberTracing', 'sightWords', 'addition', 'phonics'],
   handwriting: ['letterTracing', 'sightWords', 'nameWriting', 'shapes', 'phonics'],
   math: ['numberTracing', 'countingObjects', 'addition', 'colorByNumber', 'matching'],
+  placement: ['letterTracing', 'phonics', 'countingObjects', 'numberTracing', 'addition'],
 }
 
 export const buildPacketConfigs = ({ baseConfig, template, pageCount = 5, getPresetProblems }) => {

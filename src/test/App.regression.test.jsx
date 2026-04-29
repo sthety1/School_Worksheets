@@ -86,6 +86,33 @@ describe('app regression coverage', () => {
     expect(pages.length).toBe(5)
   })
 
+  test('placement flow recommends a preset and can apply it', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.selectOptions(screen.getByLabelText('Packet Template'), 'placement')
+    await user.click(screen.getByRole('button', { name: 'Generate Placement Packet' }))
+
+    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
+
+    await user.clear(screen.getByLabelText('Letter tracing'))
+    await user.type(screen.getByLabelText('Letter tracing'), '0')
+    await user.clear(screen.getByLabelText('Phonics'))
+    await user.type(screen.getByLabelText('Phonics'), '0')
+    await user.clear(screen.getByLabelText('Counting'))
+    await user.type(screen.getByLabelText('Counting'), '0')
+    await user.clear(screen.getByLabelText('Number tracing'))
+    await user.type(screen.getByLabelText('Number tracing'), '0')
+    await user.clear(screen.getByLabelText('Addition'))
+    await user.type(screen.getByLabelText('Addition'), '0')
+
+    expect(screen.getByText(/Recommended preset: Pre-K/)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Apply recommendation' }))
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('preK')
+  })
+
   test('print preview mode hides sidebar and can exit', async () => {
     const user = userEvent.setup()
     render(<App />)
