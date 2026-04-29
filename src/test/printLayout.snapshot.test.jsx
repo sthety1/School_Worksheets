@@ -20,7 +20,7 @@ describe('print layout snapshots', () => {
     const problemsInput = container.querySelector('input[type="number"]')
     expect(problemsInput).toBeTruthy()
     fireEvent.change(problemsInput, { target: { value: 10 } })
-    fireEvent.click(screen.getByLabelText('Show standards tags'))
+    fireEvent.click(screen.getByLabelText('Show Common Core standard codes on the page'))
     const page = container.querySelector('[data-page="worksheet"]')
     expect(page).toBeTruthy()
     expect(page).toMatchSnapshot()
@@ -29,7 +29,7 @@ describe('print layout snapshots', () => {
   test('single worksheet renders answer key page when enabled', () => {
     const { container } = render(<App />)
     fireEvent.change(screen.getByLabelText('Skill Preset'), { target: { value: 'kEarly' } })
-    fireEvent.click(screen.getByLabelText('Show answer key'))
+    fireEvent.click(screen.getByLabelText('Include answer key on screen and when printing'))
     fireEvent.change(screen.getByLabelText('Worksheet Type'), { target: { value: 'addition' } })
     const problemsInput = container.querySelector('input[type="number"]')
     expect(problemsInput).toBeTruthy()

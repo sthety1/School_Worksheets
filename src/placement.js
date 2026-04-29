@@ -29,7 +29,9 @@ export function recommendPlacementPreset(scores) {
   else if (total <= 22) preset = 'kMid'
 
   const label = presetLabel(preset)
-  const explanation = `Total ${total}/30. Literacy ${literacy}/10, Math ${math}/15${extra ? `, Extra ${extra}/5` : ''}.`
+  const explanation = `Your scores add up to ${total} out of 30 (about ${literacy}/10 for reading routines, ${math}/15 for number work${
+    extra ? `, plus ${extra}/5 optional` : ''
+  }). Higher totals usually mean your child may be comfortable starting on a slightly higher preset.`
 
   return { preset, label, explanation, total, literacy, math, extra }
 }

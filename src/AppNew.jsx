@@ -79,6 +79,8 @@ const getPresetProblems = (type, skillLevel) => problemPlanByType[type]?.[skillL
 
 const RECENT_MEMORY_KEY = 'worksheet_recent_memory_v1'
 const PROFILES_KEY = 'worksheet_child_profiles_v1'
+const UI_HINTS_KEY = 'worksheet_ui_hints_v1'
+const LAST_PACKET_KEY = 'worksheet_last_packet_v1'
 
 const readJsonFromStorage = (key, fallback) => {
   try {
@@ -679,6 +681,9 @@ export default function AppNew() {
   const [generationId, setGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
 
+  const [uiHints, setUiHints] = useState(() => readJsonFromStorage(UI_HINTS_KEY, { packetFlowDismissed: false }))
+  const [lastPacketSnapshot, setLastPacketSnapshot] = useState(() => readJsonFromStorage(LAST_PACKET_KEY, null))
+
   const [recentMemory, setRecentMemory] = useState(() => {
     const parsed = readJsonFromStorage(RECENT_MEMORY_KEY, {})
     return {
@@ -721,6 +726,64 @@ export default function AppNew() {
     }
   }
 
+  const dismissPacketFlowHint = () => {
+    setUiHints((prev) => {
+      const next = { ...prev, packetFlowDismissed: true }
+      writeJsonToStorage(UI_HINTS_KEY, next)
+      return next
+    })
+  }
+
+  const handleResetRecommendedDefaults = () => {
+    setConfig((prev) => {
+      const next = buildConfigWithPreset(prev, prev.type, prev.skillLevel)
+      return {
+        ...next,
+        instructionOverride: '',
+        objectiveOverride: '',
+      }
+    })
+    setStatusMessage('Restored recommended problem count and defaults for this worksheet type and preset.')
+  }
+
+  const handleJumpToPrintPreview = () => {
+    setPrintPreviewMode(true)
+    setStatusMessage('Print preview opened—use Print, Save as PDF, or Download when ready.')
+  }
+
+  const handleRestoreLastPacketSettings = () => {
+    if (!lastPacketSnapshot || typeof lastPacketSnapshot !== 'object') return
+    const pt = lastPacketSnapshot.packetTemplate
+    const toggles = lastPacketSnapshot.toggles ?? {}
+    const base = lastPacketSnapshot.base
+    setMode('packet')
+    if (typeof pt === 'string') setPacketTemplate(pt)
+    if (typeof toggles.showAnswerKey === 'boolean') setShowAnswerKey(toggles.showAnswerKey)
+    if (typeof toggles.showStandardsTags === 'boolean') setShowStandardsTags(toggles.showStandardsTags)
+    if (typeof toggles.showObjectiveLine === 'boolean') setShowObjectiveLine(toggles.showObjectiveLine)
+
+    setConfig((prev) => {
+      if (!base || typeof base !== 'object') return prev
+      const nextType = typeof base.type === 'string' ? base.type : prev.type
+      const nextSkill = typeof base.skillLevel === 'string' ? base.skillLevel : prev.skillLevel
+      const cap = getMaxProblems(nextType)
+      const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
+      return {
+        ...prev,
+        ...base,
+        type: nextType,
+        skillLevel: nextSkill,
+        difficulty: profile.difficulty,
+        problems: Math.max(4, Math.min(Number(base.problems) || getPresetProblems(nextType, nextSkill), cap)),
+      }
+    })
+
+    setPacketPages([])
+    setPacketWarnings([])
+    setPacketPageRerolls([])
+    setStatusMessage('Restored settings from your last generated packet. Click Generate to build new pages.')
+  }
+
   const placementRecommendation = useMemo(() => recommendPlacementPreset(placementScores), [placementScores])
 
   const handleGenerate = () => {
@@ -747,6 +810,31 @@ export default function AppNew() {
     setPacketPageRerolls(Array.from({ length: pages.length }, () => 0))
     setMode('packet')
     setPacketWarnings([])
+    const snapshot = {
+      packetTemplate,
+      toggles: {
+        showAnswerKey,
+        showStandardsTags,
+        showObjectiveLine,
+      },
+      base: {
+        type: config.type,
+        skillLevel: config.skillLevel,
+        difficulty: config.difficulty,
+        problems: config.problems,
+        theme: config.theme,
+        childName: config.childName,
+        sightWordSource: config.sightWordSource,
+        customWordList: config.customWordList,
+        paperStyle: config.paperStyle,
+        traceOpacity: config.traceOpacity,
+        traceFont: config.traceFont,
+        instructionOverride: config.instructionOverride,
+        objectiveOverride: config.objectiveOverride,
+      },
+    }
+    setLastPacketSnapshot(snapshot)
+    writeJsonToStorage(LAST_PACKET_KEY, snapshot)
     setStatusMessage('Packet generated.')
   }
 
@@ -992,6 +1080,20 @@ export default function AppNew() {
               </label>
             )}
 
+            {mode === 'packet' && !uiHints.packetFlowDismissed && (
+              <div className="rounded-xl border border-sky-200 bg-sky-50 p-3 text-sm text-slate-800">
+                <p className="font-bold text-sky-900">Weekly packet — three quick steps</p>
+                <ol className="mt-2 list-decimal space-y-1 pl-5 text-slate-700">
+                  <li>Choose a template above (mixed review, math focus, and more).</li>
+                  <li>Click Generate to build five pages in the preview area.</li>
+                  <li>Open Print Preview, then Print or Download PDF for the full stack.</li>
+                </ol>
+                <button type="button" className="mt-3 text-xs font-bold text-sky-900 underline" onClick={dismissPacketFlowHint}>
+                  Got it, hide this tip
+                </button>
+              </div>
+            )}
+
             <label className="control-label">
               Worksheet Type
               <select
@@ -1025,9 +1127,10 @@ export default function AppNew() {
 
             {mode === 'packet' && packetTemplate === 'placement' && (
               <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Placement</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Placement check</p>
                 <p className="mt-1 text-xs text-slate-600">
-                  Generate the packet, have your child complete it, then enter scores (0–5) to get a recommended preset.
+                  Print the packet and let your child work through it. Then, for each row below, enter a score from 0 (not yet) to
+                  5 (strong). We add the scores to suggest a good starting skill preset—no grading rubric required.
                 </p>
 
                 <div className="mt-3 grid grid-cols-2 gap-2">
@@ -1112,7 +1215,7 @@ export default function AppNew() {
                 </div>
 
                 <div className="mt-3 rounded-lg border border-slate-200 bg-white p-3">
-                  <p className="text-xs font-bold text-slate-700">Recommended preset: {placementRecommendation.label}</p>
+                  <p className="text-xs font-bold text-slate-700">Suggested starting preset: {placementRecommendation.label}</p>
                   <p className="mt-1 text-xs text-slate-600">{placementRecommendation.explanation}</p>
                   <div className="mt-2 grid grid-cols-2 gap-2">
                     <button
@@ -1120,7 +1223,7 @@ export default function AppNew() {
                       className="action-btn-secondary"
                       onClick={() => setConfig((prev) => buildConfigWithPreset(prev, prev.type, placementRecommendation.preset))}
                     >
-                      Apply recommendation
+                      Use this preset
                     </button>
                     <button
                       type="button"
@@ -1209,25 +1312,26 @@ export default function AppNew() {
             )}
 
             <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Teacher tools</p>
+              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Printing &amp; curriculum</p>
+              <p className="mt-1 text-xs text-slate-600">Optional—turn on only when you want parents or co-teachers to see extras.</p>
               <label className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold">
-                <span>Show answer key</span>
+                <span className="pr-2">Include answer key (on screen and when printing)</span>
                 <input
                   type="checkbox"
-                  aria-label="Show answer key"
+                  aria-label="Include answer key on screen and when printing"
                   checked={showAnswerKey}
                   onChange={(e) => setShowAnswerKey(e.target.checked)}
-                  className="h-4 w-4 accent-slate-900"
+                  className="h-4 w-4 shrink-0 accent-slate-900"
                 />
               </label>
               <label className="mt-2 flex items-center justify-between gap-3 text-sm font-semibold">
-                <span>Show standards tags</span>
+                <span className="pr-2">Show standard codes (Common Core labels on the page)</span>
                 <input
                   type="checkbox"
-                  aria-label="Show standards tags"
+                  aria-label="Show Common Core standard codes on the page"
                   checked={showStandardsTags}
                   onChange={(e) => setShowStandardsTags(e.target.checked)}
-                  className="h-4 w-4 accent-slate-900"
+                  className="h-4 w-4 shrink-0 accent-slate-900"
                 />
               </label>
               <label className="mt-3 block text-sm font-semibold">
@@ -1248,13 +1352,13 @@ export default function AppNew() {
               </button>
 
               <label className="mt-3 flex items-center justify-between gap-3 text-sm font-semibold">
-                <span>Show objective line</span>
+                <span className="pr-2">Show learning goal line (“I can…”)</span>
                 <input
                   type="checkbox"
-                  aria-label="Show objective line"
+                  aria-label="Show learning goal line under the instructions"
                   checked={showObjectiveLine}
                   onChange={(e) => setShowObjectiveLine(e.target.checked)}
-                  className="h-4 w-4 accent-slate-900"
+                  className="h-4 w-4 shrink-0 accent-slate-900"
                 />
               </label>
               {showObjectiveLine && (
@@ -1342,6 +1446,31 @@ export default function AppNew() {
               Print Preview
             </button>
           </div>
+
+          <div className="mt-4 rounded-xl border border-slate-200 bg-white p-3">
+            <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Quick actions</p>
+            <div className="mt-3 flex flex-col gap-2">
+              <button type="button" className="action-btn-secondary text-sm" onClick={handleResetRecommendedDefaults}>
+                Reset worksheet to recommended defaults
+              </button>
+              <button type="button" className="action-btn-secondary text-sm" onClick={handleJumpToPrintPreview}>
+                Jump to print preview
+              </button>
+              <button
+                type="button"
+                className="action-btn-secondary text-sm"
+                disabled={!lastPacketSnapshot}
+                onClick={handleRestoreLastPacketSettings}
+              >
+                Use last packet settings
+              </button>
+            </div>
+            <p className="mt-2 text-xs text-slate-500">
+              Reset clears custom instruction text and puts the problem count back in line with the skill preset.
+              Last packet restores template and options from your most recently generated weekly packet (not placement).
+            </p>
+          </div>
+
           {statusMessage && <p className="mt-3 text-xs font-semibold text-slate-600">{statusMessage}</p>}
 
           <div className="mt-6">
@@ -1452,9 +1581,31 @@ export default function AppNew() {
         ) : (
           <div ref={packetContainerRef} className="space-y-6 print:space-y-0">
             {packetPages.length === 0 && (
-              <div className="rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:hidden">
-                <p className="text-lg font-semibold">Generate a packet to preview pages here.</p>
-                <p className="mt-1 text-sm text-slate-600">Choose a template, then click “Generate Weekly Packet”.</p>
+              <div className="rounded-xl border border-dashed border-slate-300 bg-white p-8 shadow-sm print:hidden">
+                <h3 className="text-lg font-bold text-slate-900">No packet in the preview yet</h3>
+                <p className="mt-2 text-sm text-slate-600">
+                  Each weekly packet builds five themed pages—letters, math, phonics—using your preset and theme selected in the left panel.
+                </p>
+                <ol className="mt-4 list-decimal space-y-2 pl-5 text-sm text-slate-800">
+                  <li>Pick a packet template above (try <strong>Mixed review</strong> for variety).</li>
+                  <li>Click <strong>Generate Weekly Packet</strong> (or Generate Placement Packet for the placement flow).</li>
+                  <li>Scroll this area to review every page, then use <strong>Print Preview</strong>, <strong>Print</strong>, or{' '}
+                  <strong>Download PDF</strong>.</li>
+                </ol>
+                <div className="mt-5 flex flex-wrap gap-2 print:hidden">
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('mixed')}>
+                    Use Mixed Review template
+                  </button>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('math')}>
+                    Use Math Focus template
+                  </button>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('handwriting')}>
+                    Use Handwriting Focus template
+                  </button>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={handleJumpToPrintPreview}>
+                    Jump to print preview
+                  </button>
+                </div>
               </div>
             )}
             {packetPages.map((pageConfig, idx) => {

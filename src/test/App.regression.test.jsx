@@ -107,10 +107,26 @@ describe('app regression coverage', () => {
     await user.clear(screen.getByLabelText('Addition'))
     await user.type(screen.getByLabelText('Addition'), '0')
 
-    expect(screen.getByText(/Recommended preset: Pre-K/)).toBeInTheDocument()
+    expect(screen.getByText(/Suggested starting preset: Pre-K/)).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: 'Apply recommendation' }))
+    await user.click(screen.getByRole('button', { name: 'Use this preset' }))
     expect(screen.getByLabelText('Skill Preset')).toHaveValue('preK')
+  })
+
+  test('reset to recommended defaults restores suggested problem count', async () => {
+    const user = userEvent.setup()
+    const { container } = render(<App />)
+    const problemsInput = container.querySelector('input[type="number"]')
+    expect(problemsInput).toBeTruthy()
+    await user.clear(problemsInput)
+    await user.type(problemsInput, '4')
+    await user.click(screen.getByRole('button', { name: /Reset worksheet to recommended defaults/i }))
+    expect(container.querySelector('input[type="number"]')).toHaveValue(12)
+  })
+
+  test('use last packet settings starts disabled until a packet has been generated', () => {
+    render(<App />)
+    expect(screen.getByRole('button', { name: /Use last packet settings/i })).toBeDisabled()
   })
 
   test('print preview mode hides sidebar and can exit', async () => {
@@ -195,7 +211,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     expect(screen.queryByText(/Standards:/)).not.toBeInTheDocument()
-    await user.click(screen.getByLabelText('Show standards tags'))
+    await user.click(screen.getByLabelText('Show Common Core standard codes on the page'))
     expect(screen.getByText(/Standards:/)).toBeInTheDocument()
   })
 
@@ -204,7 +220,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'addition')
-    await user.click(screen.getByLabelText('Show answer key'))
+    await user.click(screen.getByLabelText('Include answer key on screen and when printing'))
 
     const pages = document.querySelectorAll('[data-page="worksheet"]')
     expect(pages.length).toBe(2)
@@ -216,7 +232,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'tenFrames')
-    await user.click(screen.getByLabelText('Show answer key'))
+    await user.click(screen.getByLabelText('Include answer key on screen and when printing'))
 
     const pages = document.querySelectorAll('[data-page="worksheet"]')
     expect(pages.length).toBe(2)
@@ -227,7 +243,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'cvcWords')
-    await user.click(screen.getByLabelText('Show answer key'))
+    await user.click(screen.getByLabelText('Include answer key on screen and when printing'))
 
     const pages = document.querySelectorAll('[data-page="worksheet"]')
     expect(pages.length).toBe(2)
@@ -238,7 +254,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'sentenceTracing')
-    await user.click(screen.getByLabelText('Show answer key'))
+    await user.click(screen.getByLabelText('Include answer key on screen and when printing'))
 
     const pages = document.querySelectorAll('[data-page="worksheet"]')
     expect(pages.length).toBe(1)
@@ -249,7 +265,7 @@ describe('app regression coverage', () => {
     render(<App />)
 
     await user.selectOptions(screen.getByLabelText('Worksheet Type'), 'patterns')
-    await user.click(screen.getByLabelText('Show answer key'))
+    await user.click(screen.getByLabelText('Include answer key on screen and when printing'))
 
     const pages = document.querySelectorAll('[data-page="worksheet"]')
     expect(pages.length).toBe(2)

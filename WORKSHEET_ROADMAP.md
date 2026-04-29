@@ -249,17 +249,17 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ---
 
-## Phase 12: Parent UX + Quality of Life (queued)
+## Phase 12: Parent UX + Quality of Life (complete)
 
 **Goal:** Reduce cognitive load for parents while keeping power-user controls discoverable but not noisy.
 
 ### Tasks
 
-- [ ] First-run / first-packet guided hints (short, dismissible) for: packet → preview → print/PDF
-- [ ] “Reset to recommended defaults” for the current worksheet type (undo manual tweaks safely)
-- [ ] Clearer empty states in packet preview (what to do next; common templates)
-- [ ] Quick actions: duplicate last packet settings, jump to print preview
-- [ ] Copy improvements: plainer language for teacher toggles and placement scoring
+- [x] First-run / first-packet guided hints (short, dismissible) for: packet → preview → print/PDF
+- [x] “Reset to recommended defaults” for the current worksheet type (undo manual tweaks safely)
+- [x] Clearer empty states in packet preview (what to do next; common templates)
+- [x] Quick actions: duplicate last packet settings, jump to print preview
+- [x] Copy improvements: plainer language for teacher toggles and placement scoring
 
 ### Acceptance Criteria
 
@@ -306,6 +306,7 @@ Use this section as our sprint tracker.
 - [x] Phase 1 / Handwriting guide lines
 - [x] Phase 10 / Assessment + placement packet + recommendation + tests
 - [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds; Subitizing; Measurement / Compare)
+- [x] Phase 12 / Parent UX + quality of life (hints, reset, packet empty state, quick actions, copy)
 
 ### Queued (After Phase 5 Stabilizes)
 
@@ -313,7 +314,7 @@ Use this section as our sprint tracker.
 - [x] Phase 8 / New worksheet types (subtraction, ten-frames, CVC, sentences, patterns)
 - [x] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
 - [x] Phase 11 / Next content expansion (Rhyme Match, Syllable Sort, Number Bonds + Subitizing + Measurement / Compare)
-- [ ] Phase 12 / Parent UX + quality of life
+- [x] Phase 12 / Parent UX + quality of life
 - [ ] Phase 13 / Engineering + reliability (CI smoke + performance hardening)
 
 ### Decisions Log
@@ -330,6 +331,7 @@ Use this section as our sprint tracker.
 - 2026-04-29: Prioritized next roadmap themes: **Phase 11 content expansion**, **Phase 12 parent UX/QoL**, then **Phase 13 engineering/reliability**.
 - 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots).
 - 2026-04-29: Completed Phase 11 second increment: **Subitizing (Quick-Look Dots)** and **Measurement / Compare** (word/label prompts; clipart-style pictures deferred).
+- 2026-04-29: Completed Phase 12 parent UX/QoL: dismissible weekly-packet tips, richer empty packet preview + template shortcuts, quick actions (reset to recommended defaults, jump to print preview, restore last packet snapshot from localStorage), clearer printing/placement copy, softer placement recommendation narration.
 
 ### Risks / Open Questions
 
