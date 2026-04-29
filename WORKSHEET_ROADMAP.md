@@ -22,8 +22,8 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Standards-based sight word sets
 - [x] Primary handwriting guide lines
 - [x] Regression test suite (core generation + UI actions)
-- [ ] Weekly packet workflow
-- [ ] Persistent child profiles
+- [x] Weekly packet workflow
+- [x] Persistent child profiles
 - [ ] Automated layout regression checks
 
 ---
@@ -83,10 +83,11 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ### Tasks
 
-- [ ] Build one-click weekly packet generator (mixed worksheet bundle)
-- [ ] Add packet templates (e.g., handwriting focus, math focus, mixed review)
-- [ ] Add child profile save/load (name, level, preferences)
-- [ ] Add print preview quality checks and overflow warnings
+- [x] Build one-click weekly packet generator (mixed worksheet bundle)
+- [x] Add packet templates (e.g., handwriting focus, math focus, mixed review)
+- [x] Add child profile save/load (name, level, preferences)
+- [x] Add print preview quality checks and overflow warnings
+- [x] Add Phase 3 regression tests (packet + profiles)
 
 ### Acceptance Criteria
 

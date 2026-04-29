@@ -147,4 +147,9 @@ body {
   body {
     background: white;
   }
+
+  [data-page="worksheet"] {
+    break-after: page;
+    page-break-after: always;
+  }
 }

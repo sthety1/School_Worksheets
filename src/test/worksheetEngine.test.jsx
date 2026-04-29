@@ -1,4 +1,5 @@
 import {
+  buildPacketConfigs,
   dolchPrePrimerWords,
   fryStarterWords,
   generateWorksheetData,
@@ -82,5 +83,29 @@ describe('worksheet engine regression', () => {
     const c = generateWorksheetData({ ...baseInput, seed: 43 })
     expect(a).toEqual(b)
     expect(a).not.toEqual(c)
+  })
+
+  test('buildPacketConfigs returns five type-rotated pages', () => {
+    const pages = buildPacketConfigs({
+      baseConfig: {
+        type: 'numberTracing',
+        problems: 8,
+        childName: 'Ava',
+        theme: 'animals',
+        skillLevel: 'kEarly',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+      template: 'mixed',
+      pageCount: 5,
+    })
+    expect(pages).toHaveLength(5)
+    expect(pages.map((p) => p.type)).toEqual([
+      'letterTracing',
+      'numberTracing',
+      'sightWords',
+      'addition',
+      'phonics',
+    ])
   })
 })

@@ -31,4 +31,37 @@ describe('app regression coverage', () => {
     expect(printSpy).toHaveBeenCalledTimes(1)
     printSpy.mockRestore()
   })
+
+  test('can save and load a child profile', async () => {
+    const user = userEvent.setup()
+    const store = new Map()
+    const originalLocalStorage = globalThis.localStorage
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: {
+        getItem: (k) => store.get(k) ?? null,
+        setItem: (k, v) => store.set(k, String(v)),
+        removeItem: (k) => store.delete(k),
+        clear: () => store.clear(),
+      },
+      configurable: true,
+    })
+
+    render(<App />)
+
+    await user.type(screen.getByLabelText('Child Name'), 'Ava')
+    await user.type(screen.getByLabelText('Profile name'), 'Ava (K Early)')
+    await user.click(screen.getByRole('button', { name: 'Save Profile' }))
+
+    // Clear current name to prove load works.
+    await user.clear(screen.getByLabelText('Child Name'))
+    expect(screen.getByLabelText('Child Name')).toHaveValue('')
+
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Ava (K Early)')
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Ava')
+
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: originalLocalStorage,
+      configurable: true,
+    })
+  })
 })

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -115,6 +115,19 @@ export const maxProblemsByType = {
   colorByNumber: 20,
 }
 const RECENT_MEMORY_KEY = 'worksheet_recent_memory_v1'
+const PROFILES_KEY = 'worksheet_child_profiles_v1'
+
+const packetTemplates = [
+  { value: 'mixed', label: 'Mixed Review (5 pages)' },
+  { value: 'handwriting', label: 'Handwriting Focus (5 pages)' },
+  { value: 'math', label: 'Math Focus (5 pages)' },
+]
+
+const packetTemplateToTypes = {
+  mixed: ['letterTracing', 'numberTracing', 'sightWords', 'addition', 'phonics'],
+  handwriting: ['letterTracing', 'sightWords', 'nameWriting', 'shapes', 'phonics'],
+  math: ['numberTracing', 'countingObjects', 'addition', 'colorByNumber', 'matching'],
+}
 
 const sampleWorksheets = [
   { type: 'numberTracing', difficulty: 'easy', problems: 8, theme: 'dinosaurs', childName: 'Ava' },
@@ -222,6 +235,39 @@ const writeRecentMemory = (value) => {
   } catch {
     // Ignore storage write failures in restricted environments.
   }
+}
+
+const readProfiles = () => {
+  try {
+    const storage = globalThis?.localStorage
+    if (!storage || typeof storage.getItem !== 'function') return []
+    const parsed = JSON.parse(storage.getItem(PROFILES_KEY) || '[]')
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+const writeProfiles = (profiles) => {
+  try {
+    const storage = globalThis?.localStorage
+    if (!storage || typeof storage.setItem !== 'function') return
+    storage.setItem(PROFILES_KEY, JSON.stringify(profiles))
+  } catch {
+    // Ignore storage write failures in restricted environments.
+  }
+}
+
+export const buildPacketConfigs = ({ baseConfig, template, pageCount = 5 }) => {
+  const types = packetTemplateToTypes[template] ?? packetTemplateToTypes.mixed
+  return Array.from({ length: pageCount }, (_, idx) => {
+    const type = types[idx % types.length]
+    return {
+      ...baseConfig,
+      type,
+      problems: Math.min(getPresetProblems(type, baseConfig.skillLevel), getMaxProblems(type)),
+    }
+  })
 }
 
 const ThemeIcon = ({ theme, className = 'h-7 w-7' }) => {
@@ -545,6 +591,7 @@ function WorksheetBody({ config, data }) {
 
 function App() {
   const sheetRef = useRef(null)
+  const packetContainerRef = useRef(null)
   const [config, setConfig] = useState({
     type: 'numberTracing',
     difficulty: 'easy',
@@ -555,6 +602,10 @@ function App() {
     sightWordSource: 'dolchPrePrimer',
     customWordList: '',
   })
+  const [mode, setMode] = useState('single') // single | packet
+  const [packetTemplate, setPacketTemplate] = useState('mixed')
+  const [packetPages, setPacketPages] = useState([])
+  const [packetWarnings, setPacketWarnings] = useState([])
   const [generationId, setGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
   const [recentMemory, setRecentMemory] = useState(() => {
@@ -592,6 +643,77 @@ function App() {
     setStatusMessage('Worksheet regenerated.')
   }
 
+  const [profiles, setProfiles] = useState(() => readProfiles())
+  const [profileName, setProfileName] = useState('')
+  const [selectedProfileId, setSelectedProfileId] = useState('')
+
+  const handleSaveProfile = () => {
+    const name = profileName.trim()
+    if (!name) {
+      setStatusMessage('Please enter a profile name.')
+      return
+    }
+    const next = profiles.filter((p) => p.id !== name)
+    next.unshift({
+      id: name,
+      name,
+      savedAt: Date.now(),
+      config: {
+        childName: config.childName,
+        skillLevel: config.skillLevel,
+        theme: config.theme,
+        sightWordSource: config.sightWordSource,
+        customWordList: config.customWordList,
+        packetTemplate,
+      },
+    })
+    setProfiles(next)
+    writeProfiles(next)
+    setSelectedProfileId(name)
+    setStatusMessage(`Saved profile: ${name}`)
+  }
+
+  const handleLoadProfile = (id) => {
+    const found = profiles.find((p) => p.id === id)
+    if (!found) return
+    setConfig((prev) => ({
+      ...prev,
+      childName: found.config.childName ?? prev.childName,
+      skillLevel: found.config.skillLevel ?? prev.skillLevel,
+      theme: found.config.theme ?? prev.theme,
+      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
+      customWordList: found.config.customWordList ?? prev.customWordList,
+      problems: Math.min(prev.problems, getMaxProblems(prev.type)),
+    }))
+    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
+    setStatusMessage(`Loaded profile: ${found.name}`)
+  }
+
+  const handleDeleteProfile = (id) => {
+    const next = profiles.filter((p) => p.id !== id)
+    setProfiles(next)
+    writeProfiles(next)
+    if (selectedProfileId === id) setSelectedProfileId('')
+    setStatusMessage('Profile deleted.')
+  }
+
+  const handleGeneratePacket = () => {
+    const pages = buildPacketConfigs({ baseConfig: config, template: packetTemplate, pageCount: 5 })
+    setPacketPages(pages)
+    setMode('packet')
+    setPacketWarnings([])
+    setStatusMessage('Packet generated.')
+  }
+
+  useEffect(() => {
+    if (mode !== 'packet') return
+    const container = packetContainerRef.current
+    if (!container) return
+    const frames = Array.from(container.querySelectorAll('[data-page="worksheet"]'))
+    const warnings = frames.map((el) => el.scrollHeight > el.clientHeight + 2)
+    setPacketWarnings(warnings)
+  }, [mode, packetPages, generationId])
+
   const updateWithPreset = (nextType, nextSkill) => {
     const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
     const suggestedProblems = getPresetProblems(nextType, nextSkill)
@@ -623,11 +745,37 @@ function App() {
 
           <div className="mt-5 space-y-4">
             <label className="control-label">
+              Mode
+              <select className="control-input" value={mode} onChange={(e) => setMode(e.target.value)}>
+                <option value="single">Single Worksheet</option>
+                <option value="packet">Weekly Packet</option>
+              </select>
+            </label>
+
+            {mode === 'packet' && (
+              <label className="control-label">
+                Packet Template
+                <select
+                  className="control-input"
+                  value={packetTemplate}
+                  onChange={(e) => setPacketTemplate(e.target.value)}
+                >
+                  {packetTemplates.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
+            <label className="control-label">
               Worksheet Type
               <select
                 className="control-input"
                 value={config.type}
                 onChange={(e) => setConfig(updateWithPreset(e.target.value, config.skillLevel))}
+                disabled={mode === 'packet'}
               >
                 {worksheetTypes.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -666,6 +814,7 @@ function App() {
                     problems: Math.max(4, Math.min(maxProblems, Number(e.target.value))),
                   })
                 }
+                disabled={mode === 'packet'}
               />
               <span className="text-xs text-slate-500">Max for this worksheet: {maxProblems}</span>
             </label>
@@ -717,11 +866,63 @@ function App() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
-            <button type="button" className="action-btn" onClick={handleGenerate}>Generate Worksheet</button>
+            {mode === 'single' ? (
+              <button type="button" className="action-btn" onClick={handleGenerate}>
+                Generate Worksheet
+              </button>
+            ) : (
+              <button type="button" className="action-btn" onClick={handleGeneratePacket}>
+                Generate Weekly Packet
+              </button>
+            )}
             <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print Worksheet</button>
             <button type="button" className="action-btn-secondary" onClick={handleSaveAsPdf}>Save as PDF</button>
           </div>
           {statusMessage && <p className="mt-3 text-xs font-semibold text-slate-600">{statusMessage}</p>}
+
+          <div className="mt-6">
+            <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-500">Child profiles</h2>
+            <label className="control-label">
+              Profile name
+              <input
+                className="control-input"
+                placeholder="e.g. Ava (K Early)"
+                value={profileName}
+                onChange={(e) => setProfileName(e.target.value)}
+              />
+            </label>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <button type="button" className="action-btn-secondary" onClick={handleSaveProfile}>
+                Save Profile
+              </button>
+              <button
+                type="button"
+                className="action-btn-secondary"
+                onClick={() => selectedProfileId && handleDeleteProfile(selectedProfileId)}
+                disabled={!selectedProfileId}
+              >
+                Delete
+              </button>
+            </div>
+            <label className="control-label mt-3">
+              Load profile
+              <select
+                className="control-input"
+                value={selectedProfileId}
+                onChange={(e) => {
+                  setSelectedProfileId(e.target.value)
+                  if (e.target.value) handleLoadProfile(e.target.value)
+                }}
+              >
+                <option value="">Select…</option>
+                {profiles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
 
           <div className="mt-6">
             <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-500">Sample worksheets</h2>
@@ -752,27 +953,90 @@ function App() {
           </div>
         </aside>
 
-        <section ref={sheetRef} className="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none">
-          <header className="mb-8 border-b border-slate-300 pb-4">
-            <p className="text-sm uppercase tracking-widest text-slate-500">Printable Kindergarten Worksheet</p>
-            <h2 className="text-4xl font-black">{title}</h2>
-            <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm">
-              <ThemeIcon theme={config.theme} className="h-5 w-5" />
-              <span className="capitalize">{config.theme} theme</span>
+        {mode === 'single' ? (
+          <section
+            ref={sheetRef}
+            className="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+            data-page="worksheet"
+          >
+            <header className="mb-8 border-b border-slate-300 pb-4">
+              <p className="text-sm uppercase tracking-widest text-slate-500">Printable Kindergarten Worksheet</p>
+              <h2 className="text-4xl font-black">{title}</h2>
+              <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm">
+                <ThemeIcon theme={config.theme} className="h-5 w-5" />
+                <span className="capitalize">{config.theme} theme</span>
+              </div>
+              <p className="mt-2 text-base">{instruction}</p>
+              <p className="mt-2 text-xl">
+                Name:{' '}
+                <span className="inline-block min-w-64 border-b-2 border-dotted border-black">
+                  {config.childName || '________________'}
+                </span>
+              </p>
+            </header>
+            <div className="mb-4 flex items-center gap-2 print:hidden">
+              <button type="button" className="action-btn-secondary" onClick={handleGenerate}>
+                Reshuffle Problems
+              </button>
+              <span className="text-xs text-slate-500">Keeps settings, refreshes worksheet content only.</span>
             </div>
-            <p className="mt-2 text-base">{instruction}</p>
-            <p className="mt-2 text-xl">
-              Name: <span className="inline-block min-w-64 border-b-2 border-dotted border-black">{config.childName || '________________'}</span>
-            </p>
-          </header>
-          <div className="mb-4 flex items-center gap-2 print:hidden">
-            <button type="button" className="action-btn-secondary" onClick={handleGenerate}>
-              Reshuffle Problems
-            </button>
-            <span className="text-xs text-slate-500">Keeps settings, refreshes worksheet content only.</span>
+            <WorksheetBody config={config} data={worksheetData} />
+          </section>
+        ) : (
+          <div ref={packetContainerRef} className="space-y-6 print:space-y-0">
+            {packetPages.length === 0 && (
+              <div className="rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:hidden">
+                <p className="text-lg font-semibold">Generate a packet to preview pages here.</p>
+                <p className="mt-1 text-sm text-slate-600">
+                  Choose a template, then click “Generate Weekly Packet”.
+                </p>
+              </div>
+            )}
+
+            {packetPages.map((pageConfig, idx) => {
+              const pageTitle =
+                worksheetTypes.find((t) => t.value === pageConfig.type)?.label ?? 'Worksheet'
+              const pageInstruction = getInstructionByType(pageConfig.type)
+              const pageData = generateWorksheetData({
+                ...pageConfig,
+                recentMemory,
+                seed: generationId + idx + 1,
+              })
+              const overflow = packetWarnings[idx]
+              return (
+                <section
+                  key={`page-${idx}`}
+                  className="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+                  data-page="worksheet"
+                >
+                  {overflow && (
+                    <div className="mb-3 rounded-lg border border-black bg-white px-3 py-2 text-sm print:hidden">
+                      This page looks too tall to print on one sheet. Try fewer problems or a different template.
+                    </div>
+                  )}
+                  <header className="mb-8 border-b border-slate-300 pb-4">
+                    <p className="text-sm uppercase tracking-widest text-slate-500">
+                      Weekly Packet — Page {idx + 1} of {packetPages.length}
+                    </p>
+                    <h2 className="text-4xl font-black">{pageTitle}</h2>
+                    <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm">
+                      <ThemeIcon theme={pageConfig.theme} className="h-5 w-5" />
+                      <span className="capitalize">{pageConfig.theme} theme</span>
+                    </div>
+                    <p className="mt-2 text-base">{pageInstruction}</p>
+                    <p className="mt-2 text-xl">
+                      Name:{' '}
+                      <span className="inline-block min-w-64 border-b-2 border-dotted border-black">
+                        {pageConfig.childName || '________________'}
+                      </span>
+                    </p>
+                  </header>
+                  <WorksheetBody config={pageConfig} data={pageData} />
+                </section>
+              )
+            })}
           </div>
-          <WorksheetBody config={config} data={worksheetData} />
-        </section>
+        )}
       </div>
     </main>
   )
