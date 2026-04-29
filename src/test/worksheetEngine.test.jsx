@@ -1,5 +1,4 @@
 import {
-  buildPacketConfigs,
   dolchPrePrimerWords,
   fryStarterWords,
   generateWorksheetData,
@@ -7,7 +6,8 @@ import {
   getSightWordPool,
   parseCustomWords,
   pickUniqueWithRecent,
-} from '../App'
+} from '../worksheetEngine'
+import { buildPacketConfigs } from '../packetTemplates'
 
 describe('worksheet engine regression', () => {
   test('parses custom words from comma/newline input', () => {
@@ -98,6 +98,7 @@ describe('worksheet engine regression', () => {
       },
       template: 'mixed',
       pageCount: 5,
+      getPresetProblems: () => 8,
     })
     expect(pages).toHaveLength(5)
     expect(pages.map((p) => p.type)).toEqual([

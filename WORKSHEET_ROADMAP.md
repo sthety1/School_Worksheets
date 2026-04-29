@@ -103,11 +103,11 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ### Tasks
 
-- [ ] Refactor each worksheet type into dedicated components
-- [ ] Introduce settings schema validation
-- [ ] Add deterministic generation helpers and unit tests
-- [ ] Add print-layout snapshot tests
-- [ ] Add lightweight e2e test for generate/print/pdf flow
+- [x] Refactor each worksheet type into dedicated components/modules
+- [x] Introduce settings schema validation
+- [x] Add deterministic generation helpers and unit tests
+- [x] Add print-layout snapshot tests
+- [x] Add lightweight e2e test for generate/print/pdf/packet flow
 
 ### Acceptance Criteria
 

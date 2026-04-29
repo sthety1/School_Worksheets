@@ -1,4 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  generateWorksheetData,
+  getMaxProblems,
+  sightWordSources,
+  skillProfiles,
+} from './worksheetEngine'
+import { buildPacketConfigs, packetTemplates } from './packetTemplates'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -14,80 +21,13 @@ const worksheetTypes = [
 ]
 
 const themes = ['animals', 'princesses', 'cars', 'dinosaurs', 'unicorns']
+
 const skillPresets = [
   { value: 'preK', label: 'Pre-K' },
   { value: 'kEarly', label: 'K Early' },
   { value: 'kMid', label: 'K Mid' },
   { value: 'kEnd', label: 'K End' },
 ]
-const sightWords = ['the', 'and', 'can', 'see', 'play', 'look', 'I', 'we', 'is', 'go']
-export const sightWordSources = [
-  { value: 'dolchPrePrimer', label: 'Dolch Pre-Primer' },
-  { value: 'dolchPrimer', label: 'Dolch Primer' },
-  { value: 'fryFirst100', label: 'Fry Top 100 (Starter Set)' },
-  { value: 'custom', label: 'Custom Word List' },
-  { value: 'mixedRandom', label: 'Mixed Random Phonics' },
-]
-export const dolchPrePrimerWords = [
-  'a', 'and', 'away', 'big', 'blue', 'can', 'come', 'down', 'find', 'for', 'fun', 'go', 'help', 'here', 'I', 'in', 'is', 'it', 'jump', 'little',
-]
-export const dolchPrimerWords = [
-  'all', 'am', 'are', 'at', 'ate', 'be', 'black', 'brown', 'but', 'came', 'did', 'do', 'eat', 'four', 'get', 'good', 'have', 'he', 'into', 'like',
-]
-export const fryStarterWords = [
-  'the', 'of', 'and', 'a', 'to', 'in', 'is', 'you', 'that', 'it', 'he', 'was', 'for', 'on', 'are', 'as', 'with', 'his', 'they', 'I',
-]
-const randomSightWordPool = [
-  'sun',
-  'run',
-  'hat',
-  'big',
-  'red',
-  'jump',
-  'help',
-  'find',
-  'tree',
-  'frog',
-  'home',
-  'milk',
-]
-const shapes = ['Circle', 'Square', 'Triangle', 'Rectangle', 'Star', 'Heart', 'Oval']
-const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-const phonicsBank = [
-  { letter: 'A', word: 'apple' },
-  { letter: 'B', word: 'ball' },
-  { letter: 'C', word: 'cat' },
-  { letter: 'D', word: 'dog' },
-  { letter: 'E', word: 'egg' },
-  { letter: 'F', word: 'fish' },
-  { letter: 'G', word: 'goat' },
-  { letter: 'H', word: 'hat' },
-  { letter: 'I', word: 'igloo' },
-  { letter: 'J', word: 'jam' },
-  { letter: 'K', word: 'kite' },
-  { letter: 'L', word: 'lion' },
-  { letter: 'M', word: 'moon' },
-  { letter: 'N', word: 'nest' },
-  { letter: 'O', word: 'octopus' },
-  { letter: 'P', word: 'pig' },
-  { letter: 'Q', word: 'queen' },
-  { letter: 'R', word: 'rabbit' },
-  { letter: 'S', word: 'sun' },
-  { letter: 'T', word: 'turtle' },
-  { letter: 'U', word: 'umbrella' },
-  { letter: 'V', word: 'van' },
-  { letter: 'W', word: 'whale' },
-  { letter: 'X', word: 'xylophone' },
-  { letter: 'Y', word: 'yo-yo' },
-  { letter: 'Z', word: 'zebra' },
-]
-
-const skillProfiles = {
-  preK: { difficulty: 'easy', numberMax: 8, additionMax: 3, phonicsLetters: 8 },
-  kEarly: { difficulty: 'easy', numberMax: 12, additionMax: 5, phonicsLetters: 14 },
-  kMid: { difficulty: 'medium', numberMax: 16, additionMax: 7, phonicsLetters: 20 },
-  kEnd: { difficulty: 'hard', numberMax: 20, additionMax: 9, phonicsLetters: 26 },
-}
 
 const problemPlanByType = {
   numberTracing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
@@ -102,172 +42,30 @@ const problemPlanByType = {
   colorByNumber: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
 }
 
-export const maxProblemsByType = {
-  numberTracing: 20,
-  countingObjects: 20,
-  letterTracing: 26,
-  sightWords: 20,
-  nameWriting: 20,
-  shapes: 7,
-  addition: 20,
-  matching: 6,
-  phonics: 26,
-  colorByNumber: 20,
-}
+const getPresetProblems = (type, skillLevel) => problemPlanByType[type]?.[skillLevel] ?? 8
+
 const RECENT_MEMORY_KEY = 'worksheet_recent_memory_v1'
 const PROFILES_KEY = 'worksheet_child_profiles_v1'
 
-const packetTemplates = [
-  { value: 'mixed', label: 'Mixed Review (5 pages)' },
-  { value: 'handwriting', label: 'Handwriting Focus (5 pages)' },
-  { value: 'math', label: 'Math Focus (5 pages)' },
-]
-
-const packetTemplateToTypes = {
-  mixed: ['letterTracing', 'numberTracing', 'sightWords', 'addition', 'phonics'],
-  handwriting: ['letterTracing', 'sightWords', 'nameWriting', 'shapes', 'phonics'],
-  math: ['numberTracing', 'countingObjects', 'addition', 'colorByNumber', 'matching'],
-}
-
-const sampleWorksheets = [
-  { type: 'numberTracing', difficulty: 'easy', problems: 8, theme: 'dinosaurs', childName: 'Ava' },
-  { type: 'letterTracing', difficulty: 'medium', problems: 8, theme: 'unicorns', childName: 'Leo' },
-  { type: 'addition', difficulty: 'easy', problems: 10, theme: 'cars', childName: 'Mia' },
-  { type: 'colorByNumber', difficulty: 'easy', problems: 8, theme: 'animals', childName: 'Noah' },
-]
-
-const themeWords = {
-  animals: ['cat', 'dog', 'fish', 'bird', 'frog', 'bear'],
-  princesses: ['crown', 'castle', 'dress', 'wand', 'ring', 'shoe'],
-  cars: ['car', 'bus', 'van', 'truck', 'jeep', 'taxi'],
-  dinosaurs: ['dino', 'fossil', 'tail', 'roar', 'egg', 'claw'],
-  unicorns: ['unicorn', 'horn', 'star', 'cloud', 'rainbow', 'mane'],
-}
-
-// Deterministic RNG helpers (seeded) for regression stability.
-const hashStringToUint32 = (input) => {
-  let h = 2166136261
-  for (let i = 0; i < input.length; i += 1) {
-    h ^= input.charCodeAt(i)
-    h = Math.imul(h, 16777619)
-  }
-  return h >>> 0
-}
-
-const createRng = (seed) => {
-  // Mulberry32: deterministic, fast, adequate for worksheet shuffling.
-  let t = (seed >>> 0) || 1
-  return () => {
-    t += 0x6d2b79f5
-    let x = t
-    x = Math.imul(x ^ (x >>> 15), x | 1)
-    x ^= x + Math.imul(x ^ (x >>> 7), x | 61)
-    return ((x ^ (x >>> 14)) >>> 0) / 4294967296
-  }
-}
-
-const randInt = (rng, maxExclusive) => Math.floor(rng() * maxExclusive)
-const vowels = ['a', 'e', 'i', 'o', 'u']
-const consonants = 'bcdfghjklmnpqrstvwxyz'.split('')
-
-const pickUniqueRandom = (source, count, rng) => {
-  const copy = [...source]
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = randInt(rng, i + 1)
-    ;[copy[i], copy[j]] = [copy[j], copy[i]]
-  }
-  return copy.slice(0, Math.min(count, copy.length))
-}
-
-const makeSimpleWord = (rng) => {
-  const useBlend = randInt(rng, 2) === 0
-  if (useBlend) {
-    return `${consonants[randInt(rng, consonants.length)]}${vowels[randInt(rng, vowels.length)]}${consonants[randInt(rng, consonants.length)]}`
-  }
-  return `${consonants[randInt(rng, consonants.length)]}${vowels[randInt(rng, vowels.length)]}${consonants[randInt(rng, consonants.length)]}${consonants[randInt(rng, consonants.length)]}`
-}
-
-export const parseCustomWords = (text) =>
-  Array.from(
-    new Set(
-      text
-        .split(/[\n,]/)
-        .map((word) => word.trim().toLowerCase())
-        .filter(Boolean),
-    ),
-  )
-
-export const getSightWordPool = (config) => {
-  if (config.sightWordSource === 'dolchPrePrimer') return dolchPrePrimerWords
-  if (config.sightWordSource === 'dolchPrimer') return dolchPrimerWords
-  if (config.sightWordSource === 'fryFirst100') return fryStarterWords
-  if (config.sightWordSource === 'custom') {
-    const parsed = parseCustomWords(config.customWordList)
-    return parsed.length > 0 ? parsed : sightWords
-  }
-  return [...randomSightWordPool, ...sightWords]
-}
-
-export const pickUniqueWithRecent = (source, count, recentItems = [], rng) => {
-  const recentSet = new Set(recentItems)
-  const freshPool = source.filter((item) => !recentSet.has(item))
-  const firstPass = pickUniqueRandom(freshPool, count, rng)
-  if (firstPass.length === count) return firstPass
-  const fallbackPool = source.filter((item) => !firstPass.includes(item))
-  return [...firstPass, ...pickUniqueRandom(fallbackPool, count - firstPass.length, rng)]
-}
-
-const readRecentMemory = () => {
+const readJsonFromStorage = (key, fallback) => {
   try {
     const storage = globalThis?.localStorage
-    if (!storage || typeof storage.getItem !== 'function') return null
-    return JSON.parse(storage.getItem(RECENT_MEMORY_KEY) || '{}')
+    if (!storage || typeof storage.getItem !== 'function') return fallback
+    const raw = storage.getItem(key)
+    return raw ? JSON.parse(raw) : fallback
   } catch {
-    return null
+    return fallback
   }
 }
 
-const writeRecentMemory = (value) => {
+const writeJsonToStorage = (key, value) => {
   try {
     const storage = globalThis?.localStorage
     if (!storage || typeof storage.setItem !== 'function') return
-    storage.setItem(RECENT_MEMORY_KEY, JSON.stringify(value))
+    storage.setItem(key, JSON.stringify(value))
   } catch {
-    // Ignore storage write failures in restricted environments.
+    // ignore
   }
-}
-
-const readProfiles = () => {
-  try {
-    const storage = globalThis?.localStorage
-    if (!storage || typeof storage.getItem !== 'function') return []
-    const parsed = JSON.parse(storage.getItem(PROFILES_KEY) || '[]')
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
-
-const writeProfiles = (profiles) => {
-  try {
-    const storage = globalThis?.localStorage
-    if (!storage || typeof storage.setItem !== 'function') return
-    storage.setItem(PROFILES_KEY, JSON.stringify(profiles))
-  } catch {
-    // Ignore storage write failures in restricted environments.
-  }
-}
-
-export const buildPacketConfigs = ({ baseConfig, template, pageCount = 5 }) => {
-  const types = packetTemplateToTypes[template] ?? packetTemplateToTypes.mixed
-  return Array.from({ length: pageCount }, (_, idx) => {
-    const type = types[idx % types.length]
-    return {
-      ...baseConfig,
-      type,
-      problems: Math.min(getPresetProblems(type, baseConfig.skillLevel), getMaxProblems(type)),
-    }
-  })
 }
 
 const ThemeIcon = ({ theme, className = 'h-7 w-7' }) => {
@@ -353,109 +151,6 @@ const getInstructionByType = (type) => {
     colorByNumber: 'Use the key to color each shape by number. Stay inside the lines.',
   }
   return instructions[type] ?? 'Complete each problem neatly.'
-}
-
-const getPresetProblems = (type, skillLevel) =>
-  problemPlanByType[type]?.[skillLevel] ?? 8
-
-export const getMaxProblems = (type) => maxProblemsByType[type] ?? 20
-
-export const generateWorksheetData = ({
-  type,
-  problems,
-  childName,
-  theme,
-  skillLevel,
-  sightWordSource,
-  customWordList,
-  recentMemory,
-  seed,
-}) => {
-  const safeProblems = Math.max(4, Math.min(getMaxProblems(type), Number(problems)))
-  const skillProfile = skillProfiles[skillLevel] ?? skillProfiles.kEarly
-  const numberCeiling = skillProfile.numberMax
-  const additionMax = skillProfile.additionMax
-  const baseSeed = (Number.isFinite(seed) ? seed : 0) >>> 0
-  const cfgSeed = hashStringToUint32(
-    JSON.stringify({
-      type,
-      problems: safeProblems,
-      childName,
-      theme,
-      skillLevel,
-      sightWordSource,
-      customWordList,
-      recentMemory,
-    }),
-  )
-  const rng = createRng(baseSeed ^ cfgSeed)
-
-  if (type === 'numberTracing') {
-    const numberPool = Array.from({ length: numberCeiling }, (_, i) => (i + 1).toString())
-    return pickUniqueWithRecent(numberPool, safeProblems, recentMemory.numberTracing, rng)
-  }
-  if (type === 'countingObjects') {
-    return Array.from({ length: safeProblems }, () => {
-      const total = randInt(rng, numberCeiling) + 1
-      return { total, theme }
-    })
-  }
-  if (type === 'letterTracing') {
-    return pickUniqueWithRecent(letters, safeProblems, recentMemory.letterTracing, rng)
-  }
-  if (type === 'sightWords') {
-    if (sightWordSource === 'mixedRandom') {
-      const uniqueWords = new Set()
-      while (uniqueWords.size < safeProblems && uniqueWords.size < 20) {
-        if (uniqueWords.size % 2 === 0) {
-          uniqueWords.add(randomSightWordPool[randInt(rng, randomSightWordPool.length)])
-        } else {
-          uniqueWords.add(makeSimpleWord(rng))
-        }
-      }
-      return Array.from(uniqueWords)
-    }
-    const selectedPool = getSightWordPool({ sightWordSource, customWordList })
-    const baseWords = pickUniqueWithRecent(selectedPool, safeProblems, recentMemory.sightWords, rng)
-    if (baseWords.length === safeProblems || selectedPool.length >= safeProblems) return baseWords
-    const fillWords = pickUniqueWithRecent(
-      randomSightWordPool.filter((word) => !baseWords.includes(word)),
-      safeProblems - baseWords.length,
-      [],
-      rng,
-    )
-    return [...baseWords, ...fillWords]
-  }
-  if (type === 'nameWriting') {
-    return Array.from({ length: safeProblems }, () => childName || 'Write your name')
-  }
-  if (type === 'shapes') {
-    return pickUniqueRandom(shapes, safeProblems, rng)
-  }
-  if (type === 'addition') {
-    return Array.from({ length: safeProblems }, () => {
-      const a = randInt(rng, additionMax) + 1
-      const b = randInt(rng, additionMax) + 1
-      return { a, b }
-    })
-  }
-  if (type === 'matching') {
-    return pickUniqueWithRecent(themeWords[theme], safeProblems, recentMemory.matching, rng).map((word) => {
-      return { word, theme }
-    })
-  }
-  if (type === 'phonics') {
-    return pickUniqueWithRecent(
-      phonicsBank.slice(0, skillProfile.phonicsLetters),
-      safeProblems,
-      recentMemory.phonics,
-      rng,
-    )
-  }
-  return Array.from({ length: safeProblems }, (_, i) => ({
-    n: (i % 6) + 1,
-    shape: ['⬡', '◯', '△', '□', '☆', '♡'][i % 6],
-  }))
 }
 
 function WorksheetBody({ config, data }) {
@@ -589,9 +284,10 @@ function WorksheetBody({ config, data }) {
   }
 }
 
-function App() {
+export default function AppNew() {
   const sheetRef = useRef(null)
   const packetContainerRef = useRef(null)
+
   const [config, setConfig] = useState({
     type: 'numberTracing',
     difficulty: 'easy',
@@ -602,22 +298,26 @@ function App() {
     sightWordSource: 'dolchPrePrimer',
     customWordList: '',
   })
-  const [mode, setMode] = useState('single') // single | packet
+
+  const [mode, setMode] = useState('single')
   const [packetTemplate, setPacketTemplate] = useState('mixed')
   const [packetPages, setPacketPages] = useState([])
   const [packetWarnings, setPacketWarnings] = useState([])
+
   const [generationId, setGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
+
   const [recentMemory, setRecentMemory] = useState(() => {
-    const parsed = readRecentMemory()
+    const parsed = readJsonFromStorage(RECENT_MEMORY_KEY, {})
     return {
-      numberTracing: parsed?.numberTracing || [],
-      letterTracing: parsed?.letterTracing || [],
-      sightWords: parsed?.sightWords || [],
-      matching: parsed?.matching || [],
-      phonics: parsed?.phonics || [],
+      numberTracing: parsed.numberTracing || [],
+      letterTracing: parsed.letterTracing || [],
+      sightWords: parsed.sightWords || [],
+      matching: parsed.matching || [],
+      phonics: parsed.phonics || [],
     }
   })
+
   const worksheetData = useMemo(
     () => generateWorksheetData({ ...config, seed: generationId, recentMemory }),
     [config, generationId, recentMemory],
@@ -630,6 +330,18 @@ function App() {
   const instruction = useMemo(() => getInstructionByType(config.type), [config.type])
   const maxProblems = useMemo(() => getMaxProblems(config.type), [config.type])
 
+  const updateWithPreset = (nextType, nextSkill) => {
+    const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
+    const suggestedProblems = getPresetProblems(nextType, nextSkill)
+    return {
+      ...config,
+      type: nextType,
+      skillLevel: nextSkill,
+      difficulty: profile.difficulty,
+      problems: Math.min(suggestedProblems, getMaxProblems(nextType)),
+    }
+  }
+
   const handleGenerate = () => {
     const memoryPatch = { ...recentMemory }
     if (config.type === 'numberTracing') memoryPatch.numberTracing = worksheetData.slice(-8)
@@ -638,67 +350,18 @@ function App() {
     if (config.type === 'matching') memoryPatch.matching = worksheetData.map((item) => item.word).slice(-6)
     if (config.type === 'phonics') memoryPatch.phonics = worksheetData.slice(-10)
     setRecentMemory(memoryPatch)
-    writeRecentMemory(memoryPatch)
+    writeJsonToStorage(RECENT_MEMORY_KEY, memoryPatch)
     setGenerationId((id) => id + 1)
     setStatusMessage('Worksheet regenerated.')
   }
 
-  const [profiles, setProfiles] = useState(() => readProfiles())
-  const [profileName, setProfileName] = useState('')
-  const [selectedProfileId, setSelectedProfileId] = useState('')
-
-  const handleSaveProfile = () => {
-    const name = profileName.trim()
-    if (!name) {
-      setStatusMessage('Please enter a profile name.')
-      return
-    }
-    const next = profiles.filter((p) => p.id !== name)
-    next.unshift({
-      id: name,
-      name,
-      savedAt: Date.now(),
-      config: {
-        childName: config.childName,
-        skillLevel: config.skillLevel,
-        theme: config.theme,
-        sightWordSource: config.sightWordSource,
-        customWordList: config.customWordList,
-        packetTemplate,
-      },
-    })
-    setProfiles(next)
-    writeProfiles(next)
-    setSelectedProfileId(name)
-    setStatusMessage(`Saved profile: ${name}`)
-  }
-
-  const handleLoadProfile = (id) => {
-    const found = profiles.find((p) => p.id === id)
-    if (!found) return
-    setConfig((prev) => ({
-      ...prev,
-      childName: found.config.childName ?? prev.childName,
-      skillLevel: found.config.skillLevel ?? prev.skillLevel,
-      theme: found.config.theme ?? prev.theme,
-      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
-      customWordList: found.config.customWordList ?? prev.customWordList,
-      problems: Math.min(prev.problems, getMaxProblems(prev.type)),
-    }))
-    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
-    setStatusMessage(`Loaded profile: ${found.name}`)
-  }
-
-  const handleDeleteProfile = (id) => {
-    const next = profiles.filter((p) => p.id !== id)
-    setProfiles(next)
-    writeProfiles(next)
-    if (selectedProfileId === id) setSelectedProfileId('')
-    setStatusMessage('Profile deleted.')
-  }
-
   const handleGeneratePacket = () => {
-    const pages = buildPacketConfigs({ baseConfig: config, template: packetTemplate, pageCount: 5 })
+    const pages = buildPacketConfigs({
+      baseConfig: config,
+      template: packetTemplate,
+      pageCount: 5,
+      getPresetProblems,
+    })
     setPacketPages(pages)
     setMode('packet')
     setPacketWarnings([])
@@ -714,18 +377,6 @@ function App() {
     setPacketWarnings(warnings)
   }, [mode, packetPages, generationId])
 
-  const updateWithPreset = (nextType, nextSkill) => {
-    const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
-    const suggestedProblems = getPresetProblems(nextType, nextSkill)
-    return {
-      ...config,
-      type: nextType,
-      skillLevel: nextSkill,
-      difficulty: profile.difficulty,
-      problems: Math.min(suggestedProblems, getMaxProblems(nextType)),
-    }
-  }
-
   const handlePrint = () => {
     setStatusMessage('Opening print dialog...')
     window.print()
@@ -734,6 +385,61 @@ function App() {
   const handleSaveAsPdf = async () => {
     setStatusMessage('Opening print dialog. Choose "Save as PDF" as destination.')
     window.print()
+  }
+
+  // Profiles
+  const [profiles, setProfiles] = useState(() => readJsonFromStorage(PROFILES_KEY, []))
+  const [profileName, setProfileName] = useState('')
+  const [selectedProfileId, setSelectedProfileId] = useState('')
+
+  const handleSaveProfile = () => {
+    const name = profileName.trim()
+    if (!name) {
+      setStatusMessage('Please enter a profile name.')
+      return
+    }
+    const next = (Array.isArray(profiles) ? profiles : []).filter((p) => p.id !== name)
+    next.unshift({
+      id: name,
+      name,
+      savedAt: Date.now(),
+      config: {
+        childName: config.childName,
+        skillLevel: config.skillLevel,
+        theme: config.theme,
+        sightWordSource: config.sightWordSource,
+        customWordList: config.customWordList,
+        packetTemplate,
+      },
+    })
+    setProfiles(next)
+    writeJsonToStorage(PROFILES_KEY, next)
+    setSelectedProfileId(name)
+    setStatusMessage(`Saved profile: ${name}`)
+  }
+
+  const handleLoadProfile = (id) => {
+    const found = (Array.isArray(profiles) ? profiles : []).find((p) => p.id === id)
+    if (!found) return
+    setConfig((prev) => ({
+      ...prev,
+      childName: found.config.childName ?? prev.childName,
+      skillLevel: found.config.skillLevel ?? prev.skillLevel,
+      theme: found.config.theme ?? prev.theme,
+      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
+      customWordList: found.config.customWordList ?? prev.customWordList,
+      problems: Math.min(prev.problems, getMaxProblems(prev.type)),
+    }))
+    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
+    setStatusMessage(`Loaded profile: ${found.name}`)
+  }
+
+  const handleDeleteProfile = (id) => {
+    const next = (Array.isArray(profiles) ? profiles : []).filter((p) => p.id !== id)
+    setProfiles(next)
+    writeJsonToStorage(PROFILES_KEY, next)
+    if (selectedProfileId === id) setSelectedProfileId('')
+    setStatusMessage('Profile deleted.')
   }
 
   return (
@@ -834,6 +540,7 @@ function App() {
               Child Name
               <input className="control-input" placeholder="Enter your child's name" value={config.childName} onChange={(e) => setConfig({ ...config, childName: e.target.value })} />
             </label>
+
             {config.type === 'sightWords' && (
               <>
                 <label className="control-label">
@@ -915,41 +622,13 @@ function App() {
                 }}
               >
                 <option value="">Select…</option>
-                {profiles.map((p) => (
+                {(Array.isArray(profiles) ? profiles : []).map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name}
                   </option>
                 ))}
               </select>
             </label>
-          </div>
-
-          <div className="mt-6">
-            <h2 className="mb-2 text-sm font-bold uppercase tracking-wide text-slate-500">Sample worksheets</h2>
-            <div className="space-y-2">
-              {sampleWorksheets.map((sample, idx) => (
-                <button
-                  type="button"
-                  key={`sample-${idx}`}
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-left text-sm hover:bg-slate-50"
-                  onClick={() => {
-                    const nextConfig = {
-                      ...updateWithPreset(sample.type, 'kEarly'),
-                      ...sample,
-                      skillLevel: sample.skillLevel ?? 'kEarly',
-                    }
-                    nextConfig.problems = Math.min(
-                      nextConfig.problems,
-                      getMaxProblems(nextConfig.type),
-                    )
-                    setConfig(nextConfig)
-                    setGenerationId((id) => id + 1)
-                  }}
-                >
-                  {worksheetTypes.find((type) => type.value === sample.type)?.label} - {sample.theme}
-                </button>
-              ))}
-            </div>
           </div>
         </aside>
 
@@ -987,15 +666,11 @@ function App() {
             {packetPages.length === 0 && (
               <div className="rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:hidden">
                 <p className="text-lg font-semibold">Generate a packet to preview pages here.</p>
-                <p className="mt-1 text-sm text-slate-600">
-                  Choose a template, then click “Generate Weekly Packet”.
-                </p>
+                <p className="mt-1 text-sm text-slate-600">Choose a template, then click “Generate Weekly Packet”.</p>
               </div>
             )}
-
             {packetPages.map((pageConfig, idx) => {
-              const pageTitle =
-                worksheetTypes.find((t) => t.value === pageConfig.type)?.label ?? 'Worksheet'
+              const pageTitle = worksheetTypes.find((t) => t.value === pageConfig.type)?.label ?? 'Worksheet'
               const pageInstruction = getInstructionByType(pageConfig.type)
               const pageData = generateWorksheetData({
                 ...pageConfig,
@@ -1042,4 +717,3 @@ function App() {
   )
 }
 
-export default App
