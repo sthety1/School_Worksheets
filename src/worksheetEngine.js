@@ -76,6 +76,9 @@ export const maxProblemsByType = {
   cvcWords: 20,
   sentenceTracing: 20,
   patterns: 20,
+  rhymeMatch: 12,
+  syllableSort: 12,
+  numberBonds: 14,
 }
 
 export const getMaxProblems = (type) => maxProblemsByType[type] ?? 20
@@ -96,6 +99,9 @@ export const standardsTagsByType = {
   cvcWords: ['K.RF.A.2'],
   sentenceTracing: ['K.RF.A.3'],
   patterns: ['K.OA.A.1'],
+  rhymeMatch: ['K.RF.A.2'],
+  syllableSort: ['K.RF.A.2'],
+  numberBonds: ['K.OA.A.3'],
 }
 
 export const getStandardsTagsForType = (type) => standardsTagsByType[type] ?? []
@@ -176,6 +182,55 @@ const cvcWordPool = [
   'cat', 'dog', 'pig', 'hen', 'hat', 'bat', 'rat', 'map', 'cap', 'sun', 'run', 'fun', 'cup', 'bug', 'hug', 'mug', 'fan', 'van', 'bed', 'red',
   'pen', 'ten', 'fin', 'pin', 'sit', 'hit', 'lip', 'log', 'fog', 'hop', 'top', 'cot', 'fox', 'box',
 ]
+
+const rhymeFamilies = [
+  { key: 'at', words: ['hat', 'cat', 'bat'] },
+  { key: 'an', words: ['can', 'pan', 'van'] },
+  { key: 'ap', words: ['map', 'cap', 'tap'] },
+  { key: 'og', words: ['dog', 'log', 'fog'] },
+  { key: 'ug', words: ['bug', 'mug', 'rug'] },
+  { key: 'un', words: ['sun', 'run', 'fun'] },
+  { key: 'en', words: ['ten', 'pen', 'hen'] },
+  { key: 'ip', words: ['lip', 'sip', 'tip'] },
+  { key: 'it', words: ['sit', 'hit', 'bit'] },
+  { key: 'ot', words: ['cot', 'hot', 'pot'] },
+  { key: 'op', words: ['hop', 'top', 'mop'] },
+  { key: 'ox', words: ['fox', 'box'] },
+]
+
+const pickThirdWord = (usedWord, rng) => {
+  // Pick another short word unlikely to rhyme; keep it deterministic.
+  const pool = [...randomSightWordPool, ...fallbackSightWords].filter((w) => w && w !== usedWord)
+  return pool[randInt(rng, pool.length)] ?? 'zip'
+}
+
+const syllableProblems = [
+  { word: 'rabbit', syllables: 2, correct: 'rab-bit', distractors: ['ra-bbit', 'rabb-it'] },
+  { word: 'lion', syllables: 2, correct: 'li-on', distractors: ['lio-n', 'l-ion'] },
+  { word: 'pencil', syllables: 2, correct: 'pen-cil', distractors: ['penc-il', 'pen-ci-l'] },
+  { word: 'basket', syllables: 2, correct: 'bas-ket', distractors: ['ba-sket', 'bask-et'] },
+  { word: 'puppet', syllables: 2, correct: 'pup-pet', distractors: ['pu-pet', 'puppe-t'] },
+  { word: 'butterfly', syllables: 3, correct: 'but-ter-fly', distractors: ['bu-tterfly', 'butter-fly'] },
+  { word: 'elephant', syllables: 3, correct: 'e-le-phant', distractors: ['el-e-phant', 'ele-phant'] },
+  { word: 'animal', syllables: 3, correct: 'a-ni-mal', distractors: ['an-i-mal', 'ani-mal'] },
+  { word: 'beautiful', syllables: 3, correct: 'beau-ti-ful', distractors: ['be-autiful', 'beau-tiful'] },
+  { word: 'fantastic', syllables: 3, correct: 'fan-tas-tic', distractors: ['fant-astic', 'fan-tastic'] },
+  { word: 'triangle', syllables: 3, correct: 'tri-an-gle', distractors: ['tri-ang-le', 'trian-gle'] },
+  { word: 'dinosaur', syllables: 3, correct: 'di-no-saur', distractors: ['din-o-saur', 'dino-saur'] },
+  { word: 'playground', syllables: 2, correct: 'play-ground', distractors: ['pla-yground', 'playg-round'] },
+  { word: 'sunshine', syllables: 2, correct: 'sun-shine', distractors: ['sunsh-ine', 'su-nshine'] },
+  { word: 'ladybug', syllables: 3, correct: 'la-dy-bug', distractors: ['lady-bug', 'lad-y-bug'] },
+  { word: 'notebook', syllables: 2, correct: 'note-book', distractors: ['not-ebook', 'noteb-ook'] },
+]
+
+const shuffleOptions = (options, rng) => {
+  const copy = [...options]
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = randInt(rng, i + 1)
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy
+}
 
 export const generateWorksheetData = (input) => {
   const parsed = generatorInputSchema.parse(input)
@@ -374,6 +429,111 @@ export const generateWorksheetData = (input) => {
       })
     }
 
+    if (parsed.type === 'rhymeMatch') {
+      const usedFamilies = new Set()
+      const rows = []
+      let attempts = 0
+      while (rows.length < safeProblems && attempts < safeProblems * 50) {
+        attempts += 1
+        const fam = rhymeFamilies[randInt(rng, rhymeFamilies.length)]
+        if (usedFamilies.has(fam.key)) continue
+
+        const w1 = fam.words[randInt(rng, fam.words.length)]
+        let w2 = fam.words[randInt(rng, fam.words.length)]
+        while (w2 === w1 && fam.words.length > 1) {
+          w2 = fam.words[randInt(rng, fam.words.length)]
+        }
+
+        let foil = ''
+        let foilSafety = 0
+        while (foilSafety < 20) {
+          foilSafety += 1
+          const candidate = pickThirdWord(w1, rng)
+          if (!fam.words.includes(candidate)) {
+            foil = candidate
+            break
+          }
+        }
+        if (!foil) {
+          foil = 'zip'
+        }
+
+        usedFamilies.add(fam.key)
+        rows.push({
+          cueWord: w1,
+          choices: shuffleOptions([w1, w2, foil], rng),
+        })
+      }
+
+      if (rows.length > 0) {
+        while (rows.length < safeProblems) {
+          rows.push(rows[rows.length % rows.length])
+        }
+      }
+
+      return rows
+    }
+
+    if (parsed.type === 'syllableSort') {
+      const rows = []
+      while (rows.length < safeProblems) {
+        const p = syllableProblems[randInt(rng, syllableProblems.length)]
+        const uniq = Array.from(new Set([p.correct, ...p.distractors]))
+        while (uniq.length < 3) {
+          uniq.push(`${p.correct}-${uniq.length}`)
+        }
+        const finalOptions = shuffleOptions(uniq.slice(0, 3), rng)
+        rows.push({
+          word: p.word,
+          syllables: p.syllables,
+          options: finalOptions.slice(0, 3),
+        })
+      }
+      return rows
+    }
+
+    if (parsed.type === 'numberBonds') {
+      const maxBondTotal = Math.min(10, numberCeiling)
+      const minBondTotal =
+        parsed.skillLevel === 'preK' ? 5 : parsed.skillLevel === 'kEarly' ? 5 : parsed.skillLevel === 'kMid' ? 6 : 6
+
+      const pickPairForTotal = (total) => {
+        const pairs = []
+        for (let a = 1; a < total; a += 1) {
+          const b = total - a
+          if (b >= 1) pairs.push({ a, b })
+        }
+        return pairs
+      }
+
+      return Array.from({ length: safeProblems }, () => {
+        const span = Math.max(1, maxBondTotal - minBondTotal + 1)
+        const total = randInt(rng, span) + minBondTotal // totals within [minBondTotal..maxBondTotal], capped by number ceiling for the preset
+        const pairs = pickPairForTotal(total)
+        const pair = pairs[randInt(rng, pairs.length)]
+        const variant = randInt(rng, 3) // hide a, b, or neither (but still practice bonds)
+        if (variant === 0) {
+          return {
+            total,
+            a: '__',
+            b: pair.b,
+          }
+        }
+        if (variant === 1) {
+          return {
+            total,
+            a: pair.a,
+            b: '__',
+          }
+        }
+        return {
+          total,
+          a: pair.a,
+          b: pair.b,
+        }
+      })
+    }
+
     // colorByNumber
     return Array.from({ length: safeProblems }, (_, i) => ({
       n: (i % 6) + 1,
@@ -415,6 +575,38 @@ export const generateWorksheetData = (input) => {
     }
     if (parsed.type === 'patterns') {
       return student.map((row) => ({ kind: row.kind, next: row.next }))
+    }
+    if (parsed.type === 'rhymeMatch') {
+      return student.map((row) => {
+        const rhymeGroup = rhymeFamilies.find((fam) => fam.words.includes(row.cueWord))
+        const rhymeKey = rhymeGroup?.key ?? ''
+        const correct =
+          row.choices.find((w) => {
+            const group = rhymeFamilies.find((fam) => fam.words.includes(w))
+            return group && group.key === rhymeKey
+          }) ?? row.cueWord
+        return { cueWord: row.cueWord, correctRhyme: correct }
+      })
+    }
+
+    if (parsed.type === 'syllableSort') {
+      return student.map((row) => {
+        const canonical = syllableProblems.find((p) => p.word === row.word)
+        return { correct: canonical?.correct ?? row.options[0] }
+      })
+    }
+
+    if (parsed.type === 'numberBonds') {
+      return student.map((row) => {
+        const solvedA = typeof row.a === 'number' ? row.a : row.total - row.b
+        const solvedB = typeof row.b === 'number' ? row.b : row.total - row.a
+        return {
+          total: row.total,
+          a: solvedA,
+          b: solvedB,
+          sumCheck: solvedA + solvedB,
+        }
+      })
     }
     return null
   })()

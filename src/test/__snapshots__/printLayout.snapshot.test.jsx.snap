@@ -1,5 +1,980 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout shells 1`] = `
+<section
+  class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+  data-page="worksheet"
+  style="--trace-opacity: 0.9; --trace-font-family: "Playwrite NZ Basic Guides";"
+>
+  <header
+    class="mb-8 border-b border-slate-300 pb-4"
+  >
+    <p
+      class="text-sm uppercase tracking-widest text-slate-500"
+    >
+      Printable Kindergarten Worksheet
+    </p>
+    <h2
+      class="text-4xl font-black"
+    >
+      Rhyme Match
+    </h2>
+    <div
+      class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
+      <span
+        class="capitalize"
+      >
+        dogs
+         theme
+      </span>
+    </div>
+    <p
+      class="mt-2 text-base"
+    >
+      Read each cue word aloud. Circle the word in the row that rhymes with the cue word. Say both words together to check the rhyme.
+    </p>
+    <p
+      class="mt-2 text-xl"
+    >
+      Name:
+       
+      <span
+        class="inline-block min-w-64 border-b-2 border-solid border-black"
+      >
+        ________________
+      </span>
+    </p>
+  </header>
+  <div
+    class="mb-4 flex items-center gap-2 print:hidden"
+  >
+    <button
+      class="action-btn-secondary"
+      type="button"
+    >
+      Reshuffle Problems
+    </button>
+    <span
+      class="text-xs text-slate-500"
+    >
+      Keeps settings, refreshes worksheet content only.
+    </span>
+  </div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          1
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            ten
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          hen
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          go
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          ten
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          2
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            van
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          van
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          and
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          can
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          3
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            mug
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          bug
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          can
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          mug
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          4
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            tip
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          lip
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          tip
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          I
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          5
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            hat
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          hat
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          cat
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          jump
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          6
+          .
+        </span>
+        <span>
+          Cue: 
+          <span
+            class="font-extrabold capitalize"
+          >
+            sun
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-4 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          fun
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          the
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1 capitalize"
+        >
+          sun
+        </span>
+      </div>
+      <p
+        class="mt-3 text-sm text-slate-700"
+      >
+        Circle the word that rhymes with the cue word.
+      </p>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout shells 2`] = `
+<section
+  class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+  data-page="worksheet"
+  style="--trace-opacity: 0.9; --trace-font-family: "Playwrite NZ Basic Guides";"
+>
+  <header
+    class="mb-8 border-b border-slate-300 pb-4"
+  >
+    <p
+      class="text-sm uppercase tracking-widest text-slate-500"
+    >
+      Printable Kindergarten Worksheet
+    </p>
+    <h2
+      class="text-4xl font-black"
+    >
+      Syllable Sort (Tap Clap)
+    </h2>
+    <div
+      class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
+      <span
+        class="capitalize"
+      >
+        dogs
+         theme
+      </span>
+    </div>
+    <p
+      class="mt-2 text-base"
+    >
+      Say the word slowly. Tap each syllable. Circle how the word breaks into syllables.
+    </p>
+    <p
+      class="mt-2 text-xl"
+    >
+      Name:
+       
+      <span
+        class="inline-block min-w-64 border-b-2 border-solid border-black"
+      >
+        ________________
+      </span>
+    </p>
+  </header>
+  <div
+    class="mb-4 flex items-center gap-2 print:hidden"
+  >
+    <button
+      class="action-btn-secondary"
+      type="button"
+    >
+      Reshuffle Problems
+    </button>
+    <span
+      class="text-xs text-slate-500"
+    >
+      Keeps settings, refreshes worksheet content only.
+    </span>
+  </div>
+  <div
+    class="space-y-6"
+  >
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          1
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            triangle
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            3
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          tri-ang-le
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          trian-gle
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          tri-an-gle
+        </span>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          2
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            triangle
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            3
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          tri-ang-le
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          tri-an-gle
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          trian-gle
+        </span>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          3
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            elephant
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            3
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          el-e-phant
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          ele-phant
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          e-le-phant
+        </span>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          4
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            lion
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            2
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          lio-n
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          l-ion
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          li-on
+        </span>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          5
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            notebook
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            2
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          noteb-ook
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          note-book
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          not-ebook
+        </span>
+      </div>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4"
+    >
+      <div
+        class="flex flex-wrap items-baseline gap-3 text-xl"
+      >
+        <span
+          class="font-bold"
+        >
+          6
+          .
+        </span>
+        <span>
+          Word: 
+          <span
+            class="font-extrabold"
+          >
+            basket
+          </span>
+          <span
+            class="ml-3 text-base text-slate-600"
+          >
+             (
+            2
+             syllables)
+          </span>
+        </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap gap-3 text-lg"
+      >
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          bask-et
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          ba-sket
+        </span>
+        <span
+          class="rounded-md border border-black px-3 py-1"
+        >
+          bas-ket
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+`;
+
+exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout shells 3`] = `
+<section
+  class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"
+  data-page="worksheet"
+  style="--trace-opacity: 0.9; --trace-font-family: "Playwrite NZ Basic Guides";"
+>
+  <header
+    class="mb-8 border-b border-slate-300 pb-4"
+  >
+    <p
+      class="text-sm uppercase tracking-widest text-slate-500"
+    >
+      Printable Kindergarten Worksheet
+    </p>
+    <h2
+      class="text-4xl font-black"
+    >
+      Number Bonds (within 10)
+    </h2>
+    <div
+      class="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm"
+    >
+      <img
+        alt=""
+        aria-hidden="true"
+        class="h-5 w-5 object-contain"
+        draggable="false"
+        src="data:image/svg+xml,%3c?xml%20version='1.0'%20encoding='iso-8859-1'?%3e%3c!DOCTYPE%20svg%20PUBLIC%20'-//W3C//DTD%20SVG%201.0//EN'%20'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'%3e%3c!--%20Uploaded%20to:%20SVG%20Repo,%20www.svgrepo.com,%20Generator:%20SVG%20Repo%20Mixer%20Tools%20--%3e%3csvg%20version='1.0'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='800px'%20height='800px'%20viewBox='0%200%2024%2024'%20xml:space='preserve'%3e%3cg%20id='Guides'%3e%3cg%20id='_x32_0_px_2_'%3e%3c/g%3e%3cg%20id='_x32_0px'%3e%3c/g%3e%3cg%20id='_x34_0px'%3e%3c/g%3e%3cg%20id='_x34_4_px'%3e%3c/g%3e%3cg%20id='_x34_8px'%3e%3cg%20id='_x31_6px'%3e%3c/g%3e%3cg%20id='square_4px'%3e%3cg%20id='_x32_8_px'%3e%3cg%20id='square_4px_2_'%3e%3c/g%3e%3cg%20id='square_4px_3_'%3e%3c/g%3e%3cg%20id='square_4px_1_'%3e%3c/g%3e%3cg%20id='_x32_4_px_2_'%3e%3c/g%3e%3cg%20id='_x31_2_px'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Icons'%3e%3c/g%3e%3cg%20id='_x32_0_px'%3e%3c/g%3e%3cg%20id='square_6px'%3e%3cg%20id='_x31_2_PX'%3e%3c/g%3e%3c/g%3e%3cg%20id='_x33_6_px'%3e%3cg%20id='_x33_2_px'%3e%3cg%20id='_x32_8_px_1_'%3e%3cg%20id='square_6px_1_'%3e%3c/g%3e%3cg%20id='_x32_0_px_1_'%3e%3cg%20id='_x31_2_PX_2_'%3e%3c/g%3e%3cg%20id='_x34_8_px'%3e%3cg%20id='_x32_4_px'%3e%3c/g%3e%3cg%20id='_x32_4_px_1_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='_x32_0_px_3_'%3e%3c/g%3e%3cg%20id='_x32_0_px_4_'%3e%3c/g%3e%3cg%20id='New_Symbol_8'%3e%3cg%20id='_x32_4_px_3_'%3e%3c/g%3e%3c/g%3e%3c/g%3e%3cg%20id='Artboard'%3e%3c/g%3e%3cg%20id='Free_Icons'%3e%3cg%3e%3cline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20x1='7.5'%20y1='4'%20x2='7.5'%20y2='5'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14,8.5%2018.5,18%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='10,5%2011.5,8.5%2017,8.5%2013,0.5%206.5,0.5%204.5,4.5%201.5,5.5%201.5,9.5%205.5,9.5%207.5,15.5%205,20.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='14.5,16.5%2010,16.5%208,20.5%203.5,20.5%202.5,23.5%2018.5,23.5%20'/%3e%3cpolyline%20style='fill:none;stroke:%23000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;'%20points='18.5,23.5%2022.5,19.5%2022.5,16%2020.5,12%20'/%3e%3c/g%3e%3c/g%3e%3c/svg%3e"
+      />
+      <span
+        class="capitalize"
+      >
+        dogs
+         theme
+      </span>
+    </div>
+    <p
+      class="mt-2 text-base"
+    >
+      Find two parts that make the whole. Write the missing part on the line.
+    </p>
+    <p
+      class="mt-2 text-xl"
+    >
+      Name:
+       
+      <span
+        class="inline-block min-w-64 border-b-2 border-solid border-black"
+      >
+        ________________
+      </span>
+    </p>
+  </header>
+  <div
+    class="mb-4 flex items-center gap-2 print:hidden"
+  >
+    <button
+      class="action-btn-secondary"
+      type="button"
+    >
+      Reshuffle Problems
+    </button>
+    <span
+      class="text-xs text-slate-500"
+    >
+      Keeps settings, refreshes worksheet content only.
+    </span>
+  </div>
+  <div
+    class="grid grid-cols-1 gap-5"
+  >
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        1
+        .
+      </span>
+      <span>
+        4
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        __
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        6
+      </span>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        2
+        .
+      </span>
+      <span>
+        7
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        3
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        10
+      </span>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        3
+        .
+      </span>
+      <span>
+        __
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        4
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        8
+      </span>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        4
+        .
+      </span>
+      <span>
+        8
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        __
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        9
+      </span>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        5
+        .
+      </span>
+      <span>
+        3
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        3
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        6
+      </span>
+    </div>
+    <div
+      class="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold"
+    >
+      <span
+        class="mr-3 font-bold"
+      >
+        6
+        .
+      </span>
+      <span>
+        4
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        +
+      </span>
+      <span>
+        4
+         
+      </span>
+      <span
+        class="mx-2"
+      >
+        =
+      </span>
+      <span>
+        8
+      </span>
+    </div>
+  </div>
+</section>
+`;
+
 exports[`print layout snapshots > single worksheet page renders consistently 1`] = `
 <section
   class="worksheet-paper rounded-xl border border-slate-300 bg-white p-10 shadow-sm print:rounded-none print:border-none print:p-10 print:shadow-none"

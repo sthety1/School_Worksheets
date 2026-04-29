@@ -192,6 +192,67 @@ describe('worksheet engine regression', () => {
     expect(data.answers.map((r) => r.next)).toEqual(data.student.map((r) => r.next))
   })
 
+  test('rhyme match includes a rhyming answer for each cue', () => {
+    const data = generateWorksheetData({
+      type: 'rhymeMatch',
+      problems: 8,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 333,
+    })
+
+    expect(data.student).toHaveLength(8)
+    expect(data.answers).toHaveLength(8)
+    expect(data.student.every((row, idx) => row.choices.includes(data.answers[idx].correctRhyme))).toBe(true)
+  })
+
+  test('syllable sort uses three options and a single correct split', () => {
+    const data = generateWorksheetData({
+      type: 'syllableSort',
+      problems: 6,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 444,
+    })
+
+    expect(data.student).toHaveLength(6)
+    expect(data.answers).toHaveLength(6)
+    expect(data.student.every((row) => row.options.length === 3)).toBe(true)
+    expect(data.student.every((row, idx) => row.options.includes(data.answers[idx].correct))).toBe(true)
+  })
+
+  test('number bonds answer key fills missing parts consistently', () => {
+    const data = generateWorksheetData({
+      type: 'numberBonds',
+      problems: 10,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 555,
+    })
+
+    expect(data.student).toHaveLength(10)
+    expect(data.answers).toHaveLength(10)
+    expect(data.answers.every((row) => row.a + row.b === row.total)).toBe(true)
+  })
+
   test('counting objects answer key echoes totals', () => {
     const data = generateWorksheetData({
       type: 'countingObjects',

@@ -255,6 +255,25 @@ describe('app regression coverage', () => {
     expect(pages.length).toBe(2)
   })
 
+  test('new worksheet types render a worksheet frame', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const types = [
+      { type: 'rhymeMatch', text: /Cue:/i },
+      { type: 'syllableSort', text: /Word:/i },
+      { type: 'numberBonds', text: /\+/ },
+    ]
+
+    for (const item of types) {
+      await user.selectOptions(screen.getByLabelText('Worksheet Type'), item.type)
+      await user.click(screen.getByRole('button', { name: 'Generate Worksheet' }))
+      const page = document.querySelector('[data-page="worksheet"]')
+      expect(page).toBeTruthy()
+      expect(page.textContent).toMatch(item.text)
+    }
+  })
+
   test('instruction override persists in saved profiles', async () => {
     const user = userEvent.setup()
     const store = new Map()

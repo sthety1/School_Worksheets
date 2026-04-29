@@ -83,6 +83,9 @@ function prettyWorksheetType(type) {
     cvcWords: 'CVC Words',
     sentenceTracing: 'Sentence Tracing',
     patterns: 'Patterns',
+    rhymeMatch: 'Rhyme Match',
+    syllableSort: 'Syllable Sort (Tap Clap)',
+    numberBonds: 'Number Bonds (within 10)',
     matching: 'Matching Pictures to Words',
     phonics: 'Beginning Sounds / Phonics',
     colorByNumber: 'Color by Number',
@@ -198,6 +201,48 @@ function renderWorksheetBody({ page }) {
           <View key={`pat-${idx}`} style={styles.row}>
             <Text>
               {idx + 1}. ({row.kind}) {row.sequence.join(' ')}   Next: ____
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'rhymeMatch') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`rhyme-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. Cue: {row.cueWord} — choices: {row.choices.join(' | ')}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'syllableSort') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`syl-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.word} — {row.options.join(' | ')}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'numberBonds') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`bond-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.a} + {row.b} = {row.total}
             </Text>
           </View>
         ))}
@@ -323,6 +368,48 @@ function renderAnswerKeyBody({ page }) {
           <View key={`pat-ak-${idx}`} style={styles.row}>
             <Text>
               {idx + 1}. ({row.kind}) {row.next}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'rhymeMatch') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`rhyme-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.cueWord} → {row.correctRhyme}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'syllableSort') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`syl-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.correct}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'numberBonds') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`bond-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.a} + {row.b} = {row.total}
             </Text>
           </View>
         ))}

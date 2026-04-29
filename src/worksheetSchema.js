@@ -16,6 +16,9 @@ export const worksheetTypeEnum = z.enum([
   'cvcWords',
   'sentenceTracing',
   'patterns',
+  'rhymeMatch',
+  'syllableSort',
+  'numberBonds',
 ])
 
 // Keep 'animals' for backwards compatibility with saved profiles.

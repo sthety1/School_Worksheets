@@ -38,5 +38,23 @@ describe('print layout snapshots', () => {
     expect(pages.length).toBe(2)
     expect(pages.map((p) => p.outerHTML).join('\n')).toMatchSnapshot()
   })
+
+  test('phase 11 worksheet types snapshot basic layout shells', () => {
+    const { container } = render(<App />)
+    fireEvent.change(screen.getByLabelText('Skill Preset'), { target: { value: 'kEarly' } })
+
+    const types = ['rhymeMatch', 'syllableSort', 'numberBonds']
+
+    types.forEach((type) => {
+      fireEvent.change(screen.getByLabelText('Worksheet Type'), { target: { value: type } })
+      const problemsInput = container.querySelector('input[type="number"]')
+      expect(problemsInput).toBeTruthy()
+      fireEvent.change(problemsInput, { target: { value: 6 } })
+      fireEvent.click(screen.getByRole('button', { name: 'Generate Worksheet' }))
+      const page = container.querySelector('[data-page="worksheet"]')
+      expect(page).toBeTruthy()
+      expect(page).toMatchSnapshot()
+    })
+  })
 })
 

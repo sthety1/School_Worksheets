@@ -29,7 +29,8 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Handwriting paper options (paper style, tracing opacity, tracing font)
 - [x] Content expansion (subtraction, ten-frames, CVC, sentence tracing, patterns)
 - [x] Assessment + placement (placement packet template + in-app scoring recommendation + apply)
-- [ ] Next themes queued: Phase 11 (content expansion), Phase 12 (parent UX/QoL), Phase 13 (engineering/reliability)
+- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds)
+- [ ] Next themes queued: Phase 12 (parent UX/QoL), Phase 13 (engineering/reliability)
 
 ---
 
@@ -221,24 +222,24 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ---
 
-## Phase 11: Content Expansion — Next Curriculum Skills (queued)
+## Phase 11: Content Expansion — Next Curriculum Skills
 
 **Goal:** Add the next slice of kindergarten readiness skills as new worksheet types while keeping print output clean, consistent, and test-covered.
 
 ### Candidate worksheet types (pick 2–4 as the first increment)
 
-- [ ] Rhyming / word families (match + write)
-- [ ] Syllable awareness (count/sort syllables with simple picture prompts)
-- [ ] Number bonds / decomposing numbers (within 10) aligned with ten-frames thinking
+- [x] Rhyming / word families (match + write) — implemented as **Rhyme Match**
+- [x] Syllable awareness (count/sort syllables with simple picture prompts) — implemented as **Syllable Sort (Tap Clap)**
+- [x] Number bonds / decomposing numbers (within 10) aligned with ten-frames thinking — implemented as **Number Bonds (within 10)**
 - [ ] Subitizing / quick-look dot groups (small quantities)
 - [ ] Measurement / comparison (longer/shorter, heavier/lighter) with picture prompts
 
 ### Tasks
 
-- [ ] Choose the first increment (2–4 types) and define defaults per skill preset
-- [ ] Add schema + engine generation + UI renderer for each new type
-- [ ] Add targeted unit tests for generation + layout snapshot coverage where layout is sensitive
-- [ ] Add at least one regression test per new type for “generate + render path exists”
+- [x] Choose the first increment (2–4 types) and define defaults per skill preset (**Rhyme Match**, **Syllable Sort**, **Number Bonds**)
+- [x] Add schema + engine generation + UI renderer for each new type
+- [x] Add targeted unit tests for generation + layout snapshot coverage where layout is sensitive
+- [x] Add at least one regression test per new type for “generate + render path exists”
 
 ### Acceptance Criteria
 
@@ -304,13 +305,14 @@ Use this section as our sprint tracker.
 - [x] Phase 1 / Skill presets
 - [x] Phase 1 / Handwriting guide lines
 - [x] Phase 10 / Assessment + placement packet + recommendation + tests
+- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds)
 
 ### Queued (After Phase 5 Stabilizes)
 
 - [x] Phase 6 / Handwriting paper options (paper styles, tracing opacity, font selector)
 - [x] Phase 8 / New worksheet types (subtraction, ten-frames, CVC, sentences, patterns)
 - [x] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
-- [ ] Phase 11 / Next content expansion (new worksheet types batch)
+- [x] Phase 11 / Next content expansion (Rhyme Match, Syllable Sort, Number Bonds)
 - [ ] Phase 12 / Parent UX + quality of life
 - [ ] Phase 13 / Engineering + reliability (CI smoke + performance hardening)
 
@@ -326,6 +328,7 @@ Use this section as our sprint tracker.
 - 2026-04-29: Added Vitest regression tests for worksheet engine logic and key UI flows.
 - 2026-04-29: Completed Phase 10 assessment + placement: added Placement Packet template, in-app scoring recommendation + apply-to-preset controls, placement unit + regression coverage (optional printable placement score-sheet page deferred).
 - 2026-04-29: Prioritized next roadmap themes: **Phase 11 content expansion**, **Phase 12 parent UX/QoL**, then **Phase 13 engineering/reliability**.
+- 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots). Deferred additional Phase 11 candidates (**Subitizing**, **Measurement**) for a later increment.
 
 ### Risks / Open Questions
 

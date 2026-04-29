@@ -26,6 +26,9 @@ const worksheetTypes = [
   { value: 'cvcWords', label: 'CVC Words' },
   { value: 'sentenceTracing', label: 'Sentence Tracing' },
   { value: 'patterns', label: 'Patterns' },
+  { value: 'rhymeMatch', label: 'Rhyme Match' },
+  { value: 'syllableSort', label: 'Syllable Sort (Tap Clap)' },
+  { value: 'numberBonds', label: 'Number Bonds (within 10)' },
   { value: 'matching', label: 'Matching Pictures to Words' },
   { value: 'phonics', label: 'Beginning Sounds / Phonics' },
   { value: 'colorByNumber', label: 'Color by Number' },
@@ -60,6 +63,9 @@ const problemPlanByType = {
   cvcWords: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   sentenceTracing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 10 },
   patterns: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
+  rhymeMatch: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  syllableSort: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  numberBonds: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   matching: { preK: 6, kEarly: 6, kMid: 6, kEnd: 6 },
   phonics: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   colorByNumber: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
@@ -121,6 +127,10 @@ const getInstructionByType = (type) => {
     cvcWords: 'Sound out each word, then write it on the line.',
     sentenceTracing: 'Trace each sentence neatly on the writing guides.',
     patterns: 'Look at the pattern. Write what comes next.',
+    rhymeMatch:
+      'Read each cue word aloud. Circle the word in the row that rhymes with the cue word. Say both words together to check the rhyme.',
+    syllableSort: 'Say the word slowly. Tap each syllable. Circle how the word breaks into syllables.',
+    numberBonds: 'Find two parts that make the whole. Write the missing part on the line.',
     matching: 'Draw a line to match each picture word to the same word on the right.',
     phonics: 'Say the beginning sound, read the picture word, then trace the focus letter.',
     colorByNumber: 'Use the key to color each shape by number. Stay inside the lines.',
@@ -142,6 +152,9 @@ const getObjectiveByType = (type) => {
     cvcWords: 'I can read and write CVC words.',
     sentenceTracing: 'I can write a sentence neatly.',
     patterns: 'I can find and complete patterns.',
+    rhymeMatch: 'I can listen for rhyming words.',
+    syllableSort: 'I can separate a word into syllables.',
+    numberBonds: 'I can break a number into two parts.',
     matching: 'I can match pictures and words.',
     phonics: 'I can say the first sound in a word.',
     colorByNumber: 'I can follow a key to color by number.',
@@ -305,6 +318,71 @@ function WorksheetBody({ config, data }) {
           ))}
         </div>
       )
+    case 'rhymeMatch':
+      return (
+        <div className="space-y-6">
+          {data.map((row, idx) => (
+            <div key={`rhyme-${idx}`} className="rounded-lg border border-dashed border-black p-4">
+              <div className="flex flex-wrap items-baseline gap-3 text-xl">
+                <span className="font-bold">{idx + 1}.</span>
+                <span>
+                  Cue: <span className="font-extrabold capitalize">{row.cueWord}</span>
+                </span>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-4 text-lg">
+                {row.choices.map((choice) => (
+                  <span key={`${row.cueWord}-${choice}`} className="rounded-md border border-black px-3 py-1 capitalize">
+                    {choice}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-3 text-sm text-slate-700">Circle the word that rhymes with the cue word.</p>
+            </div>
+          ))}
+        </div>
+      )
+    case 'syllableSort':
+      return (
+        <div className="space-y-6">
+          {data.map((row, idx) => (
+            <div key={`syl-${idx}`} className="rounded-lg border border-dashed border-black p-4">
+              <div className="flex flex-wrap items-baseline gap-3 text-xl">
+                <span className="font-bold">{idx + 1}.</span>
+                <span>
+                  Word: <span className="font-extrabold">{row.word}</span>
+                  <span className="ml-3 text-base text-slate-600"> ({row.syllables} syllables)</span>
+                </span>
+              </div>
+              <div className="mt-3 flex flex-wrap gap-3 text-lg">
+                {row.options.map((opt) => (
+                  <span key={`${row.word}-${opt}`} className="rounded-md border border-black px-3 py-1">
+                    {opt}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    case 'numberBonds':
+      return (
+        <div className="grid grid-cols-1 gap-5">
+          {data.map((row, idx) => (
+            <div key={`bond-${idx}`} className="rounded-lg border border-dashed border-black p-4 text-3xl font-semibold">
+              <span className="mr-3 font-bold">{idx + 1}.</span>
+              <span>
+                {typeof row.a === 'number' ? row.a : '__'}{' '}
+              </span>
+              <span className="mx-2">+</span>
+              <span>
+                {typeof row.b === 'number' ? row.b : '__'}{' '}
+              </span>
+              <span className="mx-2">=</span>
+              <span>{row.total}</span>
+            </div>
+          ))}
+        </div>
+      )
     case 'matching':
       return (
         <div className="space-y-4">
@@ -437,6 +515,39 @@ function AnswerKeyBody({ config, answers }) {
         {answers.map((row, idx) => (
           <div key={`pat-ak-${idx}`} className="text-2xl">
             {idx + 1}. ({row.kind}) <span className="font-bold">{row.next}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'rhymeMatch') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`rhyme-ak-${idx}`} className="text-2xl">
+            {idx + 1}. {row.cueWord} rhymes with <span className="font-bold capitalize">{row.correctRhyme}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'syllableSort') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`syl-ak-${idx}`} className="text-2xl">
+            {idx + 1}. <span className="font-bold">{row.correct}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'numberBonds') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`bond-ak-${idx}`} className="text-2xl">
+            {idx + 1}. {row.a} + {row.b} = {row.total}
           </div>
         ))}
       </div>
