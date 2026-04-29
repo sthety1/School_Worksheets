@@ -1,0 +1,245 @@
+import { generatorInputSchema } from './worksheetSchema'
+
+export const sightWordSources = [
+  { value: 'dolchPrePrimer', label: 'Dolch Pre-Primer' },
+  { value: 'dolchPrimer', label: 'Dolch Primer' },
+  { value: 'fryFirst100', label: 'Fry Top 100 (Starter Set)' },
+  { value: 'custom', label: 'Custom Word List' },
+  { value: 'mixedRandom', label: 'Mixed Random Phonics' },
+]
+
+export const dolchPrePrimerWords = [
+  'a', 'and', 'away', 'big', 'blue', 'can', 'come', 'down', 'find', 'for', 'fun', 'go', 'help', 'here', 'I', 'in', 'is', 'it', 'jump', 'little',
+]
+export const dolchPrimerWords = [
+  'all', 'am', 'are', 'at', 'ate', 'be', 'black', 'brown', 'but', 'came', 'did', 'do', 'eat', 'four', 'get', 'good', 'have', 'he', 'into', 'like',
+]
+export const fryStarterWords = [
+  'the', 'of', 'and', 'a', 'to', 'in', 'is', 'you', 'that', 'it', 'he', 'was', 'for', 'on', 'are', 'as', 'with', 'his', 'they', 'I',
+]
+
+const fallbackSightWords = ['the', 'and', 'can', 'see', 'play', 'look', 'I', 'we', 'is', 'go']
+const randomSightWordPool = ['sun', 'run', 'hat', 'big', 'red', 'jump', 'help', 'find', 'tree', 'frog', 'home', 'milk']
+
+export const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+export const shapes = ['Circle', 'Square', 'Triangle', 'Rectangle', 'Star', 'Heart', 'Oval']
+
+export const phonicsBank = [
+  { letter: 'A', word: 'apple' },
+  { letter: 'B', word: 'ball' },
+  { letter: 'C', word: 'cat' },
+  { letter: 'D', word: 'dog' },
+  { letter: 'E', word: 'egg' },
+  { letter: 'F', word: 'fish' },
+  { letter: 'G', word: 'goat' },
+  { letter: 'H', word: 'hat' },
+  { letter: 'I', word: 'igloo' },
+  { letter: 'J', word: 'jam' },
+  { letter: 'K', word: 'kite' },
+  { letter: 'L', word: 'lion' },
+  { letter: 'M', word: 'moon' },
+  { letter: 'N', word: 'nest' },
+  { letter: 'O', word: 'octopus' },
+  { letter: 'P', word: 'pig' },
+  { letter: 'Q', word: 'queen' },
+  { letter: 'R', word: 'rabbit' },
+  { letter: 'S', word: 'sun' },
+  { letter: 'T', word: 'turtle' },
+  { letter: 'U', word: 'umbrella' },
+  { letter: 'V', word: 'van' },
+  { letter: 'W', word: 'whale' },
+  { letter: 'X', word: 'xylophone' },
+  { letter: 'Y', word: 'yo-yo' },
+  { letter: 'Z', word: 'zebra' },
+]
+
+export const skillProfiles = {
+  preK: { difficulty: 'easy', numberMax: 8, additionMax: 3, phonicsLetters: 8 },
+  kEarly: { difficulty: 'easy', numberMax: 12, additionMax: 5, phonicsLetters: 14 },
+  kMid: { difficulty: 'medium', numberMax: 16, additionMax: 7, phonicsLetters: 20 },
+  kEnd: { difficulty: 'hard', numberMax: 20, additionMax: 9, phonicsLetters: 26 },
+}
+
+export const maxProblemsByType = {
+  numberTracing: 20,
+  countingObjects: 20,
+  letterTracing: 26,
+  sightWords: 20,
+  nameWriting: 20,
+  shapes: 7,
+  addition: 20,
+  matching: 6,
+  phonics: 26,
+  colorByNumber: 20,
+}
+
+export const getMaxProblems = (type) => maxProblemsByType[type] ?? 20
+
+// Deterministic RNG helpers (seeded) for regression stability.
+export const hashStringToUint32 = (input) => {
+  let h = 2166136261
+  for (let i = 0; i < input.length; i += 1) {
+    h ^= input.charCodeAt(i)
+    h = Math.imul(h, 16777619)
+  }
+  return h >>> 0
+}
+
+export const createRng = (seed) => {
+  let t = (seed >>> 0) || 1
+  return () => {
+    t += 0x6d2b79f5
+    let x = t
+    x = Math.imul(x ^ (x >>> 15), x | 1)
+    x ^= x + Math.imul(x ^ (x >>> 7), x | 61)
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const randInt = (rng, maxExclusive) => Math.floor(rng() * maxExclusive)
+
+const pickUniqueRandom = (source, count, rng) => {
+  const copy = [...source]
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = randInt(rng, i + 1)
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy.slice(0, Math.min(count, copy.length))
+}
+
+export const parseCustomWords = (text) =>
+  Array.from(
+    new Set(
+      text
+        .split(/[\n,]/)
+        .map((word) => word.trim().toLowerCase())
+        .filter(Boolean),
+    ),
+  )
+
+export const getSightWordPool = (config) => {
+  if (config.sightWordSource === 'dolchPrePrimer') return dolchPrePrimerWords
+  if (config.sightWordSource === 'dolchPrimer') return dolchPrimerWords
+  if (config.sightWordSource === 'fryFirst100') return fryStarterWords
+  if (config.sightWordSource === 'custom') {
+    const parsed = parseCustomWords(config.customWordList)
+    return parsed.length > 0 ? parsed : fallbackSightWords
+  }
+  return [...randomSightWordPool, ...fallbackSightWords]
+}
+
+export const pickUniqueWithRecent = (source, count, recentItems = [], rng) => {
+  const recentSet = new Set(recentItems)
+  const freshPool = source.filter((item) => !recentSet.has(item))
+  const firstPass = pickUniqueRandom(freshPool, count, rng)
+  if (firstPass.length === count) return firstPass
+  const fallbackPool = source.filter((item) => !firstPass.includes(item))
+  return [...firstPass, ...pickUniqueRandom(fallbackPool, count - firstPass.length, rng)]
+}
+
+const vowels = ['a', 'e', 'i', 'o', 'u']
+const consonants = 'bcdfghjklmnpqrstvwxyz'.split('')
+const makeSimpleWord = (rng) => {
+  const useBlend = randInt(rng, 2) === 0
+  if (useBlend) {
+    return `${consonants[randInt(rng, consonants.length)]}${vowels[randInt(rng, vowels.length)]}${consonants[randInt(rng, consonants.length)]}`
+  }
+  return `${consonants[randInt(rng, consonants.length)]}${vowels[randInt(rng, vowels.length)]}${consonants[randInt(rng, consonants.length)]}${consonants[randInt(rng, consonants.length)]}`
+}
+
+export const generateWorksheetData = (input) => {
+  const parsed = generatorInputSchema.parse(input)
+
+  const safeProblems = Math.max(4, Math.min(getMaxProblems(parsed.type), Number(parsed.problems)))
+  const skillProfile = skillProfiles[parsed.skillLevel] ?? skillProfiles.kEarly
+  const numberCeiling = skillProfile.numberMax
+  const additionMax = skillProfile.additionMax
+
+  const baseSeed = (Number.isFinite(parsed.seed) ? parsed.seed : 0) >>> 0
+  const cfgSeed = hashStringToUint32(
+    JSON.stringify({
+      ...parsed,
+      problems: safeProblems,
+    }),
+  )
+  const rng = createRng(baseSeed ^ cfgSeed)
+
+  if (parsed.type === 'numberTracing') {
+    const numberPool = Array.from({ length: numberCeiling }, (_, i) => (i + 1).toString())
+    return pickUniqueWithRecent(numberPool, safeProblems, parsed.recentMemory.numberTracing, rng)
+  }
+  if (parsed.type === 'countingObjects') {
+    return Array.from({ length: safeProblems }, () => {
+      const total = randInt(rng, numberCeiling) + 1
+      return { total, theme: parsed.theme }
+    })
+  }
+  if (parsed.type === 'letterTracing') {
+    return pickUniqueWithRecent(letters, safeProblems, parsed.recentMemory.letterTracing, rng)
+  }
+  if (parsed.type === 'sightWords') {
+    if (parsed.sightWordSource === 'mixedRandom') {
+      const uniqueWords = new Set()
+      while (uniqueWords.size < safeProblems && uniqueWords.size < 20) {
+        if (uniqueWords.size % 2 === 0) {
+          uniqueWords.add(randomSightWordPool[randInt(rng, randomSightWordPool.length)])
+        } else {
+          uniqueWords.add(makeSimpleWord(rng))
+        }
+      }
+      return Array.from(uniqueWords)
+    }
+    const selectedPool = getSightWordPool(parsed)
+    const baseWords = pickUniqueWithRecent(selectedPool, safeProblems, parsed.recentMemory.sightWords, rng)
+    if (baseWords.length === safeProblems || selectedPool.length >= safeProblems) return baseWords
+    const fillWords = pickUniqueWithRecent(
+      randomSightWordPool.filter((word) => !baseWords.includes(word)),
+      safeProblems - baseWords.length,
+      [],
+      rng,
+    )
+    return [...baseWords, ...fillWords]
+  }
+  if (parsed.type === 'nameWriting') {
+    return Array.from({ length: safeProblems }, () => parsed.childName || 'Write your name')
+  }
+  if (parsed.type === 'shapes') {
+    return pickUniqueRandom(shapes, safeProblems, rng)
+  }
+  if (parsed.type === 'addition') {
+    return Array.from({ length: safeProblems }, () => {
+      const a = randInt(rng, additionMax) + 1
+      const b = randInt(rng, additionMax) + 1
+      return { a, b }
+    })
+  }
+  if (parsed.type === 'matching') {
+    const themeWords = {
+      animals: ['cat', 'dog', 'fish', 'bird', 'frog', 'bear'],
+      princesses: ['crown', 'castle', 'dress', 'wand', 'ring', 'shoe'],
+      cars: ['car', 'bus', 'van', 'truck', 'jeep', 'taxi'],
+      dinosaurs: ['dino', 'fossil', 'tail', 'roar', 'egg', 'claw'],
+      unicorns: ['unicorn', 'horn', 'star', 'cloud', 'rainbow', 'mane'],
+    }
+    const basePool = themeWords[parsed.theme]
+    return pickUniqueWithRecent(basePool, safeProblems, parsed.recentMemory.matching, rng).map((word) => ({
+      word,
+      theme: parsed.theme,
+    }))
+  }
+  if (parsed.type === 'phonics') {
+    return pickUniqueWithRecent(
+      phonicsBank.slice(0, skillProfile.phonicsLetters),
+      safeProblems,
+      parsed.recentMemory.phonics,
+      rng,
+    )
+  }
+
+  // colorByNumber
+  return Array.from({ length: safeProblems }, (_, i) => ({
+    n: (i % 6) + 1,
+    shape: ['⬡', '◯', '△', '□', '☆', '♡'][i % 6],
+  }))
+}
+

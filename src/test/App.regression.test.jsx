@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from '../App'
+import App from '../AppNew'
 
 describe('app regression coverage', () => {
   test('shows sight word source controls when sight words are selected', async () => {
@@ -63,5 +63,16 @@ describe('app regression coverage', () => {
       value: originalLocalStorage,
       configurable: true,
     })
+  })
+
+  test('packet mode generates 5 pages', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
+
+    const pages = document.querySelectorAll('[data-page="worksheet"]')
+    expect(pages.length).toBe(5)
   })
 })
