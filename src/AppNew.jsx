@@ -445,10 +445,12 @@ function AnswerKeyBody({ config, answers }) {
 export default function AppNew() {
   const sheetRef = useRef(null)
   const packetContainerRef = useRef(null)
+  const importFileRef = useRef(null)
 
   const [showStandardsTags, setShowStandardsTags] = useState(false)
   const [showAnswerKey, setShowAnswerKey] = useState(false)
   const [showObjectiveLine, setShowObjectiveLine] = useState(false)
+  const [printPreviewMode, setPrintPreviewMode] = useState(false)
 
   const [config, setConfig] = useState({
     type: 'numberTracing',
@@ -470,6 +472,7 @@ export default function AppNew() {
   const [packetTemplate, setPacketTemplate] = useState('mixed')
   const [packetPages, setPacketPages] = useState([])
   const [packetWarnings, setPacketWarnings] = useState([])
+  const [packetPageRerolls, setPacketPageRerolls] = useState([])
 
   const [generationId, setGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
@@ -537,6 +540,7 @@ export default function AppNew() {
       getPresetProblems,
     })
     setPacketPages(pages)
+    setPacketPageRerolls(Array.from({ length: pages.length }, () => 0))
     setMode('packet')
     setPacketWarnings([])
     setStatusMessage('Packet generated.')
@@ -561,10 +565,72 @@ export default function AppNew() {
     window.print()
   }
 
+  const handleRerollPacketPage = (idx) => {
+    setPacketPageRerolls((prev) => {
+      const next = Array.isArray(prev) ? [...prev] : []
+      next[idx] = (next[idx] ?? 0) + 1
+      return next
+    })
+    setGenerationId((id) => id + 1)
+    setStatusMessage(`Packet page ${idx + 1} regenerated.`)
+  }
+
   // Profiles
   const [profiles, setProfiles] = useState(() => readJsonFromStorage(PROFILES_KEY, []))
   const [profileName, setProfileName] = useState('')
   const [selectedProfileId, setSelectedProfileId] = useState('')
+
+  const handleExportProfiles = () => {
+    try {
+      const payload = {
+        version: 1,
+        exportedAt: Date.now(),
+        profiles: Array.isArray(profiles) ? profiles : [],
+      }
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'worksheet_profiles.json'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+      setStatusMessage('Profiles exported.')
+    } catch {
+      setStatusMessage('Could not export profiles.')
+    }
+  }
+
+  const handleImportProfiles = async (file) => {
+    try {
+      const text = await file.text()
+      const parsed = JSON.parse(text)
+      const incoming = Array.isArray(parsed) ? parsed : parsed?.profiles
+      if (!Array.isArray(incoming)) {
+        setStatusMessage('Invalid profile file.')
+        return
+      }
+      const normalized = incoming
+        .filter((p) => p && typeof p === 'object')
+        .map((p) => ({
+          id: String(p.id ?? p.name ?? '').trim(),
+          name: String(p.name ?? p.id ?? '').trim(),
+          savedAt: Number.isFinite(p.savedAt) ? p.savedAt : Date.now(),
+          config: p.config ?? {},
+        }))
+        .filter((p) => p.id && p.name)
+
+      const byId = new Map((Array.isArray(profiles) ? profiles : []).map((p) => [p.id, p]))
+      for (const p of normalized) byId.set(p.id, p)
+      const merged = Array.from(byId.values()).sort((a, b) => (b.savedAt ?? 0) - (a.savedAt ?? 0))
+      setProfiles(merged)
+      writeJsonToStorage(PROFILES_KEY, merged)
+      setStatusMessage(`Imported ${normalized.length} profile(s).`)
+    } catch {
+      setStatusMessage('Could not import profiles.')
+    }
+  }
 
   const handleSaveProfile = () => {
     const name = profileName.trim()
@@ -634,8 +700,22 @@ export default function AppNew() {
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl bg-slate-50 p-4 text-slate-900 md:p-8 print:bg-white print:p-0">
-      <div className="grid gap-6 lg:grid-cols-[340px_1fr] print:block">
-        <aside className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden">
+      {printPreviewMode && (
+        <div className="sticky top-0 z-20 mb-4 flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm print:hidden">
+          <div>
+            <p className="text-sm font-bold">Print Preview</p>
+            <p className="text-xs text-slate-600">Review pages, then print or save as PDF.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print</button>
+            <button type="button" className="action-btn-secondary" onClick={handleSaveAsPdf}>Save as PDF</button>
+            <button type="button" className="action-btn" onClick={() => setPrintPreviewMode(false)}>Exit Preview</button>
+          </div>
+        </div>
+      )}
+
+      <div className={`grid gap-6 lg:grid-cols-[340px_1fr] print:block ${printPreviewMode ? 'lg:grid-cols-1' : ''}`}>
+        <aside className={`rounded-2xl border border-slate-200 bg-white p-5 shadow-sm print:hidden ${printPreviewMode ? 'hidden' : ''}`}>
           <h1 className="text-2xl font-bold">Kindergarten Worksheet Generator</h1>
           <p className="mt-1 text-sm text-slate-600">Create printable black-and-white practice pages in seconds.</p>
 
@@ -888,6 +968,9 @@ export default function AppNew() {
             )}
             <button type="button" className="action-btn-secondary" onClick={handlePrint}>Print Worksheet</button>
             <button type="button" className="action-btn-secondary" onClick={handleSaveAsPdf}>Save as PDF</button>
+            <button type="button" className="action-btn-secondary" onClick={() => setPrintPreviewMode(true)}>
+              Print Preview
+            </button>
           </div>
           {statusMessage && <p className="mt-3 text-xs font-semibold text-slate-600">{statusMessage}</p>}
 
@@ -914,6 +997,26 @@ export default function AppNew() {
               >
                 Delete
               </button>
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <button type="button" className="action-btn-secondary" onClick={handleExportProfiles}>
+                Export JSON
+              </button>
+              <button type="button" className="action-btn-secondary" onClick={() => importFileRef.current?.click()}>
+                Import JSON
+              </button>
+              <input
+                ref={importFileRef}
+                type="file"
+                accept="application/json"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) void handleImportProfiles(file)
+                  // allow re-importing the same file after edits
+                  e.target.value = ''
+                }}
+              />
             </div>
             <label className="control-label mt-3">
               Load profile
@@ -991,7 +1094,7 @@ export default function AppNew() {
               const pageData = generateWorksheetData({
                 ...pageConfig,
                 recentMemory,
-                seed: generationId + idx + 1,
+                seed: generationId + idx + 1 + (packetPageRerolls[idx] ?? 0) * 10000,
               })
               const overflow = packetWarnings[idx]
               return (
@@ -1009,7 +1112,10 @@ export default function AppNew() {
                   >
                     {overflow && (
                       <div className="mb-3 rounded-lg border border-black bg-white px-3 py-2 text-sm print:hidden">
-                        This page looks too tall to print on one sheet. Try fewer problems or a different template.
+                        <p className="font-semibold">This page may overflow a single sheet.</p>
+                        <p className="mt-1 text-sm text-slate-700">
+                          Try lowering the problem count, switching packet template, or changing the worksheet type for this page.
+                        </p>
                       </div>
                     )}
                     <header className="mb-8 border-b border-slate-300 pb-4">
@@ -1017,6 +1123,16 @@ export default function AppNew() {
                         Weekly Packet — Page {idx + 1} of {packetPages.length}
                       </p>
                       <h2 className="text-4xl font-black">{pageTitle}</h2>
+                      <div className="mt-2 flex items-center gap-2 print:hidden">
+                        <button
+                          type="button"
+                          className="action-btn-secondary"
+                          onClick={() => handleRerollPacketPage(idx)}
+                        >
+                          Reroll this page
+                        </button>
+                        <span className="text-xs text-slate-500">Regenerates only this page’s content.</span>
+                      </div>
                       <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-black px-3 py-1 text-sm">
                         <ThemeIcon theme={pageConfig.theme} className="h-5 w-5" />
                         <span className="capitalize">{pageConfig.theme} theme</span>

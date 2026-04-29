@@ -213,7 +213,7 @@ Use this section as our sprint tracker.
 
 - [x] Phase 6 / Handwriting paper options (paper styles, tracing opacity, font selector)
 - [x] Phase 8 / New worksheet types (subtraction, ten-frames, CVC, sentences, patterns)
-- [ ] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
+- [x] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
 
 ### Decisions Log
 

@@ -259,7 +259,31 @@ export const generateWorksheetData = (input) => {
         seen.add(key)
         rows.push({ a: hi, b: lo })
       }
-      while (rows.length < safeProblems) rows.push({ a: additionMax, b: 1 })
+      if (rows.length < safeProblems) {
+        // Fill remaining slots with unused unique pairs (deterministic order),
+        // so we avoid duplicates unless uniqueness is mathematically impossible.
+        for (let hi = additionMax; hi >= 1 && rows.length < safeProblems; hi -= 1) {
+          for (let lo = 1; lo <= hi && rows.length < safeProblems; lo += 1) {
+            const key = `${hi}-${lo}`
+            if (seen.has(key)) continue
+            seen.add(key)
+            rows.push({ a: hi, b: lo })
+          }
+        }
+
+        // If still short, we've exhausted unique pairs in this range.
+        // Repeat deterministically from the start.
+        if (rows.length === 0) {
+          // Defensive: avoid modulo-by-zero edge cases.
+          // This should be unreachable with normal presets (additionMax >= 1),
+          // but keeps the generator safe even if config changes later.
+          const a = Math.max(1, additionMax)
+          rows.push({ a, b: 1 })
+        }
+        for (let i = 0; rows.length < safeProblems; i += 1) {
+          rows.push(rows[i % rows.length])
+        }
+      }
       return rows
     }
     if (parsed.type === 'matching') {

@@ -129,6 +129,7 @@ describe('worksheet engine regression', () => {
     })
     expect(data.student).toHaveLength(10)
     expect(data.answers).toHaveLength(10)
+    expect(new Set(data.student.map((r) => `${r.a}-${r.b}`)).size).toBe(data.student.length)
     expect(data.answers.every((row, idx) => row.diff === data.student[idx].a - data.student[idx].b)).toBe(true)
     expect(data.answers.every((row) => row.diff >= 0)).toBe(true)
   })

@@ -76,6 +76,83 @@ describe('app regression coverage', () => {
     expect(pages.length).toBe(5)
   })
 
+  test('print preview mode hides sidebar and can exit', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: 'Print Preview' }))
+    expect(screen.getByRole('button', { name: 'Exit Preview' })).toBeInTheDocument()
+    // Sidebar is hidden, but the worksheet page still exists.
+    expect(document.querySelector('[data-page="worksheet"]')).toBeTruthy()
+
+    await user.click(screen.getByRole('button', { name: 'Exit Preview' }))
+    expect(screen.queryByRole('button', { name: 'Exit Preview' })).not.toBeInTheDocument()
+  })
+
+  test('reroll packet page does not change page count', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
+    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
+
+    await user.click(screen.getAllByRole('button', { name: 'Reroll this page' })[0])
+    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
+    expect(screen.getByText(/Packet page 1 regenerated\./)).toBeInTheDocument()
+  })
+
+  test('can import child profiles from JSON', async () => {
+    const user = userEvent.setup()
+    const store = new Map()
+    const originalLocalStorage = globalThis.localStorage
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: {
+        getItem: (k) => store.get(k) ?? null,
+        setItem: (k, v) => store.set(k, String(v)),
+        removeItem: (k) => store.delete(k),
+        clear: () => store.clear(),
+      },
+      configurable: true,
+    })
+
+    render(<App />)
+
+    const importBtn = screen.getByRole('button', { name: 'Import JSON' })
+    expect(importBtn).toBeInTheDocument()
+
+    const fileInput = document.querySelector('input[type="file"][accept="application/json"]')
+    expect(fileInput).toBeTruthy()
+
+    const file = new File(
+      [
+        JSON.stringify({
+          version: 1,
+          profiles: [
+            {
+              id: 'Imported One',
+              name: 'Imported One',
+              savedAt: Date.now(),
+              config: { childName: 'Mia', skillLevel: 'kEarly', theme: 'dogs', sightWordSource: 'dolchPrePrimer', customWordList: '' },
+            },
+          ],
+        }),
+      ],
+      'profiles.json',
+      { type: 'application/json' },
+    )
+
+    await user.upload(fileInput, file)
+
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Imported One')
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Mia')
+
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: originalLocalStorage,
+      configurable: true,
+    })
+  })
+
   test('standards tags are hidden by default and appear when enabled', async () => {
     const user = userEvent.setup()
     render(<App />)
