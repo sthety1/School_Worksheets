@@ -6,6 +6,7 @@ import {
   skillProfiles,
 } from './worksheetEngine'
 import { buildPacketConfigs, packetTemplates } from './packetTemplates'
+import { ThemeIcon } from './themeIcons'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -66,59 +67,6 @@ const writeJsonToStorage = (key, value) => {
   } catch {
     // ignore
   }
-}
-
-const ThemeIcon = ({ theme, className = 'h-7 w-7' }) => {
-  if (theme === 'animals') {
-    return (
-      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-        <circle cx="10" cy="10" r="4" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="30" cy="10" r="4" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="20" cy="17" r="5" fill="none" stroke="black" strokeWidth="2" />
-        <ellipse cx="13" cy="28" rx="5" ry="6" fill="none" stroke="black" strokeWidth="2" />
-        <ellipse cx="27" cy="28" rx="5" ry="6" fill="none" stroke="black" strokeWidth="2" />
-      </svg>
-    )
-  }
-  if (theme === 'princesses') {
-    return (
-      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-        <path d="M6 30 L10 12 L20 22 L30 12 L34 30 Z" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="10" cy="10" r="2" fill="black" />
-        <circle cx="20" cy="8" r="2" fill="black" />
-        <circle cx="30" cy="10" r="2" fill="black" />
-      </svg>
-    )
-  }
-  if (theme === 'cars') {
-    return (
-      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-        <rect x="6" y="16" width="28" height="10" rx="2" fill="none" stroke="black" strokeWidth="2" />
-        <path d="M12 16 L16 11 H26 L30 16" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="14" cy="29" r="3" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="26" cy="29" r="3" fill="none" stroke="black" strokeWidth="2" />
-      </svg>
-    )
-  }
-  if (theme === 'dinosaurs') {
-    return (
-      <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-        <path d="M8 28 Q12 18 22 20 Q30 20 33 26 Q28 30 20 30 Q12 31 8 28 Z" fill="none" stroke="black" strokeWidth="2" />
-        <path d="M18 20 Q20 14 25 13" fill="none" stroke="black" strokeWidth="2" />
-        <circle cx="26" cy="13" r="1.5" fill="black" />
-        <line x1="13" y1="29" x2="13" y2="34" stroke="black" strokeWidth="2" />
-        <line x1="21" y1="30" x2="21" y2="34" stroke="black" strokeWidth="2" />
-      </svg>
-    )
-  }
-  return (
-    <svg viewBox="0 0 40 40" className={className} aria-hidden="true">
-      <path d="M7 28 Q10 20 16 17 Q22 14 29 20" fill="none" stroke="black" strokeWidth="2" />
-      <path d="M18 17 Q20 10 26 10 Q30 10 32 14 Q31 19 26 20 Q22 20 18 17 Z" fill="none" stroke="black" strokeWidth="2" />
-      <path d="M27 10 L33 5" fill="none" stroke="black" strokeWidth="2" />
-      <circle cx="26" cy="14" r="1.5" fill="black" />
-    </svg>
-  )
 }
 
 const ShapePreview = ({ shapeName }) => {
