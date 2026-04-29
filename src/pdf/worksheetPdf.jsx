@@ -67,6 +67,30 @@ const styles = StyleSheet.create({
     fontSize: 10,
     alignSelf: 'flex-start',
   },
+  subitWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 140,
+    marginTop: 4,
+    marginBottom: 8,
+    borderWidth: 0.75,
+    borderColor: '#000000',
+    padding: 2,
+  },
+  subitCell: {
+    width: 26,
+    height: 26,
+    borderWidth: 0.5,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  subitDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: '#000000',
+  },
 })
 
 function prettyWorksheetType(type) {
@@ -86,6 +110,8 @@ function prettyWorksheetType(type) {
     rhymeMatch: 'Rhyme Match',
     syllableSort: 'Syllable Sort (Tap Clap)',
     numberBonds: 'Number Bonds (within 10)',
+    subitizing: 'Subitizing (Quick-Look Dots)',
+    measurementCompare: 'Measurement / Compare',
     matching: 'Matching Pictures to Words',
     phonics: 'Beginning Sounds / Phonics',
     colorByNumber: 'Color by Number',
@@ -243,6 +269,47 @@ function renderWorksheetBody({ page }) {
           <View key={`bond-${idx}`} style={styles.row}>
             <Text>
               {idx + 1}. {row.a} + {row.b} = {row.total}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'subitizing') {
+    return (
+      <View>
+        {student.map((row, idx) => {
+          const filled = new Set(row.cells.map((c) => `${c.row},${c.col}`))
+          return (
+            <View key={`sub-${idx}`} style={styles.row}>
+              <Text>{idx + 1}. How many dots? _____</Text>
+              <View style={styles.subitWrap}>
+                {Array.from({ length: 25 }, (_, i) => {
+                  const r = Math.floor(i / 5)
+                  const col = i % 5
+                  const on = filled.has(`${r},${col}`)
+                  return (
+                    <View key={`subc-${idx}-${i}`} style={styles.subitCell}>
+                      {on ? <View style={styles.subitDot} /> : null}
+                    </View>
+                  )
+                })}
+              </View>
+            </View>
+          )
+        })}
+      </View>
+    )
+  }
+
+  if (config.type === 'measurementCompare') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`meas-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.prompt} A · {row.leftLabel} · B · {row.rightLabel}
             </Text>
           </View>
         ))}
@@ -410,6 +477,34 @@ function renderAnswerKeyBody({ page }) {
           <View key={`bond-ak-${idx}`} style={styles.row}>
             <Text>
               {idx + 1}. {row.a} + {row.b} = {row.total}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'subitizing') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`sub-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.count}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
+  if (config.type === 'measurementCompare') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`meas-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.correctLabel}
             </Text>
           </View>
         ))}

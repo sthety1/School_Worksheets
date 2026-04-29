@@ -29,6 +29,8 @@ const worksheetTypes = [
   { value: 'rhymeMatch', label: 'Rhyme Match' },
   { value: 'syllableSort', label: 'Syllable Sort (Tap Clap)' },
   { value: 'numberBonds', label: 'Number Bonds (within 10)' },
+  { value: 'subitizing', label: 'Subitizing (Quick-Look Dots)' },
+  { value: 'measurementCompare', label: 'Measurement / Compare' },
   { value: 'matching', label: 'Matching Pictures to Words' },
   { value: 'phonics', label: 'Beginning Sounds / Phonics' },
   { value: 'colorByNumber', label: 'Color by Number' },
@@ -66,6 +68,8 @@ const problemPlanByType = {
   rhymeMatch: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   syllableSort: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   numberBonds: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  subitizing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  measurementCompare: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   matching: { preK: 6, kEarly: 6, kMid: 6, kEnd: 6 },
   phonics: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   colorByNumber: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
@@ -131,6 +135,10 @@ const getInstructionByType = (type) => {
       'Read each cue word aloud. Circle the word in the row that rhymes with the cue word. Say both words together to check the rhyme.',
     syllableSort: 'Say the word slowly. Tap each syllable. Circle how the word breaks into syllables.',
     numberBonds: 'Find two parts that make the whole. Write the missing part on the line.',
+    subitizing:
+      'Look at each group of dots quickly. Write how many you see. Try to tell without counting each dot one-by-one.',
+    measurementCompare:
+      'Read each question. Circle the picture or word that shows the longer, shorter, taller, heavier, or greater amount.',
     matching: 'Draw a line to match each picture word to the same word on the right.',
     phonics: 'Say the beginning sound, read the picture word, then trace the focus letter.',
     colorByNumber: 'Use the key to color each shape by number. Stay inside the lines.',
@@ -155,6 +163,8 @@ const getObjectiveByType = (type) => {
     rhymeMatch: 'I can listen for rhyming words.',
     syllableSort: 'I can separate a word into syllables.',
     numberBonds: 'I can break a number into two parts.',
+    subitizing: 'I can recognize small groups of dots at a glance.',
+    measurementCompare: 'I can compare length, height, weight, and capacity with words and pictures.',
     matching: 'I can match pictures and words.',
     phonics: 'I can say the first sound in a word.',
     colorByNumber: 'I can follow a key to color by number.',
@@ -383,6 +393,52 @@ function WorksheetBody({ config, data }) {
           ))}
         </div>
       )
+    case 'subitizing':
+      return (
+        <div className="space-y-6">
+          {data.map((row, idx) => {
+            const filled = new Set(row.cells.map((c) => `${c.row},${c.col}`))
+            return (
+              <div key={`sub-${idx}`} className="trace-row flex-wrap items-start gap-6">
+                <div className="grid w-[200px] grid-cols-5 gap-1 border border-black bg-white p-1">
+                  {Array.from({ length: 25 }, (_, i) => {
+                    const gridRow = Math.floor(i / 5)
+                    const gridCol = i % 5
+                    const on = filled.has(`${gridRow},${gridCol}`)
+                    return (
+                      <div
+                        key={`sub-cell-${idx}-${i}`}
+                        className="flex aspect-square max-h-10 items-center justify-center border border-neutral-800 bg-neutral-50"
+                      >
+                        {on ? <span className="h-3 w-3 rounded-full bg-black" aria-hidden /> : null}
+                      </div>
+                    )
+                  })}
+                </div>
+                <span className="answer-line">How many dots? ____</span>
+              </div>
+            )
+          })}
+        </div>
+      )
+    case 'measurementCompare':
+      return (
+        <div className="space-y-6">
+          {data.map((row, idx) => (
+            <div key={`meas-${idx}`} className="rounded-lg border border-dashed border-black p-4">
+              <div className="flex flex-wrap items-baseline gap-3 text-xl">
+                <span className="font-bold">{idx + 1}.</span>
+                <span className="font-semibold">{row.prompt}</span>
+              </div>
+              <div className="mt-4 flex flex-wrap gap-8 text-xl">
+                <span className="rounded-md border-2 border-black px-4 py-2">A · {row.leftLabel}</span>
+                <span className="rounded-md border-2 border-black px-4 py-2">B · {row.rightLabel}</span>
+              </div>
+              <p className="mt-3 text-sm text-slate-700">Circle the letter that answers the question.</p>
+            </div>
+          ))}
+        </div>
+      )
     case 'matching':
       return (
         <div className="space-y-4">
@@ -548,6 +604,28 @@ function AnswerKeyBody({ config, answers }) {
         {answers.map((row, idx) => (
           <div key={`bond-ak-${idx}`} className="text-2xl">
             {idx + 1}. {row.a} + {row.b} = {row.total}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'subitizing') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`sub-ak-${idx}`} className="text-2xl">
+            {idx + 1}. <span className="font-bold">{row.count}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'measurementCompare') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`meas-ak-${idx}`} className="text-2xl">
+            {idx + 1}. <span className="font-bold">{row.correctLabel}</span>
           </div>
         ))}
       </div>

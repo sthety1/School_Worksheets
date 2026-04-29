@@ -43,7 +43,7 @@ describe('print layout snapshots', () => {
     const { container } = render(<App />)
     fireEvent.change(screen.getByLabelText('Skill Preset'), { target: { value: 'kEarly' } })
 
-    const types = ['rhymeMatch', 'syllableSort', 'numberBonds']
+    const types = ['rhymeMatch', 'syllableSort', 'numberBonds', 'subitizing', 'measurementCompare']
 
     types.forEach((type) => {
       fireEvent.change(screen.getByLabelText('Worksheet Type'), { target: { value: type } })

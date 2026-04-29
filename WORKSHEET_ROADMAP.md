@@ -29,7 +29,7 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Handwriting paper options (paper style, tracing opacity, tracing font)
 - [x] Content expansion (subtraction, ten-frames, CVC, sentence tracing, patterns)
 - [x] Assessment + placement (placement packet template + in-app scoring recommendation + apply)
-- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds)
+- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds; Subitizing; Measurement / Compare)
 - [ ] Next themes queued: Phase 12 (parent UX/QoL), Phase 13 (engineering/reliability)
 
 ---
@@ -231,8 +231,8 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Rhyming / word families (match + write) — implemented as **Rhyme Match**
 - [x] Syllable awareness (count/sort syllables with simple picture prompts) — implemented as **Syllable Sort (Tap Clap)**
 - [x] Number bonds / decomposing numbers (within 10) aligned with ten-frames thinking — implemented as **Number Bonds (within 10)**
-- [ ] Subitizing / quick-look dot groups (small quantities)
-- [ ] Measurement / comparison (longer/shorter, heavier/lighter) with picture prompts
+- [x] Subitizing / quick-look dot groups (small quantities) — implemented as **Subitizing (Quick-Look Dots)** (dots on a 5×5 grid; word prompts only—no clipart)
+- [x] Measurement / comparison (longer/shorter, heavier/lighter, etc.) — implemented as **Measurement / Compare** (A/B labeled picture-style word prompts; clipart deferred)
 
 ### Tasks
 
@@ -305,14 +305,14 @@ Use this section as our sprint tracker.
 - [x] Phase 1 / Skill presets
 - [x] Phase 1 / Handwriting guide lines
 - [x] Phase 10 / Assessment + placement packet + recommendation + tests
-- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds)
+- [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds; Subitizing; Measurement / Compare)
 
 ### Queued (After Phase 5 Stabilizes)
 
 - [x] Phase 6 / Handwriting paper options (paper styles, tracing opacity, font selector)
 - [x] Phase 8 / New worksheet types (subtraction, ten-frames, CVC, sentences, patterns)
 - [x] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
-- [x] Phase 11 / Next content expansion (Rhyme Match, Syllable Sort, Number Bonds)
+- [x] Phase 11 / Next content expansion (Rhyme Match, Syllable Sort, Number Bonds + Subitizing + Measurement / Compare)
 - [ ] Phase 12 / Parent UX + quality of life
 - [ ] Phase 13 / Engineering + reliability (CI smoke + performance hardening)
 
@@ -328,7 +328,8 @@ Use this section as our sprint tracker.
 - 2026-04-29: Added Vitest regression tests for worksheet engine logic and key UI flows.
 - 2026-04-29: Completed Phase 10 assessment + placement: added Placement Packet template, in-app scoring recommendation + apply-to-preset controls, placement unit + regression coverage (optional printable placement score-sheet page deferred).
 - 2026-04-29: Prioritized next roadmap themes: **Phase 11 content expansion**, **Phase 12 parent UX/QoL**, then **Phase 13 engineering/reliability**.
-- 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots). Deferred additional Phase 11 candidates (**Subitizing**, **Measurement**) for a later increment.
+- 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots).
+- 2026-04-29: Completed Phase 11 second increment: **Subitizing (Quick-Look Dots)** and **Measurement / Compare** (word/label prompts; clipart-style pictures deferred).
 
 ### Risks / Open Questions
 

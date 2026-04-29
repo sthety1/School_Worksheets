@@ -79,6 +79,8 @@ export const maxProblemsByType = {
   rhymeMatch: 12,
   syllableSort: 12,
   numberBonds: 14,
+  subitizing: 12,
+  measurementCompare: 12,
 }
 
 export const getMaxProblems = (type) => maxProblemsByType[type] ?? 20
@@ -102,6 +104,8 @@ export const standardsTagsByType = {
   rhymeMatch: ['K.RF.A.2'],
   syllableSort: ['K.RF.A.2'],
   numberBonds: ['K.OA.A.3'],
+  subitizing: ['K.CC.B.4', 'K.CC.B.5'],
+  measurementCompare: ['K.MD.A.1', 'K.MD.A.2'],
 }
 
 export const getStandardsTagsForType = (type) => standardsTagsByType[type] ?? []
@@ -231,6 +235,146 @@ const shuffleOptions = (options, rng) => {
   }
   return copy
 }
+
+// Subitizing dot centers on a 5x5 grid (row, col). Patterns support quick-perceptual groupings where possible.
+const subitizingLayoutsByCount = {
+  1: [[[2, 2]]],
+  2: [
+    [
+      [1, 2],
+      [3, 2],
+    ],
+    [
+      [2, 1],
+      [2, 3],
+    ],
+  ],
+  3: [
+    [
+      [1, 1],
+      [3, 1],
+      [2, 3],
+    ],
+    [
+      [1, 2],
+      [2, 2],
+      [3, 2],
+    ],
+  ],
+  4: [
+    [
+      [1, 1],
+      [3, 1],
+      [1, 3],
+      [3, 3],
+    ],
+    [
+      [2, 1],
+      [2, 3],
+      [1, 2],
+      [3, 2],
+    ],
+  ],
+  5: [
+    [
+      [1, 1],
+      [1, 3],
+      [3, 1],
+      [3, 3],
+      [2, 2],
+    ],
+    [
+      [1, 0],
+      [1, 2],
+      [3, 0],
+      [3, 2],
+      [3, 4],
+    ],
+  ],
+  6: [
+    [
+      [1, 1],
+      [3, 1],
+      [1, 3],
+      [3, 3],
+      [1, 2],
+      [3, 2],
+    ],
+  ],
+  7: [
+    [
+      [4, 0],
+      [4, 2],
+      [4, 4],
+      [3, 1],
+      [3, 2],
+      [3, 3],
+      [2, 2],
+    ],
+  ],
+  8: [
+    [
+      [1, 0],
+      [1, 2],
+      [3, 0],
+      [3, 2],
+      [4, 0],
+      [4, 2],
+      [4, 4],
+      [3, 4],
+    ],
+  ],
+  9: [
+    [
+      [0, 0],
+      [0, 2],
+      [0, 4],
+      [2, 0],
+      [2, 2],
+      [2, 4],
+      [4, 0],
+      [4, 2],
+      [4, 4],
+    ],
+  ],
+  10: [
+    [...Array.from({ length: 5 }, (_, i) => [2, i]), ...Array.from({ length: 5 }, (_, i) => [4, i])],
+    [
+      [1, 1],
+      [1, 2],
+      [1, 3],
+      [2, 1],
+      [2, 2],
+      [2, 3],
+      [3, 1],
+      [3, 2],
+      [3, 3],
+      [4, 2],
+    ],
+  ],
+}
+
+export function pickSubitizingCells(count, rng) {
+  const layouts = subitizingLayoutsByCount[count] ?? subitizingLayoutsByCount[1]
+  const variant = layouts.length > 1 ? randInt(rng, layouts.length) : 0
+  const picked = layouts[variant] ?? layouts[0]
+  return picked.map(([r, c]) => ({ row: r, col: c }))
+}
+
+const measurementBank = [
+  { prompt: 'Which is longer?', a: 'a pencil', b: 'a paper clip', win: 'a' },
+  { prompt: 'Which is longer?', a: 'a snake', b: 'a worm', win: 'a' },
+  { prompt: 'Which is heavier?', a: 'a rock', b: 'a feather', win: 'a' },
+  { prompt: 'Which is heavier?', a: 'a bowling ball', b: 'a balloon', win: 'a' },
+  { prompt: 'Which is taller?', a: 'a giraffe', b: 'a mouse', win: 'a' },
+  { prompt: 'Which holds more liquid?', a: 'a bucket', b: 'a spoon', win: 'a' },
+  { prompt: 'Which is wider?', a: 'a door', b: 'a book', win: 'a' },
+  { prompt: 'Which is shorter?', a: 'a skyscraper', b: 'a fence post', win: 'b' },
+  { prompt: 'Which is lighter?', a: 'a pillow', b: 'a brick', win: 'b' },
+  { prompt: 'Which is longer?', a: 'a school bus', b: 'a toy car', win: 'a' },
+  { prompt: 'Which is heavier?', a: 'a watermelon', b: 'a grape', win: 'a' },
+  { prompt: 'Which is taller?', a: 'a tree', b: 'a flower pot', win: 'a' },
+]
 
 export const generateWorksheetData = (input) => {
   const parsed = generatorInputSchema.parse(input)
@@ -534,6 +678,35 @@ export const generateWorksheetData = (input) => {
       })
     }
 
+    if (parsed.type === 'subitizing') {
+      const maxDots =
+        parsed.skillLevel === 'preK' ? 5 : parsed.skillLevel === 'kEarly' ? 7 : parsed.skillLevel === 'kMid' ? 9 : 10
+      return Array.from({ length: safeProblems }, () => {
+        const count = randInt(rng, maxDots) + 1
+        return {
+          count,
+          cells: pickSubitizingCells(count, rng),
+        }
+      })
+    }
+
+    if (parsed.type === 'measurementCompare') {
+      return Array.from({ length: safeProblems }, () => {
+        const item = measurementBank[randInt(rng, measurementBank.length)]
+        const swapSides = rng() < 0.5
+        const leftLabel = swapSides ? item.b : item.a
+        const rightLabel = swapSides ? item.a : item.b
+        const winningLabel = item.win === 'a' ? item.a : item.b
+        const correctSide = winningLabel === leftLabel ? 'left' : 'right'
+        return {
+          prompt: item.prompt,
+          leftLabel,
+          rightLabel,
+          correctSide,
+        }
+      })
+    }
+
     // colorByNumber
     return Array.from({ length: safeProblems }, (_, i) => ({
       n: (i % 6) + 1,
@@ -608,6 +781,17 @@ export const generateWorksheetData = (input) => {
         }
       })
     }
+
+    if (parsed.type === 'subitizing') {
+      return student.map((row) => ({ count: row.count }))
+    }
+
+    if (parsed.type === 'measurementCompare') {
+      return student.map((row) => ({
+        correctLabel: row.correctSide === 'left' ? row.leftLabel : row.rightLabel,
+      }))
+    }
+
     return null
   })()
 

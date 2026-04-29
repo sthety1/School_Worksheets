@@ -253,6 +253,50 @@ describe('worksheet engine regression', () => {
     expect(data.answers.every((row) => row.a + row.b === row.total)).toBe(true)
   })
 
+  test('subitizing layout cell count matches displayed quantity', () => {
+    const data = generateWorksheetData({
+      type: 'subitizing',
+      problems: 8,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 777,
+    })
+
+    expect(data.student).toHaveLength(8)
+    expect(data.answers).toHaveLength(8)
+    expect(data.student.every((row) => row.cells.length === row.count)).toBe(true)
+    expect(data.answers.map((r) => r.count)).toEqual(data.student.map((r) => r.count))
+  })
+
+  test('measurement comparison answers align with labeled sides', () => {
+    const data = generateWorksheetData({
+      type: 'measurementCompare',
+      problems: 8,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 888,
+    })
+
+    expect(data.student).toHaveLength(8)
+    expect(data.answers).toHaveLength(8)
+    data.student.forEach((row, idx) => {
+      const expected = row.correctSide === 'left' ? row.leftLabel : row.rightLabel
+      expect(data.answers[idx].correctLabel).toBe(expected)
+    })
+  })
+
   test('counting objects answer key echoes totals', () => {
     const data = generateWorksheetData({
       type: 'countingObjects',

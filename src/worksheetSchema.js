@@ -19,6 +19,8 @@ export const worksheetTypeEnum = z.enum([
   'rhymeMatch',
   'syllableSort',
   'numberBonds',
+  'subitizing',
+  'measurementCompare',
 ])
 
 // Keep 'animals' for backwards compatibility with saved profiles.

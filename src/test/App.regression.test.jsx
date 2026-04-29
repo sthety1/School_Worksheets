@@ -263,6 +263,8 @@ describe('app regression coverage', () => {
       { type: 'rhymeMatch', text: /Cue:/i },
       { type: 'syllableSort', text: /Word:/i },
       { type: 'numberBonds', text: /\+/ },
+      { type: 'subitizing', text: /How many dots/i },
+      { type: 'measurementCompare', text: /Which is/i },
     ]
 
     for (const item of types) {
