@@ -14,12 +14,13 @@ export function buildPdfPages({
   recentMemory,
   showAnswerKey,
   showStandardsTags,
+  packetTemplate = 'mixed',
 }) {
   if (mode === 'packet') {
     const pages = Array.isArray(packetPages) ? packetPages : []
     const rerolls = Array.isArray(packetPageRerolls) ? packetPageRerolls : []
 
-    return pages.flatMap((pageConfig, idx) => {
+    let built = pages.flatMap((pageConfig, idx) => {
       const seed = generationId + idx + 1 + (rerolls[idx] ?? 0) * 10000
       const data = generateWorksheetData({ ...pageConfig, seed, recentMemory })
       const standards = showStandardsTags ? getStandardsTagsForType(pageConfig.type) : []
@@ -46,6 +47,16 @@ export function buildPdfPages({
         },
       ]
     })
+    if (packetTemplate === 'placement' && pages.length > 0) {
+      built = [
+        ...built,
+        {
+          kind: 'placementScoreSheet',
+          config: pages[0] ?? config,
+        },
+      ]
+    }
+    return built
   }
 
   const data = generateWorksheetData({ ...config, seed: worksheetSeed, recentMemory })

@@ -81,6 +81,7 @@ export const maxProblemsByType = {
   numberBonds: 14,
   subitizing: 12,
   measurementCompare: 12,
+  numberLine: 14,
 }
 
 export const getMaxProblems = (type) => maxProblemsByType[type] ?? 20
@@ -106,6 +107,7 @@ export const standardsTagsByType = {
   numberBonds: ['K.OA.A.3'],
   subitizing: ['K.CC.B.4', 'K.CC.B.5'],
   measurementCompare: ['K.MD.A.1', 'K.MD.A.2'],
+  numberLine: ['K.CC.A.2'],
 }
 
 export const getStandardsTagsForType = (type) => standardsTagsByType[type] ?? []
@@ -362,18 +364,18 @@ export function pickSubitizingCells(count, rng) {
 }
 
 const measurementBank = [
-  { prompt: 'Which is longer?', a: 'a pencil', b: 'a paper clip', win: 'a' },
-  { prompt: 'Which is longer?', a: 'a snake', b: 'a worm', win: 'a' },
-  { prompt: 'Which is heavier?', a: 'a rock', b: 'a feather', win: 'a' },
-  { prompt: 'Which is heavier?', a: 'a bowling ball', b: 'a balloon', win: 'a' },
-  { prompt: 'Which is taller?', a: 'a giraffe', b: 'a mouse', win: 'a' },
-  { prompt: 'Which holds more liquid?', a: 'a bucket', b: 'a spoon', win: 'a' },
-  { prompt: 'Which is wider?', a: 'a door', b: 'a book', win: 'a' },
-  { prompt: 'Which is shorter?', a: 'a skyscraper', b: 'a fence post', win: 'b' },
-  { prompt: 'Which is lighter?', a: 'a pillow', b: 'a brick', win: 'b' },
-  { prompt: 'Which is longer?', a: 'a school bus', b: 'a toy car', win: 'a' },
-  { prompt: 'Which is heavier?', a: 'a watermelon', b: 'a grape', win: 'a' },
-  { prompt: 'Which is taller?', a: 'a tree', b: 'a flower pot', win: 'a' },
+  { prompt: 'Which is longer?', a: 'a pencil', b: 'a paper clip', win: 'a', artA: 'pencil', artB: 'clip' },
+  { prompt: 'Which is longer?', a: 'a snake', b: 'a worm', win: 'a', artA: 'snake', artB: 'worm' },
+  { prompt: 'Which is heavier?', a: 'a rock', b: 'a feather', win: 'a', artA: 'rock', artB: 'feather' },
+  { prompt: 'Which is heavier?', a: 'a bowling ball', b: 'a balloon', win: 'a', artA: 'bowlingBall', artB: 'balloon' },
+  { prompt: 'Which is taller?', a: 'a giraffe', b: 'a mouse', win: 'a', artA: 'giraffe', artB: 'mouse' },
+  { prompt: 'Which holds more liquid?', a: 'a bucket', b: 'a spoon', win: 'a', artA: 'bucket', artB: 'spoon' },
+  { prompt: 'Which is wider?', a: 'a door', b: 'a book', win: 'a', artA: 'door', artB: 'book' },
+  { prompt: 'Which is shorter?', a: 'a skyscraper', b: 'a fence post', win: 'b', artA: 'skyscraper', artB: 'fencePost' },
+  { prompt: 'Which is lighter?', a: 'a pillow', b: 'a brick', win: 'b', artA: 'pillow', artB: 'brick' },
+  { prompt: 'Which is longer?', a: 'a school bus', b: 'a toy car', win: 'a', artA: 'schoolBus', artB: 'toyCar' },
+  { prompt: 'Which is heavier?', a: 'a watermelon', b: 'a grape', win: 'a', artA: 'watermelon', artB: 'grape' },
+  { prompt: 'Which is taller?', a: 'a tree', b: 'a flower pot', win: 'a', artA: 'tree', artB: 'flowerPot' },
 ]
 
 export const generateWorksheetData = (input) => {
@@ -696,13 +698,40 @@ export const generateWorksheetData = (input) => {
         const swapSides = rng() < 0.5
         const leftLabel = swapSides ? item.b : item.a
         const rightLabel = swapSides ? item.a : item.b
+        const leftArt = swapSides ? item.artB : item.artA
+        const rightArt = swapSides ? item.artA : item.artB
         const winningLabel = item.win === 'a' ? item.a : item.b
         const correctSide = winningLabel === leftLabel ? 'left' : 'right'
         return {
           prompt: item.prompt,
           leftLabel,
           rightLabel,
+          leftArt,
+          rightArt,
           correctSide,
+        }
+      })
+    }
+
+    if (parsed.type === 'numberLine') {
+      const lineMax =
+        parsed.skillLevel === 'preK'
+          ? 6
+          : parsed.skillLevel === 'kEarly'
+            ? 8
+            : parsed.skillLevel === 'kMid'
+              ? 10
+              : 10
+      const span = 5
+      return Array.from({ length: safeProblems }, () => {
+        const maxStart = Math.max(0, lineMax - span)
+        const start = randInt(rng, maxStart + 1)
+        const ticks = Array.from({ length: span }, (_, i) => start + i)
+        const hole = randInt(rng, span)
+        return {
+          ticks,
+          hiddenIndex: hole,
+          missing: ticks[hole],
         }
       })
     }
@@ -790,6 +819,10 @@ export const generateWorksheetData = (input) => {
       return student.map((row) => ({
         correctLabel: row.correctSide === 'left' ? row.leftLabel : row.rightLabel,
       }))
+    }
+
+    if (parsed.type === 'numberLine') {
+      return student.map((row) => ({ missing: row.missing }))
     }
 
     return null

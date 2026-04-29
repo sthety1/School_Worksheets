@@ -18,8 +18,6 @@ export default defineConfig({
           if (id.includes('node_modules/react')) return 'react-vendor'
           if (id.includes('node_modules/react-dom')) return 'react-vendor'
           if (id.includes('@react-pdf/renderer') || id.includes('node_modules/react-pdf')) return 'pdf-reactpdf'
-          if (id.includes('node_modules/html2canvas')) return 'pdf-html2canvas'
-          if (id.includes('node_modules/jspdf')) return 'pdf-jspdf'
         },
       },
     },

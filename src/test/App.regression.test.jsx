@@ -281,6 +281,7 @@ describe('app regression coverage', () => {
       { type: 'numberBonds', text: /\+/ },
       { type: 'subitizing', text: /How many dots/i },
       { type: 'measurementCompare', text: /Which is/i },
+      { type: 'numberLine', text: /Missing number/i },
     ]
 
     for (const item of types) {

@@ -21,6 +21,7 @@ export const worksheetTypeEnum = z.enum([
   'numberBonds',
   'subitizing',
   'measurementCompare',
+  'numberLine',
 ])
 
 // Keep 'animals' for backwards compatibility with saved profiles.

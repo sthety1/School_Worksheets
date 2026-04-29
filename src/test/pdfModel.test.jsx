@@ -48,5 +48,32 @@ describe('pdf model builder', () => {
     // Standards tags should be included when enabled.
     expect(Array.isArray(pages[0].standards)).toBe(true)
   })
+
+  test('placement packets append placement score recorder page', () => {
+    const packetPages = [
+      {
+        type: 'letterTracing',
+        skillLevel: 'kEarly',
+        problems: 6,
+        theme: 'dogs',
+        childName: 'Leo',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+    ]
+    const pages = buildPdfPages({
+      mode: 'packet',
+      config: packetPages[0],
+      worksheetSeed: 1,
+      packetPages,
+      packetPageRerolls: [0],
+      generationId: 1,
+      recentMemory: {},
+      showAnswerKey: false,
+      showStandardsTags: false,
+      packetTemplate: 'placement',
+    })
+    expect(pages.at(-1).kind).toBe('placementScoreSheet')
+  })
 })
 

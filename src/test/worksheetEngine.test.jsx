@@ -274,6 +274,26 @@ describe('worksheet engine regression', () => {
     expect(data.answers.map((r) => r.count)).toEqual(data.student.map((r) => r.count))
   })
 
+  test('number line problems hide one tick and answer echoes missing value', () => {
+    const data = generateWorksheetData({
+      type: 'numberLine',
+      problems: 6,
+      childName: '',
+      theme: 'dogs',
+      skillLevel: 'kEarly',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+      instructionOverride: '',
+      objectiveOverride: '',
+      recentMemory: { numberTracing: [], letterTracing: [], sightWords: [], matching: [], phonics: [] },
+      seed: 921,
+    })
+    expect(data.student).toHaveLength(6)
+    expect(data.answers).toHaveLength(6)
+    expect(data.student.every((row) => row.ticks[row.hiddenIndex] === row.missing)).toBe(true)
+    expect(data.answers.map((r) => r.missing)).toEqual(data.student.map((r) => r.missing))
+  })
+
   test('measurement comparison answers align with labeled sides', () => {
     const data = generateWorksheetData({
       type: 'measurementCompare',

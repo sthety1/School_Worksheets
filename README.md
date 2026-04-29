@@ -26,6 +26,12 @@ A parent-friendly web app that generates **printable kindergarten worksheets** (
 - Matching pictures/words
 - Beginning sounds / phonics
 - Color by number
+- Measurement / compare · Subitizing · Number bonds
+- **Number line (missing number)** — small segment with one blank tick
+
+## Development checks
+
+After `npm install`, run **`npm run lint`** and **`npm run test`**. CI also runs **`npm run build`** with a bundle sanity check (**`npm run build:check`**) plus browser smoke (**`npm run test:e2e`**) via Playwright; install Chromium once with **`npx playwright install chromium`**.
 
 ## Key features
 

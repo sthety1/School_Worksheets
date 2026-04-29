@@ -1843,6 +1843,99 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         </span>
       </div>
       <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <rect
+              fill="#eaeaea"
+              height="14"
+              stroke="currentColor"
+              stroke-width="1"
+              width="24"
+              x="12"
+              y="16"
+            />
+            <line
+              stroke="currentColor"
+              stroke-width="0.8"
+              x1="12"
+              x2="36"
+              y1="23"
+              y2="23"
+            />
+            <line
+              stroke="currentColor"
+              stroke-width="0.8"
+              x1="18"
+              x2="18"
+              y1="16"
+              y2="30"
+            />
+            <line
+              stroke="currentColor"
+              stroke-width="0.8"
+              x1="30"
+              x2="30"
+              y1="16"
+              y2="30"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <rect
+              fill="#ffffff"
+              height="12"
+              rx="4"
+              stroke="currentColor"
+              stroke-width="1"
+              width="28"
+              x="10"
+              y="18"
+            />
+            <path
+              d="M14 24 H34"
+              stroke="currentColor"
+              stroke-width="0.8"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
+      </div>
+      <div
         class="mt-4 flex flex-wrap gap-8 text-xl"
       >
         <span
@@ -1881,6 +1974,83 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         >
           Which is taller?
         </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <path
+              d="M16 31 L32 31 L30 24 L18 24 Z"
+              fill="#ffffff"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <ellipse
+              cx="24"
+              cy="24"
+              fill="#ffffff"
+              rx="8"
+              ry="3"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <rect
+              fill="#ffffff"
+              height="15"
+              stroke="currentColor"
+              stroke-width="1"
+              width="4"
+              x="22"
+              y="16"
+            />
+            <circle
+              cx="24"
+              cy="15"
+              fill="#ffffff"
+              r="11"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
       </div>
       <div
         class="mt-4 flex flex-wrap gap-8 text-xl"
@@ -1923,6 +2093,94 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         </span>
       </div>
       <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <ellipse
+              cx="28"
+              cy="21"
+              fill="#ffffff"
+              rx="13"
+              ry="9"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <circle
+              cx="39"
+              cy="19"
+              fill="#ffffff"
+              r="5"
+              stroke="currentColor"
+              stroke-width="0.9"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <rect
+              fill="#ffffff"
+              height="24"
+              stroke="currentColor"
+              stroke-width="1"
+              width="4"
+              x="22"
+              y="8"
+            />
+            <circle
+              cx="24"
+              cy="13"
+              fill="#ffffff"
+              r="10"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <ellipse
+              cx="24"
+              cy="12"
+              fill="none"
+              rx="13"
+              ry="11"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
+      </div>
+      <div
         class="mt-4 flex flex-wrap gap-8 text-xl"
       >
         <span
@@ -1961,6 +2219,83 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         >
           Which is heavier?
         </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <circle
+              cx="24"
+              cy="20"
+              fill="#eaeaea"
+              r="12"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <ellipse
+              cx="24"
+              cy="31"
+              opacity="0.15"
+              rx="22"
+              ry="8"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <ellipse
+              cx="24"
+              cy="17"
+              fill="#ffffff"
+              rx="10"
+              ry="13"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <line
+              stroke="currentColor"
+              stroke-width="1"
+              x1="24"
+              x2="24"
+              y1="30"
+              y2="31"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
       </div>
       <div
         class="mt-4 flex flex-wrap gap-8 text-xl"
@@ -2003,6 +2338,83 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         </span>
       </div>
       <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <rect
+              fill="#ffffff"
+              height="15"
+              stroke="currentColor"
+              stroke-width="1"
+              width="4"
+              x="22"
+              y="16"
+            />
+            <circle
+              cx="24"
+              cy="15"
+              fill="#ffffff"
+              r="11"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <path
+              d="M16 31 L32 31 L30 24 L18 24 Z"
+              fill="#ffffff"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <ellipse
+              cx="24"
+              cy="24"
+              fill="#ffffff"
+              rx="8"
+              ry="3"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
+      </div>
+      <div
         class="mt-4 flex flex-wrap gap-8 text-xl"
       >
         <span
@@ -2041,6 +2453,90 @@ exports[`print layout snapshots > phase 11 worksheet types snapshot basic layout
         >
           Which is heavier?
         </span>
+      </div>
+      <div
+        class="mt-3 flex flex-wrap items-center gap-4"
+      >
+        <span
+          class="flex flex-shrink-0 items-center gap-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <circle
+              cx="24"
+              cy="24"
+              fill="#ffffff"
+              r="5"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <circle
+              cx="20"
+              cy="16"
+              fill="#ffffff"
+              r="3"
+              stroke="currentColor"
+              stroke-width="0.8"
+            />
+            <circle
+              cx="28"
+              cy="16"
+              fill="#ffffff"
+              r="3"
+              stroke="currentColor"
+              stroke-width="0.8"
+            />
+          </svg>
+          <svg
+            aria-hidden="true"
+            class="h-16 w-24 shrink-0 text-black"
+            role="img"
+            viewBox="0 0 48 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              fill="#ffffff"
+              height="32"
+              rx="2"
+              stroke="currentColor"
+              stroke-width="0.4"
+              width="48"
+            />
+            <ellipse
+              cx="24"
+              cy="20"
+              fill="#ffffff"
+              rx="16"
+              ry="12"
+              stroke="currentColor"
+              stroke-width="1"
+            />
+            <path
+              d="M12 20 Q24 8 36 20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.8"
+            />
+          </svg>
+        </span>
+        <p
+          class="max-w-sm text-xs text-slate-600"
+        >
+          Small sketches help—you still answer from the sentence.
+        </p>
       </div>
       <div
         class="mt-4 flex flex-wrap gap-8 text-xl"

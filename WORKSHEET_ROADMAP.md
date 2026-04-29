@@ -30,7 +30,7 @@ This document is the build plan and progress tracker for improving the worksheet
 - [x] Content expansion (subtraction, ten-frames, CVC, sentence tracing, patterns)
 - [x] Assessment + placement (placement packet template + in-app scoring recommendation + apply)
 - [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds; Subitizing; Measurement / Compare)
-- [ ] Next themes queued: Phase 12 (parent UX/QoL), Phase 13 (engineering/reliability)
+- [x] Phase 12 (parent UX/QoL); Phase 13 (engineering/reliability) — shipped
 
 ---
 
@@ -211,7 +211,7 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ### Future / Deferred (not required for MVP)
 
-- [ ] Optional printable placement score sheet page bundled into PDF export
+- [x] Optional printable placement score sheet page bundled into PDF export (**Placement · recorder page** appended when exporting a **Placement Packet** PDF)
 
 ### Acceptance Criteria
 
@@ -286,6 +286,20 @@ This document is the build plan and progress tracker for improving the worksheet
 - Build output remains reliable; no increase in flaky tests.
 - User-facing failures are explained in parent-friendly language (not stack traces).
 
+---
+
+## Phase 14+: Curriculum & polish increments
+
+Bundled enhancements after Phases 1–13 priorities:
+
+- Placement **PDF export** gains a recorder **Placement · scoring sheet** page (for adults jotting scores before typing them into the generator).
+- **Measurement / Compare** shows simple **SVG doodles** next to choices (decorative; kids still judge from wording).
+- New worksheet **`numberLine`** (missing number along a short tick span, `K.CC.A.2`).
+- **Dependency cleanup**: removed unused `jspdf` + `html2canvas` installs.
+- Docs + broader **Playwright** smoke scenarios (placement flow, dual answer-key worksheets, restored packet snapshots).
+
+---
+
 ## Implementation Notes
 
 - Keep the UI parent-friendly and uncluttered.
@@ -300,6 +314,8 @@ This document is the build plan and progress tracker for improving the worksheet
 Use this section as our sprint tracker.
 
 ### Current Sprint (Next)
+
+- [x] Phase 14+ follow-ons (placement score PDF sheet, measurement art cues, number line worksheet, docs + broader e2e, bundle cleanup)
 
 - [x] Phase 1 / Instruction line
 - [x] Phase 1 / Skill presets
@@ -328,12 +344,13 @@ Use this section as our sprint tracker.
 - 2026-04-29: Switched tracing font to Playwrite NZ Basic Guides and simplified extra guide-line styling.
 - 2026-04-29: Completed Phase 2 content/curriculum upgrades with sight-word sources and recent-history no-repeat memory.
 - 2026-04-29: Added Vitest regression tests for worksheet engine logic and key UI flows.
-- 2026-04-29: Completed Phase 10 assessment + placement: added Placement Packet template, in-app scoring recommendation + apply-to-preset controls, placement unit + regression coverage (optional printable placement score-sheet page deferred).
+- 2026-04-29: Completed Phase 10 assessment + placement: added Placement Packet template, in-app scoring recommendation + apply-to-preset controls, placement unit + regression coverage—optional scorer PDF layered in Phase 14 batch.
 - 2026-04-29: Prioritized next roadmap themes: **Phase 11 content expansion**, **Phase 12 parent UX/QoL**, then **Phase 13 engineering/reliability**.
 - 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots).
 - 2026-04-29: Completed Phase 11 second increment: **Subitizing (Quick-Look Dots)** and **Measurement / Compare** (word/label prompts; clipart-style pictures deferred).
 - 2026-04-29: Completed Phase 12 parent UX/QoL: dismissible weekly-packet tips, richer empty packet preview + template shortcuts, quick actions (reset to recommended defaults, jump to print preview, restore last packet snapshot from localStorage), clearer printing/placement copy, softer placement recommendation narration.
 - 2026-04-29: Completed Phase 13 reliability: Playwright smoke (`e2e/smoke.spec.js`) + GitHub Actions workflow; dynamic `import()` for `@react-pdf`/worksheet PDF assembly (separate `pdf-reactpdf` chunk); `scripts/check-bundle-budget.mjs` + `npm run build:check`; friendlier profile import/export errors and localStorage save failure messages; Vitest excludes `e2e/`.
+- 2026-04-29: Phase 14+ batch: Placement PDF **Placement · recorder page**; measurement compare **SVG cue cards**; **`numberLine`** worksheet type (`K.CC.A.2`); removed unused **`jspdf`/`html2canvas`** deps; README dev section + expanded Playwright coverage (placement preset, answer key dual pages, restore last packet).
 
 ### Risks / Open Questions
 

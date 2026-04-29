@@ -10,6 +10,7 @@ import { buildPacketConfigs, packetTemplates } from './packetTemplates'
 import { ThemeIcon } from './themeIcons'
 import { buildPdfPages } from './pdf/pdfModel'
 import { recommendPlacementPreset } from './placement'
+import { MeasurementPairArtWeb } from './measurementIcons'
 
 const worksheetTypes = [
   { value: 'numberTracing', label: 'Number Tracing (1-20)' },
@@ -29,6 +30,7 @@ const worksheetTypes = [
   { value: 'numberBonds', label: 'Number Bonds (within 10)' },
   { value: 'subitizing', label: 'Subitizing (Quick-Look Dots)' },
   { value: 'measurementCompare', label: 'Measurement / Compare' },
+  { value: 'numberLine', label: 'Number Line (Missing Number)' },
   { value: 'matching', label: 'Matching Pictures to Words' },
   { value: 'phonics', label: 'Beginning Sounds / Phonics' },
   { value: 'colorByNumber', label: 'Color by Number' },
@@ -68,6 +70,7 @@ const problemPlanByType = {
   numberBonds: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   subitizing: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   measurementCompare: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
+  numberLine: { preK: 6, kEarly: 8, kMid: 10, kEnd: 12 },
   matching: { preK: 6, kEarly: 6, kMid: 6, kEnd: 6 },
   phonics: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
   colorByNumber: { preK: 6, kEarly: 10, kMid: 10, kEnd: 12 },
@@ -140,6 +143,8 @@ const getInstructionByType = (type) => {
       'Look at each group of dots quickly. Write how many you see. Try to tell without counting each dot one-by-one.',
     measurementCompare:
       'Read each question. Circle the picture or word that shows the longer, shorter, taller, heavier, or greater amount.',
+    numberLine:
+      'Read the number line. Write the missing number on the line.',
     matching: 'Draw a line to match each picture word to the same word on the right.',
     phonics: 'Say the beginning sound, read the picture word, then trace the focus letter.',
     colorByNumber: 'Use the key to color each shape by number. Stay inside the lines.',
@@ -166,6 +171,7 @@ const getObjectiveByType = (type) => {
     numberBonds: 'I can break a number into two parts.',
     subitizing: 'I can recognize small groups of dots at a glance.',
     measurementCompare: 'I can compare length, height, weight, and capacity with words and pictures.',
+    numberLine: 'I can find a missing number on a number line.',
     matching: 'I can match pictures and words.',
     phonics: 'I can say the first sound in a word.',
     colorByNumber: 'I can follow a key to color by number.',
@@ -422,6 +428,31 @@ function WorksheetBody({ config, data }) {
           })}
         </div>
       )
+    case 'numberLine':
+      return (
+        <div className="space-y-6">
+          {data.map((row, idx) => (
+            <div key={`nl-${idx}`} className="rounded-lg border border-dashed border-black p-4">
+              <p className="text-lg font-bold">{idx + 1}. What number is missing?</p>
+              <div className="mt-4 flex justify-center gap-2 text-xl font-semibold md:gap-3">
+                {row.ticks.map((n, nIdx) =>
+                  nIdx === row.hiddenIndex ? (
+                    <span key={`nl-${idx}-${nIdx}-blank`} className="min-w-[2.75rem] text-center underline decoration-2 underline-offset-4">
+                      ___ 
+                    </span>
+                  ) : (
+                    <span key={`nl-${idx}-${nIdx}-n`} className="text-center">{n}</span>
+                  ),
+                )}
+              </div>
+              <div className="mt-4 flex justify-center">
+                <div className="h-1 w-[min(100%,420px)] border-b-4 border-black" />
+              </div>
+              <span className="mt-4 block answer-line text-lg">Missing number: ____</span>
+            </div>
+          ))}
+        </div>
+      )
     case 'measurementCompare':
       return (
         <div className="space-y-6">
@@ -430,6 +461,10 @@ function WorksheetBody({ config, data }) {
               <div className="flex flex-wrap items-baseline gap-3 text-xl">
                 <span className="font-bold">{idx + 1}.</span>
                 <span className="font-semibold">{row.prompt}</span>
+              </div>
+              <div className="mt-3 flex flex-wrap items-center gap-4">
+                <MeasurementPairArtWeb leftId={row.leftArt} rightId={row.rightArt} />
+                <p className="max-w-sm text-xs text-slate-600">Small sketches help—you still answer from the sentence.</p>
               </div>
               <div className="mt-4 flex flex-wrap gap-8 text-xl">
                 <span className="rounded-md border-2 border-black px-4 py-2">A · {row.leftLabel}</span>
@@ -627,6 +662,17 @@ function AnswerKeyBody({ config, answers }) {
         {answers.map((row, idx) => (
           <div key={`meas-ak-${idx}`} className="text-2xl">
             {idx + 1}. <span className="font-bold">{row.correctLabel}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  if (config.type === 'numberLine') {
+    return (
+      <div className="space-y-2">
+        {answers.map((row, idx) => (
+          <div key={`nl-ak-${idx}`} className="text-2xl">
+            {idx + 1}. <span className="font-bold">{row.missing}</span>
           </div>
         ))}
       </div>
@@ -886,6 +932,7 @@ export default function AppNew() {
         recentMemory,
         showAnswerKey,
         showStandardsTags,
+        packetTemplate,
       })
 
       const [{ downloadPdfDocument }, { WorksheetPdfDocument }] = await Promise.all([

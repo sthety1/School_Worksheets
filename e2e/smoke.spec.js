@@ -14,6 +14,30 @@ test.describe('release smoke', () => {
     await expect(page.locator('[data-page="worksheet"]')).toHaveCount(5)
   })
 
+  test('placement packet template previews five worksheets', async ({ page }) => {
+    await page.goto('/')
+    await page.getByLabel('Mode').selectOption('packet')
+    await page.getByLabel('Packet Template').selectOption('placement')
+    await page.getByRole('button', { name: 'Generate Placement Packet' }).click()
+    await expect(page.locator('[data-page="worksheet"]')).toHaveCount(5)
+    await expect(page.getByText(/Placement check/i).first()).toBeVisible()
+  })
+
+  test('single worksheet plus answer key for addition renders two worksheet frames', async ({ page }) => {
+    await page.goto('/')
+    await page.getByLabel('Worksheet Type').selectOption('addition')
+    await page.getByLabel('Include answer key on screen and when printing').click()
+    await expect(page.locator('[data-page="worksheet"]')).toHaveCount(2)
+  })
+
+  test('generate weekly packet enables use last packet settings', async ({ page }) => {
+    await page.goto('/')
+    await page.getByLabel('Mode').selectOption('packet')
+    await expect(page.getByRole('button', { name: /Use last packet settings/i })).toBeDisabled()
+    await page.getByRole('button', { name: 'Generate Weekly Packet' }).click()
+    await expect(page.getByRole('button', { name: /Use last packet settings/i })).toBeEnabled()
+  })
+
   test('print preview opens and closes', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Print Preview', exact: true }).click()

@@ -112,6 +112,7 @@ function prettyWorksheetType(type) {
     numberBonds: 'Number Bonds (within 10)',
     subitizing: 'Subitizing (Quick-Look Dots)',
     measurementCompare: 'Measurement / Compare',
+    numberLine: 'Number Line (Missing Number)',
     matching: 'Matching Pictures to Words',
     phonics: 'Beginning Sounds / Phonics',
     colorByNumber: 'Color by Number',
@@ -317,6 +318,24 @@ function renderWorksheetBody({ page }) {
     )
   }
 
+  if (config.type === 'numberLine') {
+    return (
+      <View>
+        {student.map((row, idx) => {
+          const line = row.ticks.map((n, nIdx) => (nIdx === row.hiddenIndex ? ' ___ ' : `${n}`)).join('  ')
+          return (
+            <View key={`nl-${idx}`} style={styles.row}>
+              <Text>
+                {idx + 1}. What number is missing? {line}
+              </Text>
+              <Text>Missing number (record): _____</Text>
+            </View>
+          )
+        })}
+      </View>
+    )
+  }
+
   // Tracing-style worksheets: show the prompt and a blank line.
   if (config.type === 'numberTracing' || config.type === 'letterTracing' || config.type === 'sightWords' || config.type === 'nameWriting' || config.type === 'shapes' || config.type === 'sentenceTracing') {
     return (
@@ -512,6 +531,20 @@ function renderAnswerKeyBody({ page }) {
     )
   }
 
+  if (config.type === 'numberLine') {
+    return (
+      <View>
+        {answers.map((row, idx) => (
+          <View key={`nl-ak-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.missing}
+            </Text>
+          </View>
+        ))}
+      </View>
+    )
+  }
+
   return <Text>No answer key for this worksheet.</Text>
 }
 
@@ -521,6 +554,61 @@ export function WorksheetPdfDocument({ pages, filenameLabel }) {
   return (
     <Document title={safeLabel || 'Worksheet'}>
       {pages.map((page, idx) => {
+        if (page.kind === 'placementScoreSheet') {
+          return (
+            <Page key={`place-${idx}`} size="LETTER" style={styles.page}>
+              <Text style={styles.headerLabel}>Placement · recorder page</Text>
+              <Text style={styles.title}>Placement check — scoring sheet</Text>
+              <View style={styles.metaRow}>
+                <Text style={styles.metaText}>
+                  Theme: {String(page.config.theme ?? '').toUpperCase()}
+                </Text>
+                {page.config.childName ? (
+                  <Text style={styles.metaText}>Child: {page.config.childName}</Text>
+                ) : (
+                  <Text style={styles.metaText}>Child: __________</Text>
+                )}
+              </View>
+              <View style={styles.divider} />
+              <Text style={{ fontSize: 11, marginBottom: 8 }}>
+                After your learner finishes the placement pages, circle or write a score from 0 (needs support) to 5 (strong).
+                Totals guide the preset suggestion inside the generator.
+              </Text>
+              <View style={styles.row}>
+                <Text>Letter tracing</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <View style={styles.row}>
+                <Text>Phonics</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <View style={styles.row}>
+                <Text>Counting objects</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <View style={styles.row}>
+                <Text>Number tracing</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <View style={styles.row}>
+                <Text>Addition readiness</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <View style={styles.row}>
+                <Text>Optional bonus / notes</Text>
+                <Text style={styles.answerLine}>______ / 5</Text>
+              </View>
+              <Text style={{ fontSize: 10, marginTop: 14 }}>
+                When you reopen the Placement template in this app and type these totals, tap “Use this preset” to mirror the
+                suggested skill level—or adjust freely.
+              </Text>
+              <Text style={{ ...styles.badge, position: 'absolute', bottom: 40, right: 48 }}>
+                {idx + 1} / {pages.length}
+              </Text>
+            </Page>
+          )
+        }
+
         const title =
           page.kind === 'answerKey'
             ? `${prettyWorksheetType(page.config.type)} — Answer Key`
