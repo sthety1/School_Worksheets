@@ -269,16 +269,16 @@ This document is the build plan and progress tracker for improving the worksheet
 
 ---
 
-## Phase 13: Engineering + Reliability (queued)
+## Phase 13: Engineering + Reliability (complete)
 
 **Goal:** Strengthen confidence in releases as the app grows (more types, more UI paths).
 
 ### Tasks
 
-- [ ] Add a small browser smoke suite (Playwright) for critical flows: single sheet, packet, print preview, PDF download path (as feasible in CI)
-- [ ] Improve production bundle strategy (split heavy PDF/react-pdf paths if needed) without changing user-visible output
-- [ ] Add performance budgets / monitoring hooks (bundle size trend, simple perf checklist)
-- [ ] Harden error handling around local storage + import/export edge cases (clear user messaging)
+- [x] Add a small browser smoke suite (Playwright) for critical flows: single sheet, packet, print preview, PDF download path (as feasible in CI)
+- [x] Improve production bundle strategy (split heavy PDF/react-pdf paths if needed) without changing user-visible output
+- [x] Add performance budgets / monitoring hooks (bundle size trend, simple perf checklist)
+- [x] Harden error handling around local storage + import/export edge cases (clear user messaging)
 
 ### Acceptance Criteria
 
@@ -307,6 +307,7 @@ Use this section as our sprint tracker.
 - [x] Phase 10 / Assessment + placement packet + recommendation + tests
 - [x] Phase 11 / Content expansion increment (Rhyme Match, Syllable Sort, Number Bonds; Subitizing; Measurement / Compare)
 - [x] Phase 12 / Parent UX + quality of life (hints, reset, packet empty state, quick actions, copy)
+- [x] Phase 13 / Engineering + reliability (Playwright smoke, PDF code-split, bundle budget, profile storage messaging, GitHub Actions CI)
 
 ### Queued (After Phase 5 Stabilizes)
 
@@ -315,7 +316,7 @@ Use this section as our sprint tracker.
 - [x] Phase 9 / UX polish (print preview, section reroll, import/export profiles)
 - [x] Phase 11 / Next content expansion (Rhyme Match, Syllable Sort, Number Bonds + Subitizing + Measurement / Compare)
 - [x] Phase 12 / Parent UX + quality of life
-- [ ] Phase 13 / Engineering + reliability (CI smoke + performance hardening)
+- [x] Phase 13 / Engineering + reliability (CI smoke + performance hardening)
 
 ### Decisions Log
 
@@ -332,6 +333,7 @@ Use this section as our sprint tracker.
 - 2026-04-29: Completed Phase 11 first increment worksheet types: **Rhyme Match**, **Syllable Sort**, **Number Bonds** (+ engine/UI/PDF/tests/snapshots).
 - 2026-04-29: Completed Phase 11 second increment: **Subitizing (Quick-Look Dots)** and **Measurement / Compare** (word/label prompts; clipart-style pictures deferred).
 - 2026-04-29: Completed Phase 12 parent UX/QoL: dismissible weekly-packet tips, richer empty packet preview + template shortcuts, quick actions (reset to recommended defaults, jump to print preview, restore last packet snapshot from localStorage), clearer printing/placement copy, softer placement recommendation narration.
+- 2026-04-29: Completed Phase 13 reliability: Playwright smoke (`e2e/smoke.spec.js`) + GitHub Actions workflow; dynamic `import()` for `@react-pdf`/worksheet PDF assembly (separate `pdf-reactpdf` chunk); `scripts/check-bundle-budget.mjs` + `npm run build:check`; friendlier profile import/export errors and localStorage save failure messages; Vitest excludes `e2e/`.
 
 ### Risks / Open Questions
 

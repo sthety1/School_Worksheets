@@ -9,8 +9,6 @@ import {
 import { buildPacketConfigs, packetTemplates } from './packetTemplates'
 import { ThemeIcon } from './themeIcons'
 import { buildPdfPages } from './pdf/pdfModel'
-import { WorksheetPdfDocument } from './pdf/worksheetPdf'
-import { downloadPdfDocument } from './pdf/downloadPdf'
 import { recommendPlacementPreset } from './placement'
 
 const worksheetTypes = [
@@ -96,10 +94,11 @@ const readJsonFromStorage = (key, fallback) => {
 const writeJsonToStorage = (key, value) => {
   try {
     const storage = globalThis?.localStorage
-    if (!storage || typeof storage.setItem !== 'function') return
+    if (!storage || typeof storage.setItem !== 'function') return false
     storage.setItem(key, JSON.stringify(value))
+    return true
   } catch {
-    // ignore
+    return false
   }
 }
 
@@ -889,11 +888,15 @@ export default function AppNew() {
         showStandardsTags,
       })
 
+      const [{ downloadPdfDocument }, { WorksheetPdfDocument }] = await Promise.all([
+        import('./pdf/downloadPdf.js'),
+        import('./pdf/worksheetPdf.jsx'),
+      ])
       const doc = <WorksheetPdfDocument pages={pages} filenameLabel={filename} />
       await downloadPdfDocument({ doc, filename })
       setStatusMessage('PDF downloaded.')
     } catch {
-      setStatusMessage('Could not generate PDF. Use Print → Save as PDF as a fallback.')
+      setStatusMessage('Could not prepare the PDF. Use Print → Save as PDF, or try again in a moment.')
     }
   }
 
@@ -930,17 +933,21 @@ export default function AppNew() {
       URL.revokeObjectURL(url)
       setStatusMessage('Profiles exported.')
     } catch {
-      setStatusMessage('Could not export profiles.')
+      setStatusMessage('Could not export profiles. Check that downloads are allowed in your browser.')
     }
   }
 
   const handleImportProfiles = async (file) => {
     try {
       const text = await file.text()
+      if (!String(text ?? '').trim()) {
+        setStatusMessage('That file looks empty. Choose the JSON file you exported from this app.')
+        return
+      }
       const parsed = JSON.parse(text)
       const incoming = Array.isArray(parsed) ? parsed : parsed?.profiles
       if (!Array.isArray(incoming)) {
-        setStatusMessage('Invalid profile file.')
+        setStatusMessage('That file does not look like an export from this app. Use “Export JSON” here, then import that file.')
         return
       }
       const normalized = incoming
@@ -953,14 +960,26 @@ export default function AppNew() {
         }))
         .filter((p) => p.id && p.name)
 
+      if (normalized.length === 0) {
+        setStatusMessage('No usable profiles were found. Each saved child needs both a name and an id (use Export JSON from here).')
+        return
+      }
+
       const byId = new Map((Array.isArray(profiles) ? profiles : []).map((p) => [p.id, p]))
       for (const p of normalized) byId.set(p.id, p)
       const merged = Array.from(byId.values()).sort((a, b) => (b.savedAt ?? 0) - (a.savedAt ?? 0))
       setProfiles(merged)
-      writeJsonToStorage(PROFILES_KEY, merged)
+      if (!writeJsonToStorage(PROFILES_KEY, merged)) {
+        setStatusMessage('Profiles loaded in this session could not be saved—your browser may be out of storage. Free a little space and try Save Profile.')
+        return
+      }
       setStatusMessage(`Imported ${normalized.length} profile(s).`)
-    } catch {
-      setStatusMessage('Could not import profiles.')
+    } catch (err) {
+      if (err instanceof SyntaxError) {
+        setStatusMessage('That file is not valid JSON. Re-export from this app or open the file in a text editor to check for typos.')
+        return
+      }
+      setStatusMessage('Could not read that file. Try the export file again, or pick a smaller JSON file.')
     }
   }
 
@@ -992,8 +1011,11 @@ export default function AppNew() {
         packetTemplate,
       },
     })
+    if (!writeJsonToStorage(PROFILES_KEY, next)) {
+      setStatusMessage('Could not save to browser storage. Check storage space or site permissions, then try again.')
+      return
+    }
     setProfiles(next)
-    writeJsonToStorage(PROFILES_KEY, next)
     setSelectedProfileId(name)
     setStatusMessage(`Saved profile: ${name}`)
   }
@@ -1024,8 +1046,11 @@ export default function AppNew() {
 
   const handleDeleteProfile = (id) => {
     const next = (Array.isArray(profiles) ? profiles : []).filter((p) => p.id !== id)
+    if (!writeJsonToStorage(PROFILES_KEY, next)) {
+      setStatusMessage('Could not update saved profiles in your browser. Check storage space, then try again.')
+      return
+    }
     setProfiles(next)
-    writeJsonToStorage(PROFILES_KEY, next)
     if (selectedProfileId === id) setSelectedProfileId('')
     setStatusMessage('Profile deleted.')
   }

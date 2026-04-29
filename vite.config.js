@@ -9,6 +9,7 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/test/setupTests.js',
+    exclude: ['**/node_modules/**', '**/dist/**', '**/e2e/**'],
   },
   build: {
     rollupOptions: {
@@ -16,6 +17,7 @@ export default defineConfig({
         manualChunks(id) {
           if (id.includes('node_modules/react')) return 'react-vendor'
           if (id.includes('node_modules/react-dom')) return 'react-vendor'
+          if (id.includes('@react-pdf/renderer') || id.includes('node_modules/react-pdf')) return 'pdf-reactpdf'
           if (id.includes('node_modules/html2canvas')) return 'pdf-html2canvas'
           if (id.includes('node_modules/jspdf')) return 'pdf-jspdf'
         },
