@@ -120,6 +120,15 @@ function prettyWorksheetType(type) {
   return map[type] ?? type
 }
 
+export function formatMatchingPdfRow(row) {
+  const word = String(row.word ?? '')
+  return `${word}  ------  ${word}`
+}
+
+export function formatColorByNumberPdfRow(row) {
+  return `${String(row.shape ?? '')} Color this shape with number ${row.n ?? ''}`
+}
+
 function renderWorksheetBody({ page }) {
   const { config, student } = page
 
@@ -171,7 +180,7 @@ function renderWorksheetBody({ page }) {
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
             <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
+              {idx + 1}. {formatMatchingPdfRow(row)}
             </Text>
           </View>
         ))}
@@ -332,6 +341,23 @@ function renderWorksheetBody({ page }) {
             </View>
           )
         })}
+      </View>
+    )
+  }
+
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {formatColorByNumberPdfRow(row)}
+            </Text>
+          </View>
+        ))}
+        <Text style={styles.instruction}>
+          Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline
+        </Text>
       </View>
     )
   }

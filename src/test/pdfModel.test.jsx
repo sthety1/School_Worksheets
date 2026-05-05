@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { buildPdfPages } from '../pdf/pdfModel'
+import { formatColorByNumberPdfRow, formatMatchingPdfRow } from '../pdf/worksheetPdf'
 
 describe('pdf model builder', () => {
   test('builds packet pages and answer key pages deterministically', () => {
@@ -74,6 +75,50 @@ describe('pdf model builder', () => {
       packetTemplate: 'placement',
     })
     expect(pages.at(-1).kind).toBe('placementScoreSheet')
+  })
+
+  test('formats worksheet rows used by math packet PDFs without undefined or JSON dumps', () => {
+    const packetPages = [
+      {
+        type: 'matching',
+        skillLevel: 'kEarly',
+        problems: 6,
+        theme: 'dogs',
+        childName: 'Mia',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+      {
+        type: 'colorByNumber',
+        skillLevel: 'kEarly',
+        problems: 6,
+        theme: 'dogs',
+        childName: 'Mia',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+    ]
+
+    const pages = buildPdfPages({
+      mode: 'packet',
+      config: packetPages[0],
+      worksheetSeed: 3,
+      packetPages,
+      packetPageRerolls: [0, 0],
+      generationId: 3,
+      recentMemory: {},
+      showAnswerKey: false,
+      showStandardsTags: false,
+      packetTemplate: 'math',
+    })
+
+    const matchingRow = formatMatchingPdfRow(pages[0].student[0])
+    const colorByNumberRow = formatColorByNumberPdfRow(pages[1].student[0])
+
+    expect(matchingRow).toContain(pages[0].student[0].word)
+    expect(matchingRow).not.toContain('undefined')
+    expect(colorByNumberRow).toContain(`number ${pages[1].student[0].n}`)
+    expect(colorByNumberRow).not.toContain('{')
   })
 })
 
