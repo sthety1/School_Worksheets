@@ -168,13 +168,17 @@ function renderWorksheetBody({ page }) {
   if (config.type === 'matching') {
     return (
       <View>
-        {student.map((row, idx) => (
-          <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
-          </View>
-        ))}
+        {student.map((row, idx) => {
+          const leftWord = row.word ?? row.wordLeft ?? ''
+          const rightWord = row.word ?? row.wordRight ?? ''
+          return (
+            <View key={`match-${idx}`} style={styles.row}>
+              <Text>
+                {idx + 1}. {leftWord}  ———————→  {rightWord}
+              </Text>
+            </View>
+          )
+        })}
       </View>
     )
   }
@@ -332,6 +336,23 @@ function renderWorksheetBody({ page }) {
             </View>
           )
         })}
+      </View>
+    )
+  }
+
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((item, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {item.shape} Color this shape with number {item.n}
+            </Text>
+          </View>
+        ))}
+        <Text style={styles.instruction}>
+          Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline
+        </Text>
       </View>
     )
   }
