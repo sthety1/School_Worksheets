@@ -125,6 +125,7 @@ describe('app regression coverage', () => {
   })
 
   test('use last packet settings starts disabled until a packet has been generated', () => {
+    globalThis.localStorage?.removeItem('worksheet_last_packet_v1')
     render(<App />)
     expect(screen.getByRole('button', { name: /Use last packet settings/i })).toBeDisabled()
   })

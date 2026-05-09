@@ -11,39 +11,35 @@ function collectText(node) {
 
 describe('worksheet PDF rendering', () => {
   test('renders matching worksheet words from generated row shape', () => {
-    const doc = (
-      <WorksheetPdfDocument
-        filenameLabel="matching.pdf"
-        pages={[
-          {
-            kind: 'worksheet',
-            config: { type: 'matching', theme: 'dogs', childName: '' },
-            student: [{ word: 'puppy', theme: 'dogs' }],
-            answers: [{ word: 'puppy' }],
-            standards: [],
-          },
-        ]}
-      />
-    )
+    const doc = WorksheetPdfDocument({
+      filenameLabel: 'matching.pdf',
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'matching', theme: 'dogs', childName: '' },
+          student: [{ word: 'puppy', theme: 'dogs' }],
+          answers: [{ word: 'puppy' }],
+          standards: [],
+        },
+      ],
+    })
 
     expect(collectText(doc)).toContain('1. puppy  ———————→  puppy')
   })
 
   test('renders color-by-number instructions instead of raw JSON', () => {
-    const doc = (
-      <WorksheetPdfDocument
-        filenameLabel="color.pdf"
-        pages={[
-          {
-            kind: 'worksheet',
-            config: { type: 'colorByNumber', theme: 'dogs', childName: '' },
-            student: [{ shape: '*', n: 1 }],
-            answers: null,
-            standards: [],
-          },
-        ]}
-      />
-    )
+    const doc = WorksheetPdfDocument({
+      filenameLabel: 'color.pdf',
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'colorByNumber', theme: 'dogs', childName: '' },
+          student: [{ shape: '*', n: 1 }],
+          answers: null,
+          standards: [],
+        },
+      ],
+    })
     const text = collectText(doc)
 
     expect(text).toContain('1. * Color this shape with number 1')
