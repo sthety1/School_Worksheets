@@ -3,6 +3,10 @@ import userEvent from '@testing-library/user-event'
 import App from '../AppNew'
 
 describe('app regression coverage', () => {
+  beforeEach(() => {
+    window.localStorage.clear()
+  })
+
   test('defaults to K End preset for new sessions', () => {
     const { container } = render(<App />)
 
