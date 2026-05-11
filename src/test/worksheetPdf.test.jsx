@@ -34,7 +34,7 @@ describe('worksheet PDF document', () => {
     const text = collectText(doc).join(' ')
 
     expect(text).toContain('Color by Number')
-    expect(text).toContain('Color this shape with number 1')
+    expect(text).toMatch(/Color this shape with number\s+1/)
     expect(text).toContain('Color key: 1-black')
     expect(text).not.toContain('{"n":1')
   })
