@@ -336,6 +336,23 @@ function renderWorksheetBody({ page }) {
     )
   }
 
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.shape} Color this shape with number {row.n}
+            </Text>
+          </View>
+        ))}
+        <Text style={styles.instruction}>
+          Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline
+        </Text>
+      </View>
+    )
+  }
+
   // Tracing-style worksheets: show the prompt and a blank line.
   if (config.type === 'numberTracing' || config.type === 'letterTracing' || config.type === 'sightWords' || config.type === 'nameWriting' || config.type === 'shapes' || config.type === 'sentenceTracing') {
     return (
