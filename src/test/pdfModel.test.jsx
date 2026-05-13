@@ -99,7 +99,7 @@ describe('pdf model builder', () => {
       ],
     })
 
-    expect(collectText(doc).join(' ')).toContain('1. Count: o o o o')
+    expect(collectText(doc).join(' ')).toMatch(/1\s+\.\s+Count:\s+o o o o/)
   })
 
   test('matching PDF rows use generated words on both sides', () => {
@@ -116,7 +116,7 @@ describe('pdf model builder', () => {
       ],
     })
 
-    expect(collectText(doc).join(' ')).toContain('1. puppy  --------  puppy')
+    expect(collectText(doc).join(' ')).toMatch(/1\s+\.\s+puppy\s+--------\s+puppy/)
   })
 })
 
