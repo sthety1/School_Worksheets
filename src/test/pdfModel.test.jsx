@@ -1,5 +1,14 @@
 import { describe, expect, test } from 'vitest'
 import { buildPdfPages } from '../pdf/pdfModel'
+import { WorksheetPdfDocument } from '../pdf/worksheetPdf'
+
+function collectText(node) {
+  if (node === null || node === undefined || typeof node === 'boolean') return []
+  if (typeof node === 'string' || typeof node === 'number') return [String(node)]
+  if (Array.isArray(node)) return node.flatMap(collectText)
+  if (typeof node === 'object' && node.props) return collectText(node.props.children)
+  return []
+}
 
 describe('pdf model builder', () => {
   test('builds packet pages and answer key pages deterministically', () => {
@@ -74,6 +83,40 @@ describe('pdf model builder', () => {
       packetTemplate: 'placement',
     })
     expect(pages.at(-1).kind).toBe('placementScoreSheet')
+  })
+
+  test('counting objects PDF rows include countable marks', () => {
+    const doc = WorksheetPdfDocument({
+      filenameLabel: 'counting-test',
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'countingObjects', theme: 'dogs' },
+          student: [{ total: 4, theme: 'dogs' }],
+          answers: [{ total: 4 }],
+          standards: [],
+        },
+      ],
+    })
+
+    expect(collectText(doc).join(' ')).toMatch(/1\s+\.\s+Count:\s+o o o o/)
+  })
+
+  test('matching PDF rows use generated words on both sides', () => {
+    const doc = WorksheetPdfDocument({
+      filenameLabel: 'matching-test',
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'matching', theme: 'dogs' },
+          student: [{ word: 'puppy', theme: 'dogs' }],
+          answers: [{ word: 'puppy' }],
+          standards: [],
+        },
+      ],
+    })
+
+    expect(collectText(doc).join(' ')).toMatch(/1\s+\.\s+puppy\s+--------\s+puppy/)
   })
 })
 

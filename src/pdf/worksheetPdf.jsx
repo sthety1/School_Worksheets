@@ -154,13 +154,18 @@ function renderWorksheetBody({ page }) {
   if (config.type === 'countingObjects') {
     return (
       <View>
-        {student.map((row, idx) => (
-          <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
-          </View>
-        ))}
+        {student.map((row, idx) => {
+          const total = Math.max(0, Math.min(50, Number(row.total) || 0))
+          const countableMarks = Array.from({ length: total }, () => 'o').join(' ')
+          return (
+            <View key={`count-${idx}`} style={styles.row}>
+              <Text>
+                {idx + 1}. Count: {countableMarks}
+              </Text>
+              <Text>Answer: ______</Text>
+            </View>
+          )
+        })}
       </View>
     )
   }
@@ -171,7 +176,7 @@ function renderWorksheetBody({ page }) {
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
             <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
+              {idx + 1}. {row.word}  --------  {row.word}
             </Text>
           </View>
         ))}
