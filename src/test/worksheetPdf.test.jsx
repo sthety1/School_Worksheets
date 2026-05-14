@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { formatPdfCountingRow, formatPdfMatchingRow } from '../pdf/worksheetPdf.jsx'
+import { formatPdfCountingRow, formatPdfMatchingRow } from '../pdf/worksheetPdfRows'
 
 describe('worksheet PDF renderer helpers', () => {
   test('counting rows include visible count markers from worksheet data', () => {
