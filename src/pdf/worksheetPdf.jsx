@@ -93,6 +93,19 @@ const styles = StyleSheet.create({
   },
 })
 
+export function formatPdfCountingRow(row, idx) {
+  const total = Number(row?.total)
+  const count = Number.isFinite(total) ? Math.max(0, Math.min(20, Math.trunc(total))) : 0
+  const markers = count > 0 ? Array.from({ length: count }, () => 'O').join(' ') : 'objects'
+  return `${idx + 1}. Count: ${markers}   Total: ______`
+}
+
+export function formatPdfMatchingRow(row, idx) {
+  const left = row?.wordLeft ?? row?.word ?? ''
+  const right = row?.wordRight ?? row?.word ?? ''
+  return `${idx + 1}. ${left}  ------  ${right}`
+}
+
 function prettyWorksheetType(type) {
   const map = {
     numberTracing: 'Number Tracing (1-20)',
@@ -156,9 +169,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{formatPdfCountingRow(row, idx)}</Text>
           </View>
         ))}
       </View>
@@ -170,9 +181,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
+            <Text>{formatPdfMatchingRow(row, idx)}</Text>
           </View>
         ))}
       </View>
