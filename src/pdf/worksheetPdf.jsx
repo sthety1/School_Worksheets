@@ -1,4 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { formatPdfCountingRow, formatPdfMatchingRow } from './worksheetPdfRows'
 
 const styles = StyleSheet.create({
   page: {
@@ -156,9 +157,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{formatPdfCountingRow(row, idx)}</Text>
           </View>
         ))}
       </View>
@@ -170,9 +169,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
+            <Text>{formatPdfMatchingRow(row, idx)}</Text>
           </View>
         ))}
       </View>
