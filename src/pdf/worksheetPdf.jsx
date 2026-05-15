@@ -168,13 +168,17 @@ function renderWorksheetBody({ page }) {
   if (config.type === 'matching') {
     return (
       <View>
-        {student.map((row, idx) => (
-          <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
-          </View>
-        ))}
+        {student.map((row, idx) => {
+          const leftWord = row.wordLeft ?? row.word
+          const rightWord = row.wordRight ?? row.word
+          return (
+            <View key={`match-${idx}`} style={styles.row}>
+              <Text>
+                {idx + 1}. {leftWord}  ———————→  {rightWord}
+              </Text>
+            </View>
+          )
+        })}
       </View>
     )
   }
