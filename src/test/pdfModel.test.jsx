@@ -1,5 +1,13 @@
 import { describe, expect, test } from 'vitest'
 import { buildPdfPages } from '../pdf/pdfModel'
+import { WorksheetPdfDocument } from '../pdf/worksheetPdf.jsx'
+
+const collectText = (node) => {
+  if (node == null || typeof node === 'boolean') return ''
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(collectText).join('')
+  return collectText(node.props?.children)
+}
 
 describe('pdf model builder', () => {
   test('builds packet pages and answer key pages deterministically', () => {
@@ -74,6 +82,36 @@ describe('pdf model builder', () => {
       packetTemplate: 'placement',
     })
     expect(pages.at(-1).kind).toBe('placementScoreSheet')
+  })
+
+  test('matching worksheet PDF renders generated row words', () => {
+    const config = {
+      type: 'matching',
+      skillLevel: 'kEarly',
+      problems: 6,
+      theme: 'dogs',
+      childName: 'Ava',
+      sightWordSource: 'dolchPrePrimer',
+      customWordList: '',
+    }
+    const pages = buildPdfPages({
+      mode: 'single',
+      config,
+      worksheetSeed: 5,
+      packetPages: [],
+      packetPageRerolls: [],
+      generationId: 5,
+      recentMemory: {},
+      showAnswerKey: false,
+      showStandardsTags: false,
+    })
+
+    const doc = WorksheetPdfDocument({ pages, filenameLabel: 'matching.pdf' })
+    const text = collectText(doc)
+
+    pages[0].student.forEach((row) => {
+      expect(text).toContain(row.word)
+    })
   })
 })
 
