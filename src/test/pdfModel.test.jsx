@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { buildPdfPages } from '../pdf/pdfModel'
-import { renderWorksheetBody } from '../pdf/worksheetPdf'
+import { WorksheetPdfDocument } from '../pdf/worksheetPdf'
 
 const collectText = (node) => {
   if (node === null || node === undefined || typeof node === 'boolean') return ''
@@ -85,27 +85,35 @@ describe('pdf model builder', () => {
   })
 
   test('matching PDF rows use the worksheet data shape', () => {
-    const body = renderWorksheetBody({
-      page: {
-        config: { type: 'matching' },
-        student: [{ word: 'dog', theme: 'dogs' }],
-      },
+    const doc = WorksheetPdfDocument({
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'matching' },
+          student: [{ word: 'dog', theme: 'dogs' }],
+          standards: [],
+        },
+      ],
     })
 
-    const text = collectText(body)
+    const text = collectText(doc)
     expect(text).toContain('dog')
     expect(text).not.toContain('undefined')
   })
 
   test('color by number PDF rows render printable prompts instead of JSON', () => {
-    const body = renderWorksheetBody({
-      page: {
-        config: { type: 'colorByNumber' },
-        student: [{ n: 1, shape: 'hexagon' }],
-      },
+    const doc = WorksheetPdfDocument({
+      pages: [
+        {
+          kind: 'worksheet',
+          config: { type: 'colorByNumber' },
+          student: [{ n: 1, shape: 'hexagon' }],
+          standards: [],
+        },
+      ],
     })
 
-    const text = collectText(body)
+    const text = collectText(doc)
     expect(text).toContain('Color this shape with number 1')
     expect(text).not.toContain('{"n"')
   })

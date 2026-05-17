@@ -120,7 +120,7 @@ function prettyWorksheetType(type) {
   return map[type] ?? type
 }
 
-export function renderWorksheetBody({ page }) {
+function renderWorksheetBody({ page }) {
   const { config, student } = page
 
   if (config.type === 'addition') {
