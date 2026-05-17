@@ -206,6 +206,66 @@ describe('app regression coverage', () => {
     })
   })
 
+  test('loading an imported profile with invalid saved options does not crash', async () => {
+    const user = userEvent.setup()
+    const store = new Map()
+    const originalLocalStorage = globalThis.localStorage
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: {
+        getItem: (k) => store.get(k) ?? null,
+        setItem: (k, v) => store.set(k, String(v)),
+        removeItem: (k) => store.delete(k),
+        clear: () => store.clear(),
+      },
+      configurable: true,
+    })
+
+    render(<App />)
+
+    const fileInput = document.querySelector('input[type="file"][accept="application/json"]')
+    expect(fileInput).toBeTruthy()
+
+    const file = new File(
+      [
+        JSON.stringify({
+          version: 1,
+          profiles: [
+            {
+              id: 'Broken Import',
+              name: 'Broken Import',
+              savedAt: Date.now(),
+              config: {
+                childName: 'Mia',
+                skillLevel: 'not-a-preset',
+                theme: 'not-a-theme',
+                sightWordSource: 'not-a-source',
+                paperStyle: 'not-a-paper-style',
+                traceOpacity: 4,
+                traceFont: 'not-a-font',
+                packetTemplate: 'not-a-template',
+              },
+            },
+          ],
+        }),
+      ],
+      'broken-profiles.json',
+      { type: 'application/json' },
+    )
+
+    await user.upload(fileInput, file)
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Broken Import')
+
+    expect(screen.getByRole('heading', { name: /kindergarten worksheet generator/i })).toBeVisible()
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Mia')
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('kEnd')
+    expect(screen.getByLabelText('Theme')).toHaveValue('dogs')
+
+    Object.defineProperty(globalThis, 'localStorage', {
+      value: originalLocalStorage,
+      configurable: true,
+    })
+  })
+
   test('standards tags are hidden by default and appear when enabled', async () => {
     const user = userEvent.setup()
     render(<App />)

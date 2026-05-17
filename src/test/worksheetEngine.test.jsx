@@ -210,6 +210,7 @@ describe('worksheet engine regression', () => {
     expect(data.student).toHaveLength(8)
     expect(data.answers).toHaveLength(8)
     expect(data.student.every((row, idx) => row.choices.includes(data.answers[idx].correctRhyme))).toBe(true)
+    expect(data.student.every((row, idx) => data.answers[idx].correctRhyme !== row.cueWord)).toBe(true)
   })
 
   test('syllable sort uses three options and a single correct split', () => {
