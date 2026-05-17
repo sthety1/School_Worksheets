@@ -78,6 +78,52 @@ const problemPlanByType = {
 
 const getPresetProblems = (type, skillLevel) => problemPlanByType[type]?.[skillLevel] ?? 10
 
+const optionValues = (options) => new Set(options.map((option) => option.value))
+const worksheetTypeValues = optionValues(worksheetTypes)
+const skillPresetValues = optionValues(skillPresets)
+const themeValues = optionValues(themeOptions)
+const sightWordSourceValues = optionValues(sightWordSources)
+const packetTemplateValues = optionValues(packetTemplates)
+const paperStyleValues = new Set(['baseline', 'primary', 'wideRuled', 'blank'])
+const traceFontValues = new Set(['playwrite', 'system'])
+
+const coerceOption = (value, allowed, fallback) => (allowed.has(value) ? value : fallback)
+const coerceString = (value, fallback = '') => (typeof value === 'string' ? value : fallback)
+
+const normalizeStoredTheme = (theme, fallback) => {
+  if (theme === 'animals') return 'dogs'
+  return coerceOption(theme, themeValues, fallback)
+}
+
+const buildSafeStoredConfig = (source, prev) => {
+  if (!source || typeof source !== 'object') return prev
+
+  const type = coerceOption(source.type, worksheetTypeValues, prev.type)
+  const skillLevel = coerceOption(source.skillLevel, skillPresetValues, prev.skillLevel)
+  const cap = getMaxProblems(type)
+  const rawProblems = Number(source.problems)
+  const fallbackProblems = Math.min(prev.problems || getPresetProblems(type, skillLevel), cap)
+  const problems = Math.max(4, Math.min(Number.isFinite(rawProblems) ? rawProblems : fallbackProblems, cap))
+  const traceOpacity = Number.isFinite(source.traceOpacity) ? source.traceOpacity : prev.traceOpacity
+
+  return {
+    ...prev,
+    type,
+    skillLevel,
+    difficulty: (skillProfiles[skillLevel] ?? skillProfiles.kEarly).difficulty,
+    problems,
+    theme: normalizeStoredTheme(source.theme, prev.theme),
+    childName: coerceString(source.childName, prev.childName),
+    sightWordSource: coerceOption(source.sightWordSource, sightWordSourceValues, prev.sightWordSource),
+    customWordList: coerceString(source.customWordList, prev.customWordList),
+    instructionOverride: coerceString(source.instructionOverride, prev.instructionOverride),
+    objectiveOverride: coerceString(source.objectiveOverride, prev.objectiveOverride),
+    paperStyle: coerceOption(source.paperStyle, paperStyleValues, prev.paperStyle),
+    traceOpacity: Math.max(0.2, Math.min(traceOpacity, 1)),
+    traceFont: coerceOption(source.traceFont, traceFontValues, prev.traceFont),
+  }
+}
+
 const RECENT_MEMORY_KEY = 'worksheet_recent_memory_v1'
 const PROFILES_KEY = 'worksheet_child_profiles_v1'
 const UI_HINTS_KEY = 'worksheet_ui_hints_v1'
@@ -802,26 +848,12 @@ export default function AppNew() {
     const toggles = lastPacketSnapshot.toggles ?? {}
     const base = lastPacketSnapshot.base
     setMode('packet')
-    if (typeof pt === 'string') setPacketTemplate(pt)
+    if (packetTemplateValues.has(pt)) setPacketTemplate(pt)
     if (typeof toggles.showAnswerKey === 'boolean') setShowAnswerKey(toggles.showAnswerKey)
     if (typeof toggles.showStandardsTags === 'boolean') setShowStandardsTags(toggles.showStandardsTags)
     if (typeof toggles.showObjectiveLine === 'boolean') setShowObjectiveLine(toggles.showObjectiveLine)
 
-    setConfig((prev) => {
-      if (!base || typeof base !== 'object') return prev
-      const nextType = typeof base.type === 'string' ? base.type : prev.type
-      const nextSkill = typeof base.skillLevel === 'string' ? base.skillLevel : prev.skillLevel
-      const cap = getMaxProblems(nextType)
-      const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
-      return {
-        ...prev,
-        ...base,
-        type: nextType,
-        skillLevel: nextSkill,
-        difficulty: profile.difficulty,
-        problems: Math.max(4, Math.min(Number(base.problems) || getPresetProblems(nextType, nextSkill), cap)),
-      }
-    })
+    setConfig((prev) => buildSafeStoredConfig(base, prev))
 
     setPacketPages([])
     setPacketWarnings([])
@@ -1070,24 +1102,12 @@ export default function AppNew() {
   const handleLoadProfile = (id) => {
     const found = (Array.isArray(profiles) ? profiles : []).find((p) => p.id === id)
     if (!found) return
-    setConfig((prev) => ({
-      ...prev,
-      childName: found.config.childName ?? prev.childName,
-      skillLevel: found.config.skillLevel ?? prev.skillLevel,
-      theme: (found.config.theme === 'animals' ? 'dogs' : found.config.theme) ?? prev.theme,
-      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
-      customWordList: found.config.customWordList ?? prev.customWordList,
-      instructionOverride: found.config.instructionOverride ?? prev.instructionOverride,
-      objectiveOverride: found.config.objectiveOverride ?? prev.objectiveOverride,
-      paperStyle: found.config.paperStyle ?? prev.paperStyle,
-      traceOpacity: typeof found.config.traceOpacity === 'number' ? found.config.traceOpacity : prev.traceOpacity,
-      traceFont: found.config.traceFont ?? prev.traceFont,
-      problems: Math.min(prev.problems, getMaxProblems(prev.type)),
-    }))
-    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
-    if (typeof found.config.showObjectiveLine === 'boolean') setShowObjectiveLine(found.config.showObjectiveLine)
-    if (typeof found.config.showStandardsTags === 'boolean') setShowStandardsTags(found.config.showStandardsTags)
-    if (typeof found.config.showAnswerKey === 'boolean') setShowAnswerKey(found.config.showAnswerKey)
+    const profileConfig = found.config && typeof found.config === 'object' ? found.config : {}
+    setConfig((prev) => buildSafeStoredConfig(profileConfig, prev))
+    if (packetTemplateValues.has(profileConfig.packetTemplate)) setPacketTemplate(profileConfig.packetTemplate)
+    if (typeof profileConfig.showObjectiveLine === 'boolean') setShowObjectiveLine(profileConfig.showObjectiveLine)
+    if (typeof profileConfig.showStandardsTags === 'boolean') setShowStandardsTags(profileConfig.showStandardsTags)
+    if (typeof profileConfig.showAnswerKey === 'boolean') setShowAnswerKey(profileConfig.showAnswerKey)
     setStatusMessage(`Loaded profile: ${found.name}`)
   }
 

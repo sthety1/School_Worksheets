@@ -784,9 +784,10 @@ export const generateWorksheetData = (input) => {
         const rhymeKey = rhymeGroup?.key ?? ''
         const correct =
           row.choices.find((w) => {
+            if (w === row.cueWord) return false
             const group = rhymeFamilies.find((fam) => fam.words.includes(w))
             return group && group.key === rhymeKey
-          }) ?? row.cueWord
+          }) ?? row.choices.find((w) => w !== row.cueWord) ?? row.cueWord
         return { cueWord: row.cueWord, correctRhyme: correct }
       })
     }
