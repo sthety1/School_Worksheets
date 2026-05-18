@@ -105,6 +105,36 @@ const writeJsonToStorage = (key, value) => {
   }
 }
 
+const stringMemoryKeys = ['numberTracing', 'letterTracing', 'sightWords', 'matching']
+const isRecord = (value) => value && typeof value === 'object' && !Array.isArray(value)
+const optionValues = (options) => new Set(options.map((option) => option.value))
+const worksheetTypeValues = optionValues(worksheetTypes)
+const themeValues = optionValues(themeOptions)
+const skillPresetValues = optionValues(skillPresets)
+const sightWordSourceValues = optionValues(sightWordSources)
+const packetTemplateValues = optionValues(packetTemplates)
+const paperStyleValues = new Set(['baseline', 'primary', 'wideRuled', 'blank'])
+const traceFontValues = new Set(['playwrite', 'system'])
+
+const sanitizeRecentMemory = (value) => {
+  const parsed = isRecord(value) ? value : {}
+  const next = {}
+  for (const key of stringMemoryKeys) {
+    next[key] = Array.isArray(parsed[key]) ? parsed[key].filter((item) => typeof item === 'string') : []
+  }
+  next.phonics = Array.isArray(parsed.phonics) ? parsed.phonics : []
+  return next
+}
+
+const normalizeOption = (value, allowedValues, fallback, aliases = {}) => {
+  const normalized = typeof value === 'string' && Object.hasOwn(aliases, value) ? aliases[value] : value
+  return typeof normalized === 'string' && allowedValues.has(normalized) ? normalized : fallback
+}
+
+const stringOrFallback = (value, fallback) => (typeof value === 'string' ? value : fallback)
+const clampTraceOpacity = (value, fallback) =>
+  typeof value === 'number' && Number.isFinite(value) ? Math.max(0.2, Math.min(1, value)) : fallback
+
 const ShapePreview = ({ shapeName }) => {
   if (shapeName === 'Circle') return <div className="shape-circle" />
   if (shapeName === 'Square') return <div className="shape-square" />
@@ -731,13 +761,7 @@ export default function AppNew() {
 
   const [recentMemory, setRecentMemory] = useState(() => {
     const parsed = readJsonFromStorage(RECENT_MEMORY_KEY, {})
-    return {
-      numberTracing: parsed.numberTracing || [],
-      letterTracing: parsed.letterTracing || [],
-      sightWords: parsed.sightWords || [],
-      matching: parsed.matching || [],
-      phonics: parsed.phonics || [],
-    }
+    return sanitizeRecentMemory(parsed)
   })
 
   const worksheetData = useMemo(
@@ -802,23 +826,31 @@ export default function AppNew() {
     const toggles = lastPacketSnapshot.toggles ?? {}
     const base = lastPacketSnapshot.base
     setMode('packet')
-    if (typeof pt === 'string') setPacketTemplate(pt)
+    if (packetTemplateValues.has(pt)) setPacketTemplate(pt)
     if (typeof toggles.showAnswerKey === 'boolean') setShowAnswerKey(toggles.showAnswerKey)
     if (typeof toggles.showStandardsTags === 'boolean') setShowStandardsTags(toggles.showStandardsTags)
     if (typeof toggles.showObjectiveLine === 'boolean') setShowObjectiveLine(toggles.showObjectiveLine)
 
     setConfig((prev) => {
-      if (!base || typeof base !== 'object') return prev
-      const nextType = typeof base.type === 'string' ? base.type : prev.type
-      const nextSkill = typeof base.skillLevel === 'string' ? base.skillLevel : prev.skillLevel
+      if (!isRecord(base)) return prev
+      const nextType = normalizeOption(base.type, worksheetTypeValues, prev.type)
+      const nextSkill = normalizeOption(base.skillLevel, skillPresetValues, prev.skillLevel)
       const cap = getMaxProblems(nextType)
       const profile = skillProfiles[nextSkill] ?? skillProfiles.kEarly
       return {
         ...prev,
-        ...base,
         type: nextType,
         skillLevel: nextSkill,
         difficulty: profile.difficulty,
+        theme: normalizeOption(base.theme, themeValues, prev.theme, { animals: 'dogs' }),
+        childName: stringOrFallback(base.childName, prev.childName),
+        sightWordSource: normalizeOption(base.sightWordSource, sightWordSourceValues, prev.sightWordSource),
+        customWordList: stringOrFallback(base.customWordList, prev.customWordList),
+        paperStyle: normalizeOption(base.paperStyle, paperStyleValues, prev.paperStyle),
+        traceOpacity: clampTraceOpacity(base.traceOpacity, prev.traceOpacity),
+        traceFont: normalizeOption(base.traceFont, traceFontValues, prev.traceFont),
+        instructionOverride: stringOrFallback(base.instructionOverride, prev.instructionOverride),
+        objectiveOverride: stringOrFallback(base.objectiveOverride, prev.objectiveOverride),
         problems: Math.max(4, Math.min(Number(base.problems) || getPresetProblems(nextType, nextSkill), cap)),
       }
     })
@@ -1070,24 +1102,25 @@ export default function AppNew() {
   const handleLoadProfile = (id) => {
     const found = (Array.isArray(profiles) ? profiles : []).find((p) => p.id === id)
     if (!found) return
+    const savedConfig = isRecord(found.config) ? found.config : {}
     setConfig((prev) => ({
       ...prev,
-      childName: found.config.childName ?? prev.childName,
-      skillLevel: found.config.skillLevel ?? prev.skillLevel,
-      theme: (found.config.theme === 'animals' ? 'dogs' : found.config.theme) ?? prev.theme,
-      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
-      customWordList: found.config.customWordList ?? prev.customWordList,
-      instructionOverride: found.config.instructionOverride ?? prev.instructionOverride,
-      objectiveOverride: found.config.objectiveOverride ?? prev.objectiveOverride,
-      paperStyle: found.config.paperStyle ?? prev.paperStyle,
-      traceOpacity: typeof found.config.traceOpacity === 'number' ? found.config.traceOpacity : prev.traceOpacity,
-      traceFont: found.config.traceFont ?? prev.traceFont,
+      childName: stringOrFallback(savedConfig.childName, prev.childName),
+      skillLevel: normalizeOption(savedConfig.skillLevel, skillPresetValues, prev.skillLevel),
+      theme: normalizeOption(savedConfig.theme, themeValues, prev.theme, { animals: 'dogs' }),
+      sightWordSource: normalizeOption(savedConfig.sightWordSource, sightWordSourceValues, prev.sightWordSource),
+      customWordList: stringOrFallback(savedConfig.customWordList, prev.customWordList),
+      instructionOverride: stringOrFallback(savedConfig.instructionOverride, prev.instructionOverride),
+      objectiveOverride: stringOrFallback(savedConfig.objectiveOverride, prev.objectiveOverride),
+      paperStyle: normalizeOption(savedConfig.paperStyle, paperStyleValues, prev.paperStyle),
+      traceOpacity: clampTraceOpacity(savedConfig.traceOpacity, prev.traceOpacity),
+      traceFont: normalizeOption(savedConfig.traceFont, traceFontValues, prev.traceFont),
       problems: Math.min(prev.problems, getMaxProblems(prev.type)),
     }))
-    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
-    if (typeof found.config.showObjectiveLine === 'boolean') setShowObjectiveLine(found.config.showObjectiveLine)
-    if (typeof found.config.showStandardsTags === 'boolean') setShowStandardsTags(found.config.showStandardsTags)
-    if (typeof found.config.showAnswerKey === 'boolean') setShowAnswerKey(found.config.showAnswerKey)
+    if (packetTemplateValues.has(savedConfig.packetTemplate)) setPacketTemplate(savedConfig.packetTemplate)
+    if (typeof savedConfig.showObjectiveLine === 'boolean') setShowObjectiveLine(savedConfig.showObjectiveLine)
+    if (typeof savedConfig.showStandardsTags === 'boolean') setShowStandardsTags(savedConfig.showStandardsTags)
+    if (typeof savedConfig.showAnswerKey === 'boolean') setShowAnswerKey(savedConfig.showAnswerKey)
     setStatusMessage(`Loaded profile: ${found.name}`)
   }
 
