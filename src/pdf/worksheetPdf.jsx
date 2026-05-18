@@ -1,5 +1,7 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
 
+/* eslint-disable react-refresh/only-export-components -- exported render helpers are covered by PDF regression tests. */
+
 const styles = StyleSheet.create({
   page: {
     paddingTop: 40,
