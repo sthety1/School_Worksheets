@@ -191,9 +191,9 @@ export function renderWorksheetBody({ page }) {
 
   if (config.type === 'countingObjects') {
     return (
-      <View>
+      <View style={styles.grid2}>
         {student.map((row, idx) => (
-          <View key={`count-${idx}`} style={styles.row}>
+          <View key={`count-${idx}`} style={styles.cell2}>
             <Text>{idx + 1}. Count the objects.</Text>
             <View style={styles.countWrap}>
               {Array.from({ length: row.total }, (_, dotIdx) => (
@@ -237,9 +237,9 @@ export function renderWorksheetBody({ page }) {
 
   if (config.type === 'tenFrames') {
     return (
-      <View>
+      <View style={styles.grid2}>
         {student.map((row, idx) => (
-          <View key={`tf-${idx}`} style={styles.row}>
+          <View key={`tf-${idx}`} style={styles.cell2}>
             <Text>{idx + 1}. Count the ten-frame.</Text>
             <View style={styles.tenFrameWrap}>
               {Array.from({ length: 10 }, (_, dotIdx) => (
