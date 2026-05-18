@@ -91,6 +91,42 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#000000',
   },
+  countWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+    marginTop: 4,
+    marginBottom: 4,
+  },
+  countDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#000000',
+  },
+  tenFrameWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 150,
+    marginTop: 4,
+    marginBottom: 4,
+    borderWidth: 0.75,
+    borderColor: '#000000',
+  },
+  tenFrameCell: {
+    width: 30,
+    height: 26,
+    borderWidth: 0.5,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tenFrameDot: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#000000',
+  },
 })
 
 function prettyWorksheetType(type) {
@@ -120,7 +156,7 @@ function prettyWorksheetType(type) {
   return map[type] ?? type
 }
 
-function renderWorksheetBody({ page }) {
+export function renderWorksheetBody({ page }) {
   const { config, student } = page
 
   if (config.type === 'addition') {
@@ -156,9 +192,13 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{idx + 1}. Count the objects.</Text>
+            <View style={styles.countWrap}>
+              {Array.from({ length: row.total }, (_, dotIdx) => (
+                <View key={`count-dot-${idx}-${dotIdx}`} style={styles.countDot} />
+              ))}
+            </View>
+            <Text>Count: ______</Text>
           </View>
         ))}
       </View>
@@ -171,7 +211,7 @@ function renderWorksheetBody({ page }) {
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
             <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
+              {idx + 1}. {row.word}  ———————→  {row.word}
             </Text>
           </View>
         ))}
@@ -198,9 +238,15 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`tf-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Ten-frame total: ______
-            </Text>
+            <Text>{idx + 1}. Count the ten-frame.</Text>
+            <View style={styles.tenFrameWrap}>
+              {Array.from({ length: 10 }, (_, dotIdx) => (
+                <View key={`tf-cell-${idx}-${dotIdx}`} style={styles.tenFrameCell}>
+                  {dotIdx < row.total ? <View style={styles.tenFrameDot} /> : null}
+                </View>
+              ))}
+            </View>
+            <Text>Total: ______</Text>
           </View>
         ))}
       </View>
@@ -332,6 +378,21 @@ function renderWorksheetBody({ page }) {
             </View>
           )
         })}
+      </View>
+    )
+  }
+
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((item, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. Shape {item.shape}: color with number {item.n}
+            </Text>
+          </View>
+        ))}
+        <Text>Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline</Text>
       </View>
     )
   }

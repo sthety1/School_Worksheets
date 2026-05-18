@@ -75,6 +75,75 @@ describe('app regression coverage', () => {
     })
   })
 
+  test('ignores malformed recent memory from storage instead of crashing on load', () => {
+    localStorage.setItem(
+      'worksheet_recent_memory_v1',
+      JSON.stringify({
+        numberTracing: { bad: true },
+        letterTracing: 'ABC',
+        sightWords: [42, 'the'],
+        matching: [null, 'dog'],
+        phonics: 'not-an-array',
+      }),
+    )
+
+    expect(() => render(<App />)).not.toThrow()
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('kEnd')
+  })
+
+  test('loading a malformed saved profile keeps valid fields and ignores invalid enum values', async () => {
+    const user = userEvent.setup()
+    localStorage.setItem(
+      'worksheet_child_profiles_v1',
+      JSON.stringify([
+        {
+          id: 'Broken',
+          name: 'Broken',
+          savedAt: Date.now(),
+          config: {
+            childName: 'Mia',
+            skillLevel: '',
+            theme: 'not-a-theme',
+            sightWordSource: 'not-a-source',
+            packetTemplate: 'not-a-template',
+          },
+        },
+      ]),
+    )
+
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Broken')
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Mia')
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('kEnd')
+    expect(screen.getByLabelText('Theme')).toHaveValue('dogs')
+  })
+
+  test('restoring a malformed packet snapshot keeps the app usable', async () => {
+    const user = userEvent.setup()
+    localStorage.setItem(
+      'worksheet_last_packet_v1',
+      JSON.stringify({
+        packetTemplate: 'not-a-template',
+        toggles: {},
+        base: {
+          type: 'not-a-type',
+          skillLevel: '',
+          theme: 'not-a-theme',
+          problems: 8,
+          childName: 'Ava',
+        },
+      }),
+    )
+
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /Use last packet settings/i }))
+    expect(screen.getByText('Restored settings from your last generated packet. Click Generate to build new pages.')).toBeInTheDocument()
+    expect(screen.getByLabelText('Worksheet Type')).toHaveValue('numberTracing')
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Ava')
+  })
+
   test('packet mode generates 5 pages', async () => {
     const user = userEvent.setup()
     render(<App />)
