@@ -105,6 +105,36 @@ const writeJsonToStorage = (key, value) => {
   }
 }
 
+const validSkillLevels = new Set(skillPresets.map((preset) => preset.value))
+const validThemes = new Set(themeOptions.map((theme) => theme.value))
+const validSightWordSources = new Set(sightWordSources.map((source) => source.value))
+const validPacketTemplates = new Set(packetTemplates.map((template) => template.value))
+const validPaperStyles = new Set(['baseline', 'primary', 'wideRuled', 'blank'])
+const validTraceFonts = new Set(['playwrite', 'system'])
+
+const normalizeProfileConfig = (value) => {
+  const source = value && typeof value === 'object' ? value : {}
+  const next = {}
+
+  if (typeof source.childName === 'string') next.childName = source.childName
+  if (validSkillLevels.has(source.skillLevel)) next.skillLevel = source.skillLevel
+  if (source.theme === 'animals') next.theme = 'dogs'
+  else if (validThemes.has(source.theme)) next.theme = source.theme
+  if (validSightWordSources.has(source.sightWordSource)) next.sightWordSource = source.sightWordSource
+  if (typeof source.customWordList === 'string') next.customWordList = source.customWordList
+  if (typeof source.instructionOverride === 'string') next.instructionOverride = source.instructionOverride
+  if (typeof source.objectiveOverride === 'string') next.objectiveOverride = source.objectiveOverride
+  if (validPaperStyles.has(source.paperStyle)) next.paperStyle = source.paperStyle
+  if (Number.isFinite(source.traceOpacity)) next.traceOpacity = Math.max(0.2, Math.min(1, source.traceOpacity))
+  if (validTraceFonts.has(source.traceFont)) next.traceFont = source.traceFont
+  if (validPacketTemplates.has(source.packetTemplate)) next.packetTemplate = source.packetTemplate
+  if (typeof source.showObjectiveLine === 'boolean') next.showObjectiveLine = source.showObjectiveLine
+  if (typeof source.showStandardsTags === 'boolean') next.showStandardsTags = source.showStandardsTags
+  if (typeof source.showAnswerKey === 'boolean') next.showAnswerKey = source.showAnswerKey
+
+  return next
+}
+
 const ShapePreview = ({ shapeName }) => {
   if (shapeName === 'Circle') return <div className="shape-circle" />
   if (shapeName === 'Square') return <div className="shape-square" />
@@ -829,6 +859,15 @@ export default function AppNew() {
     setStatusMessage('Restored settings from your last generated packet. Click Generate to build new pages.')
   }
 
+  const handlePacketTemplateChange = (nextTemplate) => {
+    if (!validPacketTemplates.has(nextTemplate)) return
+    setPacketTemplate(nextTemplate)
+    setPacketPages([])
+    setPacketWarnings([])
+    setPacketPageRerolls([])
+    if (packetPages.length > 0) setStatusMessage('Packet template changed. Click Generate to build matching pages.')
+  }
+
   const placementRecommendation = useMemo(() => recommendPlacementPreset(placementScores), [placementScores])
 
   const handleGenerate = () => {
@@ -878,8 +917,10 @@ export default function AppNew() {
         objectiveOverride: config.objectiveOverride,
       },
     }
-    setLastPacketSnapshot(snapshot)
-    writeJsonToStorage(LAST_PACKET_KEY, snapshot)
+    if (packetTemplate !== 'placement') {
+      setLastPacketSnapshot(snapshot)
+      writeJsonToStorage(LAST_PACKET_KEY, snapshot)
+    }
     setStatusMessage('Packet generated.')
   }
 
@@ -890,7 +931,7 @@ export default function AppNew() {
     const frames = Array.from(container.querySelectorAll('[data-page="worksheet"]'))
     const warnings = frames.map((el) => el.scrollHeight > el.clientHeight + 2)
     setPacketWarnings(warnings)
-  }, [mode, packetPages, generationId])
+  }, [mode, packetPages, packetPageRerolls, generationId])
 
   const handlePrint = () => {
     setStatusMessage('Opening print dialog...')
@@ -953,7 +994,6 @@ export default function AppNew() {
       next[idx] = (next[idx] ?? 0) + 1
       return next
     })
-    setGenerationId((id) => id + 1)
     setStatusMessage(`Packet page ${idx + 1} regenerated.`)
   }
 
@@ -1003,7 +1043,7 @@ export default function AppNew() {
           id: String(p.id ?? p.name ?? '').trim(),
           name: String(p.name ?? p.id ?? '').trim(),
           savedAt: Number.isFinite(p.savedAt) ? p.savedAt : Date.now(),
-          config: p.config ?? {},
+          config: normalizeProfileConfig(p.config),
         }))
         .filter((p) => p.id && p.name)
 
@@ -1070,24 +1110,25 @@ export default function AppNew() {
   const handleLoadProfile = (id) => {
     const found = (Array.isArray(profiles) ? profiles : []).find((p) => p.id === id)
     if (!found) return
+    const profileConfig = normalizeProfileConfig(found.config)
     setConfig((prev) => ({
       ...prev,
-      childName: found.config.childName ?? prev.childName,
-      skillLevel: found.config.skillLevel ?? prev.skillLevel,
-      theme: (found.config.theme === 'animals' ? 'dogs' : found.config.theme) ?? prev.theme,
-      sightWordSource: found.config.sightWordSource ?? prev.sightWordSource,
-      customWordList: found.config.customWordList ?? prev.customWordList,
-      instructionOverride: found.config.instructionOverride ?? prev.instructionOverride,
-      objectiveOverride: found.config.objectiveOverride ?? prev.objectiveOverride,
-      paperStyle: found.config.paperStyle ?? prev.paperStyle,
-      traceOpacity: typeof found.config.traceOpacity === 'number' ? found.config.traceOpacity : prev.traceOpacity,
-      traceFont: found.config.traceFont ?? prev.traceFont,
+      childName: profileConfig.childName ?? prev.childName,
+      skillLevel: profileConfig.skillLevel ?? prev.skillLevel,
+      theme: profileConfig.theme ?? prev.theme,
+      sightWordSource: profileConfig.sightWordSource ?? prev.sightWordSource,
+      customWordList: profileConfig.customWordList ?? prev.customWordList,
+      instructionOverride: profileConfig.instructionOverride ?? prev.instructionOverride,
+      objectiveOverride: profileConfig.objectiveOverride ?? prev.objectiveOverride,
+      paperStyle: profileConfig.paperStyle ?? prev.paperStyle,
+      traceOpacity: profileConfig.traceOpacity ?? prev.traceOpacity,
+      traceFont: profileConfig.traceFont ?? prev.traceFont,
       problems: Math.min(prev.problems, getMaxProblems(prev.type)),
     }))
-    if (found.config.packetTemplate) setPacketTemplate(found.config.packetTemplate)
-    if (typeof found.config.showObjectiveLine === 'boolean') setShowObjectiveLine(found.config.showObjectiveLine)
-    if (typeof found.config.showStandardsTags === 'boolean') setShowStandardsTags(found.config.showStandardsTags)
-    if (typeof found.config.showAnswerKey === 'boolean') setShowAnswerKey(found.config.showAnswerKey)
+    if (profileConfig.packetTemplate) handlePacketTemplateChange(profileConfig.packetTemplate)
+    if (typeof profileConfig.showObjectiveLine === 'boolean') setShowObjectiveLine(profileConfig.showObjectiveLine)
+    if (typeof profileConfig.showStandardsTags === 'boolean') setShowStandardsTags(profileConfig.showStandardsTags)
+    if (typeof profileConfig.showAnswerKey === 'boolean') setShowAnswerKey(profileConfig.showAnswerKey)
     setStatusMessage(`Loaded profile: ${found.name}`)
   }
 
@@ -1141,7 +1182,7 @@ export default function AppNew() {
                 <select
                   className="control-input"
                   value={packetTemplate}
-                  onChange={(e) => setPacketTemplate(e.target.value)}
+                  onChange={(e) => handlePacketTemplateChange(e.target.value)}
                 >
                   {packetTemplates.map((t) => (
                     <option key={t.value} value={t.value}>
@@ -1665,13 +1706,13 @@ export default function AppNew() {
                   <strong>Download PDF</strong>.</li>
                 </ol>
                 <div className="mt-5 flex flex-wrap gap-2 print:hidden">
-                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('mixed')}>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => handlePacketTemplateChange('mixed')}>
                     Use Mixed Review template
                   </button>
-                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('math')}>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => handlePacketTemplateChange('math')}>
                     Use Math Focus template
                   </button>
-                  <button type="button" className="action-btn-secondary text-sm" onClick={() => setPacketTemplate('handwriting')}>
+                  <button type="button" className="action-btn-secondary text-sm" onClick={() => handlePacketTemplateChange('handwriting')}>
                     Use Handwriting Focus template
                   </button>
                   <button type="button" className="action-btn-secondary text-sm" onClick={handleJumpToPrintPreview}>

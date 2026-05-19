@@ -1,4 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { getPdfCountingPrompt, getPdfMatchingPrompt } from './worksheetPdfFormat'
 
 const styles = StyleSheet.create({
   page: {
@@ -156,9 +157,8 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{getPdfCountingPrompt(row, idx)}</Text>
+            <Text style={styles.answerLine}>Count: ______</Text>
           </View>
         ))}
       </View>
@@ -170,9 +170,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
+            <Text>{getPdfMatchingPrompt(row, idx)}</Text>
           </View>
         ))}
       </View>

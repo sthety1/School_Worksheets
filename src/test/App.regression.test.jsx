@@ -142,7 +142,23 @@ describe('app regression coverage', () => {
     expect(screen.queryByRole('button', { name: 'Exit Preview' })).not.toBeInTheDocument()
   })
 
-  test('reroll packet page does not change page count', async () => {
+  test('reroll packet page keeps other packet pages stable', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
+    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
+    const pageTwoBefore = document.querySelectorAll('[data-page="worksheet"]')[1].textContent
+
+    await user.click(screen.getAllByRole('button', { name: 'Reroll this page' })[0])
+    const pagesAfter = document.querySelectorAll('[data-page="worksheet"]')
+    expect(pagesAfter.length).toBe(5)
+    expect(pagesAfter[1].textContent).toBe(pageTwoBefore)
+    expect(screen.getByText(/Packet page 1 regenerated\./)).toBeInTheDocument()
+  })
+
+  test('changing packet template clears stale generated pages', async () => {
     const user = userEvent.setup()
     render(<App />)
 
@@ -150,9 +166,22 @@ describe('app regression coverage', () => {
     await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
     expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
 
-    await user.click(screen.getAllByRole('button', { name: 'Reroll this page' })[0])
-    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
-    expect(screen.getByText(/Packet page 1 regenerated\./)).toBeInTheDocument()
+    await user.selectOptions(screen.getByLabelText('Packet Template'), 'placement')
+    expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(0)
+    expect(screen.getByText(/Packet template changed\. Click Generate to build matching pages\./)).toBeInTheDocument()
+  })
+
+  test('placement packet generation does not overwrite last weekly packet settings', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
+    await user.selectOptions(screen.getByLabelText('Packet Template'), 'placement')
+    await user.click(screen.getByRole('button', { name: 'Generate Placement Packet' }))
+
+    await user.click(screen.getByRole('button', { name: /Use last packet settings/i }))
+    expect(screen.getByLabelText('Packet Template')).toHaveValue('mixed')
   })
 
   test('can import child profiles from JSON', async () => {
@@ -204,6 +233,47 @@ describe('app regression coverage', () => {
       value: originalLocalStorage,
       configurable: true,
     })
+  })
+
+  test('imported profiles ignore invalid enum values instead of crashing', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    const fileInput = document.querySelector('input[type="file"][accept="application/json"]')
+    expect(fileInput).toBeTruthy()
+
+    const file = new File(
+      [
+        JSON.stringify({
+          version: 1,
+          profiles: [
+            {
+              id: 'Invalid Profile',
+              name: 'Invalid Profile',
+              savedAt: Date.now(),
+              config: {
+                childName: 'Mia',
+                skillLevel: 'not-a-preset',
+                theme: 'not-a-theme',
+                sightWordSource: 'not-a-source',
+                paperStyle: 'not-a-style',
+                traceFont: 'not-a-font',
+                packetTemplate: 'not-a-template',
+              },
+            },
+          ],
+        }),
+      ],
+      'profiles.json',
+      { type: 'application/json' },
+    )
+
+    await user.upload(fileInput, file)
+    await user.selectOptions(screen.getByLabelText('Load profile'), 'Invalid Profile')
+
+    expect(screen.getByLabelText('Child Name')).toHaveValue('Mia')
+    expect(screen.getByLabelText('Skill Preset')).toHaveValue('kEnd')
+    expect(screen.getByLabelText('Theme')).toHaveValue('dogs')
   })
 
   test('standards tags are hidden by default and appear when enabled', async () => {

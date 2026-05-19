@@ -1,4 +1,14 @@
 import { generateWorksheetData, getStandardsTagsForType } from '../worksheetEngine'
+import { packetTemplateToTypes } from '../packetTemplates'
+
+const packetPagesMatchTemplate = (pages, template) => {
+  const expectedTypes = packetTemplateToTypes[template]
+  return (
+    Array.isArray(expectedTypes) &&
+    pages.length === expectedTypes.length &&
+    pages.every((page, idx) => page?.type === expectedTypes[idx])
+  )
+}
 
 /**
  * Build a simple, deterministic list of PDF pages based on current UI state.
@@ -47,7 +57,7 @@ export function buildPdfPages({
         },
       ]
     })
-    if (packetTemplate === 'placement' && pages.length > 0) {
+    if (packetTemplate === 'placement' && packetPagesMatchTemplate(pages, 'placement')) {
       built = [
         ...built,
         {
