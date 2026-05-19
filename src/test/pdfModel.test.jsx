@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { buildPdfPages } from '../pdf/pdfModel'
-import { getPdfCountingPrompt, getPdfMatchingPrompt } from '../pdf/worksheetPdf'
+import { getPdfCountingPrompt, getPdfMatchingPrompt } from '../pdf/worksheetPdfFormat'
 import { packetTemplateToTypes } from '../packetTemplates'
 
 describe('pdf model builder', () => {
