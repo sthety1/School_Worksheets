@@ -120,6 +120,17 @@ function prettyWorksheetType(type) {
   return map[type] ?? type
 }
 
+export function getPdfCountingPrompt(row, idx) {
+  const total = Math.max(0, Math.min(50, Number(row?.total) || 0))
+  const marks = Array.from({ length: total }, () => 'o').join(' ')
+  return `${idx + 1}. Count the objects: ${marks}`
+}
+
+export function getPdfMatchingPrompt(row, idx) {
+  const word = String(row?.word ?? '').trim()
+  return `${idx + 1}. ${word} ------ ${word}`
+}
+
 function renderWorksheetBody({ page }) {
   const { config, student } = page
 
@@ -156,9 +167,8 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{getPdfCountingPrompt(row, idx)}</Text>
+            <Text style={styles.answerLine}>Count: ______</Text>
           </View>
         ))}
       </View>
@@ -170,9 +180,7 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
-            </Text>
+            <Text>{getPdfMatchingPrompt(row, idx)}</Text>
           </View>
         ))}
       </View>
