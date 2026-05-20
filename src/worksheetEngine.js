@@ -785,7 +785,7 @@ export const generateWorksheetData = (input) => {
         const correct =
           row.choices.find((w) => {
             const group = rhymeFamilies.find((fam) => fam.words.includes(w))
-            return group && group.key === rhymeKey
+            return w !== row.cueWord && group && group.key === rhymeKey
           }) ?? row.cueWord
         return { cueWord: row.cueWord, correctRhyme: correct }
       })

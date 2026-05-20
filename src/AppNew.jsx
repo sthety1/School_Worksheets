@@ -710,6 +710,7 @@ export default function AppNew() {
 
   const [mode, setMode] = useState('single')
   const [packetTemplate, setPacketTemplate] = useState('mixed')
+  const [generatedPacketTemplate, setGeneratedPacketTemplate] = useState('')
   const [packetPages, setPacketPages] = useState([])
   const [packetWarnings, setPacketWarnings] = useState([])
   const [packetPageRerolls, setPacketPageRerolls] = useState([])
@@ -724,6 +725,7 @@ export default function AppNew() {
   })
 
   const [generationId, setGenerationId] = useState(0)
+  const [packetGenerationId, setPacketGenerationId] = useState(0)
   const [statusMessage, setStatusMessage] = useState('')
 
   const [uiHints, setUiHints] = useState(() => readJsonFromStorage(UI_HINTS_KEY, { packetFlowDismissed: false }))
@@ -826,6 +828,7 @@ export default function AppNew() {
     setPacketPages([])
     setPacketWarnings([])
     setPacketPageRerolls([])
+    setGeneratedPacketTemplate('')
     setStatusMessage('Restored settings from your last generated packet. Click Generate to build new pages.')
   }
 
@@ -853,6 +856,8 @@ export default function AppNew() {
     })
     setPacketPages(pages)
     setPacketPageRerolls(Array.from({ length: pages.length }, () => 0))
+    setPacketGenerationId((id) => id + 1)
+    setGeneratedPacketTemplate(packetTemplate)
     setMode('packet')
     setPacketWarnings([])
     const snapshot = {
@@ -890,7 +895,7 @@ export default function AppNew() {
     const frames = Array.from(container.querySelectorAll('[data-page="worksheet"]'))
     const warnings = frames.map((el) => el.scrollHeight > el.clientHeight + 2)
     setPacketWarnings(warnings)
-  }, [mode, packetPages, generationId])
+  }, [mode, packetPages, packetPageRerolls, packetGenerationId])
 
   const handlePrint = () => {
     setStatusMessage('Opening print dialog...')
@@ -928,11 +933,11 @@ export default function AppNew() {
         worksheetSeed: generationId,
         packetPages,
         packetPageRerolls,
-        generationId,
+        generationId: packetGenerationId,
         recentMemory,
         showAnswerKey,
         showStandardsTags,
-        packetTemplate,
+        packetTemplate: generatedPacketTemplate || packetTemplate,
       })
 
       const [{ downloadPdfDocument }, { WorksheetPdfDocument }] = await Promise.all([
@@ -953,8 +958,30 @@ export default function AppNew() {
       next[idx] = (next[idx] ?? 0) + 1
       return next
     })
-    setGenerationId((id) => id + 1)
     setStatusMessage(`Packet page ${idx + 1} regenerated.`)
+  }
+
+  const handleUsePlacementPreset = () => {
+    const nextConfig = buildConfigWithPreset(config, config.type, placementRecommendation.preset)
+    setConfig(nextConfig)
+
+    if (mode === 'packet' && packetPages.length > 0) {
+      const pages = buildPacketConfigs({
+        baseConfig: nextConfig,
+        template: packetTemplate,
+        pageCount: packetPages.length,
+        getPresetProblems,
+      })
+      setPacketPages(pages)
+      setPacketPageRerolls(Array.from({ length: pages.length }, () => 0))
+      setPacketGenerationId((id) => id + 1)
+      setGeneratedPacketTemplate(packetTemplate)
+      setPacketWarnings([])
+      setStatusMessage('Applied the suggested preset and regenerated packet pages.')
+      return
+    }
+
+    setStatusMessage('Applied the suggested preset.')
   }
 
   // Profiles
@@ -1293,7 +1320,7 @@ export default function AppNew() {
                     <button
                       type="button"
                       className="action-btn-secondary"
-                      onClick={() => setConfig((prev) => buildConfigWithPreset(prev, prev.type, placementRecommendation.preset))}
+                      onClick={handleUsePlacementPreset}
                     >
                       Use this preset
                     </button>
@@ -1687,7 +1714,7 @@ export default function AppNew() {
               const pageData = generateWorksheetData({
                 ...pageConfig,
                 recentMemory,
-                seed: generationId + idx + 1 + (packetPageRerolls[idx] ?? 0) * 10000,
+                seed: packetGenerationId + idx + 1 + (packetPageRerolls[idx] ?? 0) * 10000,
               })
               const overflow = packetWarnings[idx]
               return (

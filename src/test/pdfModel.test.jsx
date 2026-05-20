@@ -75,5 +75,44 @@ describe('pdf model builder', () => {
     })
     expect(pages.at(-1).kind).toBe('placementScoreSheet')
   })
+
+  test('packet page rerolls only change the selected page data', () => {
+    const packetPages = [
+      {
+        type: 'letterTracing',
+        skillLevel: 'kEarly',
+        problems: 6,
+        theme: 'dogs',
+        childName: '',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+      {
+        type: 'addition',
+        skillLevel: 'kEarly',
+        problems: 6,
+        theme: 'dogs',
+        childName: '',
+        sightWordSource: 'dolchPrePrimer',
+        customWordList: '',
+      },
+    ]
+    const base = {
+      mode: 'packet',
+      config: packetPages[0],
+      worksheetSeed: 1,
+      packetPages,
+      generationId: 5,
+      recentMemory: {},
+      showAnswerKey: false,
+      showStandardsTags: false,
+    }
+
+    const before = buildPdfPages({ ...base, packetPageRerolls: [0, 0] })
+    const after = buildPdfPages({ ...base, packetPageRerolls: [1, 0] })
+
+    expect(after[0].student).not.toEqual(before[0].student)
+    expect(after[1].student).toEqual(before[1].student)
+  })
 })
 

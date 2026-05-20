@@ -95,6 +95,7 @@ describe('app regression coverage', () => {
     await user.click(screen.getByRole('button', { name: 'Generate Placement Packet' }))
 
     expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
+    expect(document.querySelectorAll('[data-page="worksheet"]')[0].querySelectorAll('.trace-row')).toHaveLength(12)
 
     await user.clear(screen.getByLabelText('Letter tracing'))
     await user.type(screen.getByLabelText('Letter tracing'), '0')
@@ -111,6 +112,8 @@ describe('app regression coverage', () => {
 
     await user.click(screen.getByRole('button', { name: 'Use this preset' }))
     expect(screen.getByLabelText('Skill Preset')).toHaveValue('preK')
+    expect(screen.getByText('Applied the suggested preset and regenerated packet pages.')).toBeInTheDocument()
+    expect(document.querySelectorAll('[data-page="worksheet"]')[0].querySelectorAll('.trace-row')).toHaveLength(6)
   })
 
   test('reset to recommended defaults restores suggested problem count', async () => {
@@ -153,6 +156,21 @@ describe('app regression coverage', () => {
     await user.click(screen.getAllByRole('button', { name: 'Reroll this page' })[0])
     expect(document.querySelectorAll('[data-page="worksheet"]').length).toBe(5)
     expect(screen.getByText(/Packet page 1 regenerated\./)).toBeInTheDocument()
+  })
+
+  test('reroll packet page only changes the selected page content', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.selectOptions(screen.getByLabelText('Mode'), 'packet')
+    await user.click(screen.getByRole('button', { name: 'Generate Weekly Packet' }))
+
+    const before = Array.from(document.querySelectorAll('[data-page="worksheet"]')).map((page) => page.textContent)
+    await user.click(screen.getAllByRole('button', { name: 'Reroll this page' })[0])
+    const after = Array.from(document.querySelectorAll('[data-page="worksheet"]')).map((page) => page.textContent)
+
+    expect(after[0]).not.toEqual(before[0])
+    expect(after.slice(1)).toEqual(before.slice(1))
   })
 
   test('can import child profiles from JSON', async () => {

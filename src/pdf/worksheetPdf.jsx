@@ -154,13 +154,16 @@ function renderWorksheetBody({ page }) {
   if (config.type === 'countingObjects') {
     return (
       <View>
-        {student.map((row, idx) => (
-          <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
-          </View>
-        ))}
+        {student.map((row, idx) => {
+          const objects = Array.from({ length: Math.max(0, Number(row.total) || 0) }, () => 'O').join(' ')
+          return (
+            <View key={`count-${idx}`} style={styles.row}>
+              <Text>
+                {idx + 1}. Count: {objects}   Total: ______
+              </Text>
+            </View>
+          )
+        })}
       </View>
     )
   }
@@ -171,7 +174,7 @@ function renderWorksheetBody({ page }) {
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
             <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
+              {idx + 1}. {row.word}  --------  {row.word}
             </Text>
           </View>
         ))}
@@ -332,6 +335,21 @@ function renderWorksheetBody({ page }) {
             </View>
           )
         })}
+      </View>
+    )
+  }
+
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. {row.shape}  Color this shape with number {row.n}
+            </Text>
+          </View>
+        ))}
+        <Text>Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline</Text>
       </View>
     )
   }
