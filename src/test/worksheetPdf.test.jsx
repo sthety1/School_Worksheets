@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { renderWorksheetBody } from '../pdf/worksheetPdf.jsx'
+import { WorksheetPdfDocument } from '../pdf/worksheetPdf.jsx'
 
 const flattenText = (node) => {
   if (node === null || node === undefined || typeof node === 'boolean') return ''
@@ -11,22 +11,34 @@ const flattenText = (node) => {
 
 describe('worksheet PDF rendering', () => {
   test('counting objects includes countable marks in the downloaded PDF body', () => {
-    const body = renderWorksheetBody({
-      page: {
-        config: { type: 'countingObjects' },
-        student: [{ total: 3, theme: 'dogs' }],
-      },
+    const body = WorksheetPdfDocument({
+      filenameLabel: 'test.pdf',
+      pages: [
+        {
+          kind: 'worksheet',
+          title: 'Counting Objects',
+          config: { type: 'countingObjects' },
+          student: [{ total: 3, theme: 'dogs' }],
+          standards: [],
+        },
+      ],
     })
 
     expect(flattenText(body)).toContain('Count: O O O')
   })
 
   test('matching PDF uses generated word fields instead of undefined pairs', () => {
-    const body = renderWorksheetBody({
-      page: {
-        config: { type: 'matching' },
-        student: [{ word: 'puppy', theme: 'dogs' }],
-      },
+    const body = WorksheetPdfDocument({
+      filenameLabel: 'test.pdf',
+      pages: [
+        {
+          kind: 'worksheet',
+          title: 'Matching',
+          config: { type: 'matching' },
+          student: [{ word: 'puppy', theme: 'dogs' }],
+          standards: [],
+        },
+      ],
     })
     const text = flattenText(body)
 
@@ -35,11 +47,17 @@ describe('worksheet PDF rendering', () => {
   })
 
   test('color by number renders worksheet instructions instead of raw JSON', () => {
-    const body = renderWorksheetBody({
-      page: {
-        config: { type: 'colorByNumber' },
-        student: [{ n: 2, shape: 'circle' }],
-      },
+    const body = WorksheetPdfDocument({
+      filenameLabel: 'test.pdf',
+      pages: [
+        {
+          kind: 'worksheet',
+          title: 'Color by Number',
+          config: { type: 'colorByNumber' },
+          student: [{ n: 2, shape: 'circle' }],
+          standards: [],
+        },
+      ],
     })
     const text = flattenText(body)
 
