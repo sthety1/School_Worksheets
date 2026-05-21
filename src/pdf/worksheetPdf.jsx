@@ -1,4 +1,5 @@
 import { Document, Page, StyleSheet, Text, View } from '@react-pdf/renderer'
+import { getInstructionByType } from '../worksheetCopy'
 
 const styles = StyleSheet.create({
   page: {
@@ -67,6 +68,40 @@ const styles = StyleSheet.create({
     fontSize: 10,
     alignSelf: 'flex-start',
   },
+  countMarks: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 4,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  countMark: {
+    width: 14,
+    height: 14,
+    borderRadius: 7,
+    backgroundColor: '#000000',
+  },
+  tenFrameWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 164,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  tenFrameCell: {
+    width: 32,
+    height: 28,
+    borderWidth: 1,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tenFrameDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#000000',
+  },
   subitWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -92,6 +127,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#000000',
   },
 })
+
+const colorByNumberShapeNames = {
+  '⬡': 'hexagon',
+  '◯': 'circle',
+  '△': 'triangle',
+  '□': 'square',
+  '☆': 'star',
+  '♡': 'heart',
+}
 
 function prettyWorksheetType(type) {
   const map = {
@@ -156,9 +200,13 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`count-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Count the {row.themeNoun ?? 'items'}: ______
-            </Text>
+            <Text>{idx + 1}. Count the objects, then write the total.</Text>
+            <View style={styles.countMarks}>
+              {Array.from({ length: row.total }, (_, markIdx) => (
+                <View key={`count-mark-${idx}-${markIdx}`} style={styles.countMark} />
+              ))}
+            </View>
+            <Text>Total: ______</Text>
           </View>
         ))}
       </View>
@@ -171,7 +219,7 @@ function renderWorksheetBody({ page }) {
         {student.map((row, idx) => (
           <View key={`match-${idx}`} style={styles.row}>
             <Text>
-              {idx + 1}. {row.wordLeft}  ———————→  {row.wordRight}
+              {idx + 1}. {row.word}  ———————→  {row.word}
             </Text>
           </View>
         ))}
@@ -198,9 +246,15 @@ function renderWorksheetBody({ page }) {
       <View>
         {student.map((row, idx) => (
           <View key={`tf-${idx}`} style={styles.row}>
-            <Text>
-              {idx + 1}. Ten-frame total: ______
-            </Text>
+            <Text>{idx + 1}. Count the dots in the ten-frame.</Text>
+            <View style={styles.tenFrameWrap}>
+              {Array.from({ length: 10 }, (_, dotIdx) => (
+                <View key={`tf-dot-${idx}-${dotIdx}`} style={styles.tenFrameCell}>
+                  {dotIdx < row.total ? <View style={styles.tenFrameDot} /> : null}
+                </View>
+              ))}
+            </View>
+            <Text>Total: ______</Text>
           </View>
         ))}
       </View>
@@ -332,6 +386,23 @@ function renderWorksheetBody({ page }) {
             </View>
           )
         })}
+      </View>
+    )
+  }
+
+  if (config.type === 'colorByNumber') {
+    return (
+      <View>
+        {student.map((row, idx) => (
+          <View key={`cbn-${idx}`} style={styles.row}>
+            <Text>
+              {idx + 1}. Shape: {colorByNumberShapeNames[row.shape] ?? 'shape'} ({row.shape}) — color with number {row.n}.
+            </Text>
+          </View>
+        ))}
+        <Text style={{ marginTop: 10 }}>
+          Color key: 1-black, 2-light gray, 3-dark gray, 4-stripes, 5-dots, 6-outline
+        </Text>
       </View>
     )
   }
@@ -613,6 +684,7 @@ export function WorksheetPdfDocument({ pages, filenameLabel }) {
           page.kind === 'answerKey'
             ? `${prettyWorksheetType(page.config.type)} — Answer Key`
             : prettyWorksheetType(page.config.type)
+        const instruction = (page.config.instructionOverride ?? '').trim() || getInstructionByType(page.config.type)
 
         return (
           <Page key={`${page.kind}-${idx}`} size="LETTER" style={styles.page}>
@@ -624,8 +696,8 @@ export function WorksheetPdfDocument({ pages, filenameLabel }) {
             </View>
             <View style={styles.divider} />
 
-            {page.kind === 'worksheet' && page.config.instructionOverride ? (
-              <Text style={styles.instruction}>{page.config.instructionOverride}</Text>
+            {page.kind === 'worksheet' ? (
+              <Text style={styles.instruction}>{instruction}</Text>
             ) : null}
 
             <View>
